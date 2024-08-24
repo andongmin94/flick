@@ -165,7 +165,7 @@ export default function Component() {
                 )}
                 {comments && comments.length > 0 && (
                   <div className="mt-8">
-                    <h3 className="flex text-xl font-semibold mb-4 flex items-center border-b-2 border-primary pb-2">
+                    <h3 className="flex text-xl font-semibold mb-4items-center border-b-2 border-primary pb-2">
                       <MessageCircle className="mr-2" /> 댓글
                     </h3>
                     {comments.map(
