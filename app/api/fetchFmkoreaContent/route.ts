@@ -6,8 +6,8 @@ const cache = new NodeCache({ stdTTL: 600 }); // 10분 동안 캐싱
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const url = searchParams.get('url');
-
+  const url = "https://www.fmkorea.com/" + searchParams.get('url');
+  
   if (!url) {
     return NextResponse.json({ error: 'Invalid URL' }, { status: 400 });
   }
@@ -25,8 +25,8 @@ export async function GET(req: NextRequest) {
     const text = await response.text();
     const $ = cheerio.load(text);
 
-    // board_main_view 태그 안의 이미지 URL을 절대 경로로 변환
-    $('.board_main_view img').each((_, img) => {
+    // rd.rd_nav_style2.clear 태그 안의 이미지 URL을 절대 경로로 변환
+    $('.rd.rd_nav_style2.clear img').each((_, img) => {
       const src = $(img).attr('src');
       if (src && !src.startsWith('http')) {
         const absoluteSrc = new URL(src, decodedUrl).href;
@@ -35,17 +35,19 @@ export async function GET(req: NextRequest) {
     });
 
     // class가 row relative인 요소 제거
-    $('.board_main_view .row.relative').remove();
+    $('.level').remove();
+
+    $('.mb-2').remove();
 
     // class가 nick_link인 요소의 텍스트를 '익명'으로 변경
-    $('.comment_view_wrapper.row .nick_link').text('익명');
+    $('.member_plate').text('익명');
 
     // class가 text인 요소만 필터링하여 HTML을 배열로 수집
-    const filteredComments = $('.comment_view_wrapper.row .text').map(function() {
+    const filteredComments = $('.bd_capture').map(function() {
       return $(this).html();
     }).get();
 
-    const content = $('.board_main_view').html();
+    const content = $('.rd.rd_nav_style2.clear').html();
     const data = { content, comments: filteredComments };
 
     // 캐시에 데이터 저장
