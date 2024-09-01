@@ -4,11 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'i2.ruliweb.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'i3.ruliweb.com',
+        hostname: 'bbs.ruliweb.com',
       },
       {
         protocol: 'https',
@@ -20,7 +16,11 @@ const nextConfig = {
       },
       {
         protocol: 'https',
-        hostname: 'bbs.ruliweb.com',
+        hostname: 'i2.ruliweb.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'i3.ruliweb.com',
       },
       {
         protocol: 'https',
