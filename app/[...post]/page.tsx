@@ -34,7 +34,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -69,15 +69,15 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="overflow-hidden border-4 border-primary shadow-xl">
+    <Card className="overflow-hidden border-4 border-primary shadow-xl rounded-none">
       <CardHeader className="bg-primary text-primary-foreground">
-        <CardTitle className="text-3xl font-bold text-center">
+        <CardTitle className="text-6xl font-bold text-center">
           <Image
             src={"/icon.png"}
             alt={`안동민`}
-            width={60}
-            height={60}
-            className="mr-4 inline"
+            width={80}
+            height={80}
+            className="mr-5 inline"
             onClick={handleClearCache}
           />
           안동민의 플릭
@@ -138,7 +138,7 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                ),
+                )
             )}
           </div>
         )}
