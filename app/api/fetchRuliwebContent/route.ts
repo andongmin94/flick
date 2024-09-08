@@ -7,7 +7,6 @@ const cache = new NodeCache({ stdTTL: 600 }); // 10분 동안 캐싱
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const url = searchParams.get("url");
-  console.log(url);
 
   if (!url) {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
