@@ -168,6 +168,7 @@ export default function Component() {
                     <h3 className="flex text-xl font-semibold mb-4items-center border-b-2 border-primary pb-2">
                       <MessageCircle className="mr-2" /> 댓글
                     </h3>
+                    <br />
                     {comments.map(
                       (comment, index) =>
                         comment.trim() !== "" && (
@@ -188,6 +189,14 @@ export default function Component() {
                           </motion.div>
                         )
                     )}
+                    <br />
+                    <Button
+                      variant="outline"
+                      onClick={() => setSelectedPost(null)}
+                      className="mb-4 border-2 hover:border-primary"
+                    >
+                      <ChevronLeft className="mr-2 h-4 w-4" /> 뒤로가기
+                    </Button>
                   </div>
                 )}
               </motion.div>
