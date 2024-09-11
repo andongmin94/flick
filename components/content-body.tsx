@@ -40,9 +40,9 @@ export default function ContentBody({
                 >
                   <div className="flex items-center w-full">
                     <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 group-hover:bg-secondary-foreground transition-colors duration-300">
-                      <MessageCircleMore className="h-4 w-4" />
+                      <MessageCircleMore className="size-4" />
                     </div>
-                    <div className="flex-grow truncate">{post.title}</div>
+                    <div className="grow truncate">{post.title}</div>
                     <div className="bg-secondary-foreground text-secondary rounded-full px-2 py-1 text-xs ml-2">
                       인기
                     </div>
