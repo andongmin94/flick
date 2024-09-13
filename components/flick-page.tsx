@@ -6,13 +6,16 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
+import { cn } from "@/lib/utils";
 
 interface FlickPageProps {
+  className?: string;
   currentPage: number;
   setCurrentPage: (page: number) => void;
 }
 
 export default function FlickPage({
+  className,
   currentPage,
   setCurrentPage,
 }: FlickPageProps) {
@@ -22,7 +25,7 @@ export default function FlickPage({
   };
 
   return (
-    <Pagination className="mt-4">
+    <Pagination className={cn("py-2 border border-b-primary", className)}>
       <PaginationContent>
         <PaginationPrevious
           onClick={() => handlePageChange(currentPage - 1)}
