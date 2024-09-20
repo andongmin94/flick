@@ -100,6 +100,12 @@ export default function PostPage() {
     }
   }, [postTitle]);
 
+  useEffect(() => {
+    if (editableTitle) {
+      document.title = `${editableTitle} - 플릭`;
+    }
+  }, [editableTitle]);
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">

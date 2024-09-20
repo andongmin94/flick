@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 import NodeCache from "node-cache";
 
-const cache = new NodeCache({ stdTTL: 600 }); // 10분 동안 캐싱
+const cache = new NodeCache({ stdTTL: 1800 }); // 30분 동안 캐싱
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
