@@ -8,6 +8,7 @@ import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { TitleInput } from "@/components/title-input";
 import { decodeURL } from "@/lib/utils";
+import WordRotate from "@/components/ui/word-rotate";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -74,7 +75,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -164,39 +165,40 @@ export default function PostPage() {
             })}
           </div>
         )}
-        {comments && comments.length > 0 && (
-          <div className="mt-8">
-            <h3 className="mb-4 flex items-center border-b-2 border-primary pb-2 text-2xl font-semibold">
-              {/* <MessageCircle className="mr-2" /> */}
-              댓글
-            </h3>
-            <br />
-            {comments.map(
-              (comment, index) =>
-                comment.trim() !== "" && (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                    className="mb-2 flex items-center rounded-lg border border-primary bg-secondary p-3"
-                  >
-                    {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
-                    <MessageCircle className="mr-3 size-8" />
-                    <div
-                      dangerouslySetInnerHTML={{ __html: comment }}
-                      className="flex-1"
-                    />
-                  </motion.div>
-                )
-            )}
-          </div>
-        )}
+        {/* {comments && comments.length > 0 && ( */}
+        {/* <div className="mt-8"> */}
+        {/* <h3 className="mb-4 flex items-center border-b-2 border-primary pb-2 text-2xl font-semibold"> */}
+        {/* <MessageCircle className="mr-2" /> */}
+        {/* 댓글 */}
+        {/* </h3> */}
+        {/* <br /> */}
+        {/* {comments.map( */}
+        {/* (comment, index) => */}
+        {/* comment.trim() !== "" && ( */}
+        {/* <motion.div */}
+        {/* key={index} */}
+        {/* initial={{ opacity: 0, y: 20 }} */}
+        {/* animate={{ opacity: 1, y: 0 }} */}
+        {/* transition={{ delay: index * 0.1 }} */}
+        {/* className="mb-2 flex items-center rounded-lg border border-primary bg-secondary p-3" */}
+        {/* > */}
+        {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
+        {/* <MessageCircle className="mr-3 size-8" /> */}
+        {/* <div */}
+        {/* dangerouslySetInnerHTML={{ __html: comment }} */}
+        {/* className="flex-1" */}
+        {/* /> */}
+        {/* </motion.div> */}
+        {/* ) */}
+        {/* )} */}
+        {/* </div> */}
+        {/* )} */}
       </CardContent>
-      <div className="sticky bottom-0 flex h-[245px] items-center justify-end border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
-        <p className="border-primary text-center text-6xl font-bold">
-          {postTitle}
-        </p>
+      <div className="sticky bottom-0 flex h-[245px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
+        <WordRotate
+          className="inline max-w-[450px] text-center text-3xl font-bold text-white"
+          words={comments}
+        />
       </div>
     </Card>
   );
