@@ -19,7 +19,7 @@ async function scrapeRuliweb(page: number) {
   const $ = cheerio.load(text);
   const titles: { title: string; href: string }[] = [];
 
-  $("a.deco").each((index, element) => {
+  $("tr a.deco").each((index, element) => {
     let textContent = "";
     $(element)
       .contents()
