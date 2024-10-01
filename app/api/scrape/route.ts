@@ -28,7 +28,7 @@ async function scrapeRuliweb(page: number) {
           textContent += $(node).text().trim();
         }
       });
-    const href = $(element).attr("href");
+    const href = "https://bbs.ruliweb.com" + $(element).attr("href");
     if (textContent && href) {
       titles.push({ title: textContent, href });
     }
