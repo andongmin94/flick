@@ -18,7 +18,7 @@ export default function ContentBody({
   return (
     <AnimatePresence mode="wait">
       {isLoading ? (
-        <div className="flex items-center justify-center text-5xl font-bold h-[79.6vh] pb-40">
+        <div className="flex h-[79.6vh] items-center justify-center pb-40 text-5xl font-bold">
           로딩 중...
         </div>
       ) : (
