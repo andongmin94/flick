@@ -75,7 +75,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -127,7 +127,7 @@ export default function PostPage() {
 
   return (
     <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary pb-6 pt-0 text-primary-foreground">
+      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary pb-2 pt-0 text-primary-foreground">
         <TitleInput
           className="bg-primary text-primary hover:bg-gray-700 hover:text-white"
           editableTitle={editableTitle}
@@ -142,21 +142,23 @@ export default function PostPage() {
           />
         </div>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent>
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
               const imgMatch = line.match(/<img[^>]+src="([^">]+)"/);
               if (imgMatch) {
                 return (
-                  <Image
-                    key={index}
-                    src={imgMatch[1]}
-                    alt={`Image ${index}`}
-                    width={500}
-                    height={300}
-                    className="mb-4 w-full rounded-lg shadow-md"
-                  />
+                  <div key={index} className="flex justify-center">
+                    <Image
+                      key={index}
+                      src={imgMatch[1]}
+                      alt={`Image ${index}`}
+                      width={1000}
+                      height={0}
+                      className="mb-4 w-full rounded-lg shadow-md"
+                    />
+                  </div>
                 );
               }
               return (
@@ -189,12 +191,12 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                ),
+                )
             )}
           </div>
         )}
       </CardContent>
-      <div className="sticky bottom-0 flex h-[245px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
+      <div className="sticky bottom-0 flex h-[200px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
         <WordRotate
           className="inline max-w-[450px] text-center text-3xl font-bold text-white"
           words={comments}
