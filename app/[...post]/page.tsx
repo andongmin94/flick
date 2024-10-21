@@ -75,7 +75,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -137,7 +137,7 @@ export default function PostPage() {
           <AutoResizeDiv
             value={editableTitle}
             onChange={(e: any) => setEditableTitle(e.currentTarget.innerHTML)}
-            className="w-full resize-none bg-transparent text-center text-6xl font-bold focus:outline-none"
+            className="Pretendard-ExtraBold w-full resize-none bg-transparent text-center text-6xl focus:outline-none"
             style={{ lineHeight: "1.2" }}
           />
         </div>
@@ -191,7 +191,7 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                )
+                ),
             )}
           </div>
         )}
