@@ -82,14 +82,14 @@ export default function Component() {
         <CardHeader className="bg-primary text-primary-foreground">
           <CardTitle className="text-3xl font-bold text-center">
             <Image
-              src={"/flick.svg"}
-              alt={`flick`}
+              src={"/icon.png"}
+              alt={`안동민`}
               width={60}
               height={60}
               className="mr-4 inline"
               onClick={handleClearCache}
             />
-            커뮤니티 인기글
+            안동민의 플릭
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
