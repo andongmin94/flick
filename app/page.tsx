@@ -36,12 +36,12 @@ export default function Component() {
     fetchData();
   }, []);
 
-  const handlePostClick = async (post: { title: string; href: string }) => {
+  const handleRuliwebClick = async (post: { title: string; href: string }) => {
     setSelectedPost(post);
     setLoading(true);
     try {
       const response = await fetch(
-        `/api/fetchPostContent?url=${encodeURIComponent(post.href)}`
+        `/api/fetchRuliwebContent?url=${encodeURIComponent(post.href)}`
       );
       const data = await response.json();
       setPostContent(data.content);
@@ -50,6 +50,19 @@ export default function Component() {
     } catch (error) {
       setError("게시글 내용을 불러오는데 실패했습니다");
       setLoading(false);
+    }
+  };
+
+  const handleClearCache = async () => {
+    try {
+      const response = await fetch("/api/scrape", {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      alert("캐시 지웠음"); // "Cache cleared"
+    } catch (error) {
+      console.error("Error clearing cache:", error);
+      alert("캐시를 지우는데 실패했습니다");
     }
   };
 
@@ -68,7 +81,15 @@ export default function Component() {
       <Card className="overflow-hidden border-4 border-primary shadow-xl">
         <CardHeader className="bg-primary text-primary-foreground">
           <CardTitle className="text-3xl font-bold text-center">
-            커뮤니티 인기글 모음
+            <Image
+              src={"/flick.svg"}
+              alt={`flick`}
+              width={60}
+              height={60}
+              className="mr-4 inline"
+              onClick={handleClearCache}
+            />
+            커뮤니티 인기글
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -103,7 +124,7 @@ export default function Component() {
                       <Button
                         variant="ghost"
                         className="w-full justify-start mb-4 text-left hover:bg-secondary rounded-lg border-2 border-secondary hover:border-primary transition-all duration-300 overflow-hidden group"
-                        onClick={() => handlePostClick(post)}
+                        onClick={() => handleRuliwebClick(post)}
                       >
                         <div className="flex items-center w-full">
                           <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 group-hover:bg-secondary-foreground transition-colors duration-300">
@@ -165,7 +186,7 @@ export default function Component() {
                 )}
                 {comments && comments.length > 0 && (
                   <div className="mt-8">
-                    <h3 className="flex text-xl font-semibold mb-4items-center border-b-2 border-primary pb-2">
+                    <h3 className="flex text-xl font-semibold mb-4 items-center border-b-2 border-primary pb-2">
                       <MessageCircle className="mr-2" /> 댓글
                     </h3>
                     <br />
@@ -177,11 +198,19 @@ export default function Component() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ delay: index * 0.1 }}
-                            className="bg-secondary p-3 rounded-lg mb-2  flex items-center border border-primary"
+                            className="bg-secondary p-3 rounded-lg mb-2 flex items-center border border-primary"
                           >
-                            <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 flex-shrink-0">
+                            {/* <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 flex-shrink-0">
                               익명
-                            </div>
+                            </div> */}
+                            <Image
+                              key={index}
+                              src={"/flick.svg"}
+                              alt={`flick`}
+                              width={30}
+                              height={30}
+                              className="mr-4"
+                            />
                             <div
                               dangerouslySetInnerHTML={{ __html: comment }}
                               className="flex-1"

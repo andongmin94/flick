@@ -6,7 +6,6 @@ const cache = new NodeCache({ stdTTL: 600 }); // 10분 동안 캐싱
 
 const ruliweb = 'https://bbs.ruliweb.com/best/humor_only';
 const fmkorea = 'https://www.fmkorea.com/best2';
-const dogdrip = 'https://www.dogdrip.net/?mid=dogdrip&sort_index=popular';
 
 // 루리웹 스크래핑 함수
 async function scrapeRuliweb() {
@@ -38,7 +37,7 @@ async function scrapeRuliweb() {
   return data;
 }
 
-// 펨코 스크래핑 함수 (예시)
+// 펨코 스크래핑 함수
 async function scrapeFmkorea() {
   const cachedData = cache.get(fmkorea);
   if (cachedData) {
@@ -50,8 +49,8 @@ async function scrapeFmkorea() {
   const $ = cheerio.load(text);
   const titles: { title: string, href: string }[] = [];
 
-  // 예시로 fmkorea의 스크래핑 로직을 추가합니다.
-  $('div.some_selector a.some_link').each((index, element) => {
+  // fmkorea의 스크래핑 로직을 추가합니다.
+  $('h3.title a.hotdeal_var8').each((index, element) => {
     let textContent = '';
     $(element).contents().each((_, node) => {
       if (node.type === 'text') {
@@ -72,10 +71,9 @@ async function scrapeFmkorea() {
 export async function GET(req: NextRequest) {
   try {
     const ruliwebData = await scrapeRuliweb();
-    // const fmkoreaData = await scrapeFmkorea();
-    // const dogdripData = await scrapeDogdrip();
+    const fmkoreaData = await scrapeFmkorea();
 
-    return NextResponse.json({ ruliweb: ruliwebData });
+    return NextResponse.json({ ruliweb: ruliwebData, fmkorea: fmkoreaData });
   } catch (error) {
     return NextResponse.json({ error: 'Failed to scrape data' }, { status: 500 });
   }
