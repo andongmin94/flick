@@ -8,6 +8,14 @@ import { Skeleton } from "@/components/ui/skeleton";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, MessageCircle, MessageCircleMore } from "lucide-react";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 export default function Component() {
   const [selectedPost, setSelectedPost] = useState<{
@@ -19,11 +27,12 @@ export default function Component() {
   const [error, setError] = useState<string | null>(null);
   const [postContent, setPostContent] = useState<string | null>(null);
   const [comments, setComments] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(page: number) {
       try {
-        const response = await fetch("/api/scrape");
+        const response = await fetch(`/api/scrape?page=${page}`);
         const data = await response.json();
         setTitles(data.ruliweb.titles);
         setLoading(false);
@@ -33,8 +42,8 @@ export default function Component() {
       }
     }
 
-    fetchData();
-  }, []);
+    fetchData(currentPage);
+  }, [currentPage]);
 
   const handleRuliwebClick = async (post: { title: string; href: string }) => {
     setSelectedPost(post);
@@ -58,12 +67,16 @@ export default function Component() {
       const response = await fetch("/api/scrape", {
         method: "DELETE",
       });
-      const data = await response.json();
       alert("캐시 지웠음"); // "Cache cleared"
     } catch (error) {
       console.error("Error clearing cache:", error);
       alert("캐시를 지우는데 실패했습니다");
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    if (page < 1) return;
+    setCurrentPage(page);
   };
 
   if (error) {
@@ -92,6 +105,24 @@ export default function Component() {
             안동민의 플릭
           </CardTitle>
         </CardHeader>
+        <Pagination className="mt-4">
+          <PaginationContent>
+            <PaginationPrevious
+              onClick={() => handlePageChange(currentPage - 1)} className="cursor-pointer"
+            />
+            {[currentPage].map((page) => (
+              <PaginationItem key={page}>
+                <PaginationLink
+                  isActive={page === currentPage}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </PaginationLink>
+              </PaginationItem>
+            ))}
+            <PaginationNext onClick={() => handlePageChange(currentPage + 1)} className="cursor-pointer"/>
+          </PaginationContent>
+        </Pagination>
         <CardContent className="p-0">
           <AnimatePresence mode="wait">
             {loading ? (
@@ -113,7 +144,7 @@ export default function Component() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
               >
-                <ScrollArea className="h-[calc(100vh-150px)] p-4">
+                <ScrollArea className="h-[77.2vh] p-4">
                   {titles.map((post, index) => (
                     <motion.div
                       key={index}
@@ -200,9 +231,6 @@ export default function Component() {
                             transition={{ delay: index * 0.1 }}
                             className="bg-secondary p-3 rounded-lg mb-2 flex items-center border border-primary"
                           >
-                            {/* <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 flex-shrink-0">
-                              익명
-                            </div> */}
                             <Image
                               key={index}
                               src={"/flick.svg"}
