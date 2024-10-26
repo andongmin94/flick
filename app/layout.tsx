@@ -4,8 +4,8 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Flick",
   icons: [
-    { rel: "icon", url: '/flick.svg' },
-    { rel: "apple-touch-icon", url: '/flick.svg' },
+    { rel: "icon", url: "/flick.svg" },
+    { rel: "apple-touch-icon", url: "/flick.svg" },
   ],
 };
 
@@ -16,7 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body>{children}</body>
+      <body>
+        <div className="max-w-4xl mx-auto bg-background text-foreground p-4">
+          {children}
+        </div>
+      </body>
     </html>
   );
 }
