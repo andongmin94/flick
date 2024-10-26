@@ -25,7 +25,7 @@ export default function ContentBody({
         exit={{ opacity: 0, y: -20 }}
       >
         <FlickPage currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <ScrollArea className="h-[77.2vh] p-4">
+        <ScrollArea className="h-full p-4">
           {titles.map((post, index) => (
             <motion.div
               key={index}
