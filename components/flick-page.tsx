@@ -12,8 +12,10 @@ interface FlickPageProps {
   setCurrentPage: (page: number) => void;
 }
 
-export default function FlickPage({ currentPage, setCurrentPage }: FlickPageProps) {
-
+export default function FlickPage({
+  currentPage,
+  setCurrentPage,
+}: FlickPageProps) {
   const handlePageChange = (page: number) => {
     if (page < 1) return;
     setCurrentPage(page);
