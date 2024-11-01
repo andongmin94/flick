@@ -34,7 +34,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -48,7 +48,7 @@ export default function PostPage() {
     };
 
     fetchPostContent();
-  }, []);
+  }, [url]);
 
   if (loading) {
     return (
@@ -138,7 +138,7 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                )
+                ),
             )}
           </div>
         )}
