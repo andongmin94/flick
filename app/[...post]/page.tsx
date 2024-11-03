@@ -17,24 +17,11 @@ export default function PostPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const handleClearCache = async () => {
-    try {
-      const response = await fetch("/api/scrape", {
-        method: "DELETE",
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error("Error clearing cache:", error);
-      alert("캐시를 지우는데 실패했습니다");
-    }
-  };
-
   useEffect(() => {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -70,23 +57,12 @@ export default function PostPage() {
 
   return (
     <Card className="overflow-hidden border-4 border-primary shadow-xl rounded-none">
-      <CardHeader className="bg-primary text-primary-foreground">
-        <CardTitle className="text-6xl font-bold text-center">
-          <Image
-            src={"/icon.png"}
-            alt={`안동민`}
-            width={80}
-            height={80}
-            className="mr-5 inline"
-            onClick={handleClearCache}
-          />
-          안동민의 플릭
-        </CardTitle>
+      <CardHeader className="bg-primary text-primary-foreground flex items-center justify-center">
+        <p className="mt-16 h-36 text-6xl font-bold border-primary text-center">
+          {postTitle}
+        </p>
       </CardHeader>
       <CardContent className="p-4">
-        <h2 className="text-4xl font-bold pb-4 border-b-2 border-primary text-center">
-          {postTitle}
-        </h2>
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
@@ -138,7 +114,7 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                ),
+                )
             )}
           </div>
         )}
