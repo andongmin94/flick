@@ -21,7 +21,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -39,8 +39,8 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p>Loading...</p>
+      <div className="text-6xl flex justify-center items-center h-screen bg-primary text-primary-foreground font-bold">
+        <p>로딩 중...</p>
       </div>
     );
   }
@@ -56,13 +56,22 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="overflow-hidden border-4 border-primary shadow-xl rounded-none">
-      <CardHeader className="bg-primary text-primary-foreground flex items-center justify-center">
-        <p className="mt-16 h-36 text-6xl font-bold border-primary text-center">
+    <Card className="relative border-4 border-y-0 border-primary shadow-xl rounded-none">
+      <CardHeader
+        className="
+          sticky top-0 z-10
+          h-[265px]
+          bg-primary text-primary-foreground border-primary
+          pb-12
+          flex items-center justify-end
+          text-6xl font-bold text-center
+        "
+      >
+        <p className="text-6xl font-bold border-primary text-center">
           {postTitle}
         </p>
       </CardHeader>
-      <CardContent className="p-4">
+      <CardContent className="p-2">
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
@@ -114,11 +123,16 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                )
+                ),
             )}
           </div>
         )}
       </CardContent>
+      <CardHeader className="sticky bottom-0 h-[245px] bg-primary pb-12 text-primary-foreground flex items-center justify-end text-6xl font-bold border-primary text-center">
+        <p className="text-6xl font-bold border-primary text-center">
+          {postTitle}
+        </p>
+      </CardHeader>
     </Card>
   );
 }

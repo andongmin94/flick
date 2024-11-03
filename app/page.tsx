@@ -48,8 +48,8 @@ export default function Component() {
   }
 
   return (
-    <Card className="overflow-hidden border-4 border-primary shadow-xl rounded-none">
-      <CardHeader className="bg-primary text-primary-foreground">
+    <Card className="relative border-4 border-t-0 border-primary shadow-xl rounded-none">
+      <CardHeader className="z-10 sticky top-0 bg-primary text-primary-foreground">
         <CardTitle className="text-6xl font-bold text-center">
           <Image
             src={"/icon.png"}
