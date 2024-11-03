@@ -1,29 +1,50 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
-function AutoResizeTextarea(props : any) {
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+function AutoResizeDiv(props: any) {
+  const divRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height =
-        textareaRef.current.scrollHeight + 'px';
+    if (divRef.current) {
+      divRef.current.style.height = "auto";
+      divRef.current.style.height = divRef.current.scrollHeight + "px";
     }
   }, [props.value]);
 
+  const handleInput = (e: any) => {
+    props.onChange(e);
+  };
+
+  const handleMouseUp = () => {
+    if (window.getSelection && divRef.current) {
+      const selection = window.getSelection();
+      if (selection && !selection.isCollapsed) {
+        const range = selection.getRangeAt(0);
+        if (divRef.current.contains(range.commonAncestorContainer)) {
+          const span = document.createElement("span");
+          span.style.color = "yellow";
+          range.surroundContents(span);
+          selection.removeAllRanges();
+        }
+      }
+    }
+  };
+
   return (
-    <textarea
+    <div
       {...props}
-      ref={textareaRef}
-      rows={1}
-      className={`${props.className} overflow-hidden`}
+      ref={divRef}
+      // contentEditable
+      onInput={handleInput}
+      onMouseUp={handleMouseUp}
+      style={{ overflow: "hidden", ...props.style }}
+      dangerouslySetInnerHTML={{ __html: props.value }}
     />
   );
 }
@@ -42,7 +63,7 @@ export default function PostPage() {
     const fetchPostContent = async () => {
       try {
         const response = await fetch(
-          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`,
+          `/api/fetchRuliwebContent?url=${encodeURIComponent(url)}`
         );
         const data = await response.json();
         setPostTitle(data.title);
@@ -89,12 +110,11 @@ export default function PostPage() {
   return (
     <Card className="relative border-4 border-y-0 border-primary shadow-xl rounded-none">
       <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground border-primary pt-[84px] pb-9 flex flex-col items-center justify-end">
-        <AutoResizeTextarea
+        <AutoResizeDiv
           value={editableTitle}
-          onChange={(e : any) => setEditableTitle(e.target.value)}
+          onChange={(e: any) => setEditableTitle(e.currentTarget.innerHTML)}
           className="bg-transparent text-6xl font-bold text-center resize-none focus:outline-none w-full"
-          style={{ lineHeight: '1.2' }}
-          placeholder="제목을 입력하세요"
+          style={{ lineHeight: "1.2" }}
         />
       </CardHeader>
       <CardContent className="p-2">
@@ -149,7 +169,7 @@ export default function PostPage() {
                       className="flex-1"
                     />
                   </motion.div>
-                ),
+                )
             )}
           </div>
         )}
