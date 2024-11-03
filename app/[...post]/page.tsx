@@ -1,11 +1,32 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React, { useRef, useEffect, useState } from 'react';
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+
+function AutoResizeTextarea(props : any) {
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height =
+        textareaRef.current.scrollHeight + 'px';
+    }
+  }, [props.value]);
+
+  return (
+    <textarea
+      {...props}
+      ref={textareaRef}
+      rows={1}
+      className={`${props.className} overflow-hidden`}
+    />
+  );
+}
 
 export default function PostPage() {
   const pathName = usePathname();
@@ -37,6 +58,16 @@ export default function PostPage() {
     fetchPostContent();
   }, [url]);
 
+  // 상태 추가
+  const [editableTitle, setEditableTitle] = useState<string>("");
+
+  // useEffect에서 editableTitle 초기화
+  useEffect(() => {
+    if (postTitle) {
+      setEditableTitle(postTitle);
+    }
+  }, [postTitle]);
+
   if (loading) {
     return (
       <div className="text-6xl flex justify-center items-center h-screen bg-primary text-primary-foreground font-bold">
@@ -57,19 +88,14 @@ export default function PostPage() {
 
   return (
     <Card className="relative border-4 border-y-0 border-primary shadow-xl rounded-none">
-      <CardHeader
-        className="
-          sticky top-0 z-10
-          h-[265px]
-          bg-primary text-primary-foreground border-primary
-          pb-12
-          flex items-center justify-end
-          text-6xl font-bold text-center
-        "
-      >
-        <p className="text-6xl font-bold border-primary text-center">
-          {postTitle}
-        </p>
+      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground border-primary pt-[84px] pb-9 flex flex-col items-center justify-end">
+        <AutoResizeTextarea
+          value={editableTitle}
+          onChange={(e : any) => setEditableTitle(e.target.value)}
+          className="bg-transparent text-6xl font-bold text-center resize-none focus:outline-none w-full"
+          style={{ lineHeight: '1.2' }}
+          placeholder="제목을 입력하세요"
+        />
       </CardHeader>
       <CardContent className="p-2">
         {postContent && (
