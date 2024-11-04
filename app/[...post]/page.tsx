@@ -135,7 +135,7 @@ export default function PostPage() {
           />
         </div>
       </CardHeader>
-      <CardContent className="p-2">
+      <CardContent className="p-8">
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
@@ -161,7 +161,8 @@ export default function PostPage() {
         {comments && comments.length > 0 && (
           <div className="mt-8">
             <h3 className="flex text-2xl font-semibold mb-4 items-center border-b-2 border-primary pb-2">
-              <MessageCircle className="mr-2" /> 댓글
+              {/* <MessageCircle className="mr-2" /> */}
+              댓글
             </h3>
             <br />
             {comments.map(
@@ -174,14 +175,8 @@ export default function PostPage() {
                     transition={{ delay: index * 0.1 }}
                     className="bg-secondary p-3 rounded-lg mb-2 flex items-center border border-primary"
                   >
-                    <Image
-                      key={index}
-                      src={"/flick.svg"}
-                      alt={`flick`}
-                      width={30}
-                      height={30}
-                      className="mr-4"
-                    />
+                    {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
+                    <MessageCircle className="mr-3 size-8" />
                     <div
                       dangerouslySetInnerHTML={{ __html: comment }}
                       className="flex-1"
