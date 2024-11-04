@@ -7,6 +7,7 @@ import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { TitleInput } from "@/components/title-input";
+import { decodeURL } from '@/lib/utils';
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -59,7 +60,9 @@ function AutoResizeDiv(props: any) {
 
 export default function PostPage() {
   const pathName = usePathname();
-  const url = pathName.startsWith("/") ? pathName.slice(1) : pathName;
+  // URL 디코딩 추가
+  const encodedUrl = pathName.startsWith("/") ? pathName.slice(1) : pathName;
+  const url = decodeURL(encodedUrl);
 
   const [postTitle, setPostTitle] = useState<string | null>(null);
   const [postContent, setPostContent] = useState<string | null>(null);

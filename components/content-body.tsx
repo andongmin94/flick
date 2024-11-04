@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircleMore } from "lucide-react";
 import Link from "next/link";
+import { encodeURL } from '@/lib/utils';
 
 interface ContentBodyProps {
   currentPage: number;
@@ -26,7 +27,7 @@ export default function ContentBody({ currentPage, titles }: ContentBodyProps) {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Link href={`/${post.href}`}>
+              <Link href={`/${encodeURL(post.href)}`}>
                 <Button
                   variant="ghost"
                   className="w-full justify-start mb-4 text-left hover:bg-secondary rounded-lg border-2 border-secondary hover:border-primary transition-all duration-300 overflow-hidden group"
