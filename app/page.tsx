@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
+import FlickPage from "@/components/flick-page";
 import ContentBody from "@/components/content-body";
 
 export default function Component() {
@@ -62,6 +63,11 @@ export default function Component() {
           안동민의 플릭
         </CardTitle>
       </CardHeader>
+      <FlickPage
+        className="z-10 sticky top-32 bg-white"
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
+      />
       <CardContent className="p-0">
         <ContentBody
           currentPage={currentPage}
