@@ -1,8 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircleMore } from "lucide-react";
-import FlickPage from "@/components/flick-page";
 import Link from "next/link";
 
 interface ContentBodyProps {
@@ -11,21 +9,16 @@ interface ContentBodyProps {
   titles: { title: string; href: string }[];
 }
 
-export default function ContentBody({
-  currentPage,
-  setCurrentPage,
-  titles,
-}: ContentBodyProps) {
+export default function ContentBody({ currentPage, titles }: ContentBodyProps) {
   return (
     <AnimatePresence mode="wait">
       <motion.div
-        key="titles"
+        key={`titles-${currentPage}`}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -20 }}
       >
-        <FlickPage currentPage={currentPage} setCurrentPage={setCurrentPage} />
-        <ScrollArea className="h-full p-4">
+        <div className="h-full p-4">
           {titles.map((post, index) => (
             <motion.div
               key={index}
@@ -51,7 +44,7 @@ export default function ContentBody({
               </Link>
             </motion.div>
           ))}
-        </ScrollArea>
+        </div>
       </motion.div>
     </AnimatePresence>
   );
