@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
+import { TitleInput } from "@/components/title-input";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -27,24 +28,31 @@ function AutoResizeDiv(props: any) {
       if (selection && !selection.isCollapsed) {
         const range = selection.getRangeAt(0);
         if (divRef.current.contains(range.commonAncestorContainer)) {
-          const span = document.createElement("span");
-          span.style.color = "yellow";
-          range.surroundContents(span);
-          selection.removeAllRanges();
+          try {
+            const span = document.createElement("span");
+            span.style.color = "yellow";
+            range.surroundContents(span);
+            selection.removeAllRanges();
+          } catch (error) {
+            // 에러가 발생해도 아무 작업도 하지 않음
+          }
         }
       }
     }
+  };
+
+  const formatValue = (value: string) => {
+    return value.replace(/\n/g, "<br>").replace(/ /g, "&nbsp;");
   };
 
   return (
     <div
       {...props}
       ref={divRef}
-      // contentEditable
       onInput={handleInput}
       onMouseUp={handleMouseUp}
       style={{ overflow: "hidden", ...props.style }}
-      dangerouslySetInnerHTML={{ __html: props.value }}
+      dangerouslySetInnerHTML={{ __html: formatValue(props.value) }} // \n 문자를 <br>로, 공백 문자를 &nbsp;로 변환
     />
   );
 }
@@ -109,13 +117,20 @@ export default function PostPage() {
 
   return (
     <Card className="relative border-4 border-y-0 border-primary shadow-xl rounded-none">
-      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground border-primary pt-[84px] pb-9 flex flex-col items-center justify-end">
-        <AutoResizeDiv
-          value={editableTitle}
-          onChange={(e: any) => setEditableTitle(e.currentTarget.innerHTML)}
-          className="bg-transparent text-6xl font-bold text-center resize-none focus:outline-none w-full"
-          style={{ lineHeight: "1.2" }}
+      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground border-primary pt-[38px] pb-9 flex flex-col items-center justify-end">
+        <TitleInput
+          className="bg-primary hover:bg-gray-700 text-primary hover:text-white"
+          editableTitle={editableTitle}
+          setEditableTitle={setEditableTitle}
         />
+        <div className="flex flex-col h-36 justify-end w-full">
+          <AutoResizeDiv
+            value={editableTitle}
+            onChange={(e: any) => setEditableTitle(e.currentTarget.innerHTML)}
+            className="bg-transparent text-6xl font-bold text-center resize-none focus:outline-none w-full"
+            style={{ lineHeight: "1.2" }}
+          />
+        </div>
       </CardHeader>
       <CardContent className="p-2">
         {postContent && (
@@ -174,11 +189,11 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <CardHeader className="sticky bottom-0 h-[245px] bg-primary pb-12 text-primary-foreground flex items-center justify-end text-6xl font-bold border-primary text-center">
+      <div className="sticky bottom-0 h-[245px] bg-primary pb-12 text-primary-foreground flex items-center justify-end text-6xl font-bold border-primary text-center">
         <p className="text-6xl font-bold border-primary text-center">
           {postTitle}
         </p>
-      </CardHeader>
+      </div>
     </Card>
   );
 }
