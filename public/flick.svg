@@ -1,67 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+<svg id="_레이어_2" xmlns="http://www.w3.org/2000/svg" version="1.1" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 24 24">
+  <!-- Generator: Adobe Illustrator 29.0.1, SVG Export Plug-In . SVG Version: 2.1.0 Build 192)  -->
   <defs>
     <style>
-      .cls-1 {
-        fill: url(#_무제_그라디언트_656-2);
+      .st0 {
+        fill: url(#_무제_그라디언트_4);
       }
 
-      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-7 {
+      .st0, .st1, .st2, .st3, .st4, .st5 {
         stroke: #000;
         stroke-linecap: round;
         stroke-linejoin: round;
       }
 
-      .cls-2 {
-        fill: url(#_무제_그라디언트_656-3);
-      }
-
-      .cls-3 {
-        fill: url(#_무제_그라디언트_656-4);
-      }
-
-      .cls-8, .cls-5 {
+      .st6 {
         fill: none;
       }
 
-      .cls-4 {
-        fill: url(#_무제_그라디언트_656-6);
+      .st1 {
+        fill: url(#_무제_그라디언트_6);
       }
 
-      .cls-6 {
-        fill: url(#_무제_그라디언트_656-5);
+      .st2 {
+        fill: url(#_무제_그라디언트_5);
       }
 
-      .cls-7 {
-        fill: url(#_무제_그라디언트_656);
+      .st3 {
+        fill: url(#_무제_그라디언트_1030);
+      }
+
+      .st4 {
+        fill: url(#_무제_그라디언트_2);
+      }
+
+      .st5 {
+        fill: url(#_무제_그라디언트_3);
       }
     </style>
-    <linearGradient id="_무제_그라디언트_656" data-name="무제 그라디언트 656" x1="4.97" y1="11.99" x2="19.03" y2="11.99" gradientUnits="userSpaceOnUse">
+    <linearGradient id="_무제_그라디언트_1030" data-name="무제 그라디언트 1030" x1="2.5" y1="14" x2="21.5" y2="14" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffa01e"/>
+      <stop offset=".2" stop-color="#f7921a"/>
+      <stop offset=".7" stop-color="#dc620e"/>
+      <stop offset="1" stop-color="#d2500a"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_2" data-name="무제 그라디언트 2" x1="8.7" y1="17.3" x2="8.7" y2="17.3" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#ffff96"/>
-      <stop offset=".18" stop-color="#f2ff8f"/>
+      <stop offset=".2" stop-color="#f2ff8f"/>
       <stop offset=".5" stop-color="#d2ff7c"/>
-      <stop offset=".93" stop-color="#9fff5f"/>
+      <stop offset=".9" stop-color="#9fff5f"/>
       <stop offset="1" stop-color="#96ff5a"/>
     </linearGradient>
-    <linearGradient id="_무제_그라디언트_656-2" data-name="무제 그라디언트 656" x1="9.54" y1="9.53" x2="9.54" y2="9.53" xlink:href="#_무제_그라디언트_656"/>
-    <linearGradient id="_무제_그라디언트_656-3" data-name="무제 그라디언트 656" x1="14.81" y1="14.45" x2="14.81" y2="14.45" xlink:href="#_무제_그라디언트_656"/>
-    <linearGradient id="_무제_그라디언트_656-4" data-name="무제 그라디언트 656" x1="12" y1="11.99" x2="12" y2="11.99" xlink:href="#_무제_그라디언트_656"/>
-    <linearGradient id="_무제_그라디언트_656-5" data-name="무제 그라디언트 656" x1="11.3" y1="15.51" x2="11.3" y2="15.51" xlink:href="#_무제_그라디언트_656"/>
-    <linearGradient id="_무제_그라디언트_656-6" data-name="무제 그라디언트 656" x1="8.48" y1="13.4" x2="8.48" y2="13.4" xlink:href="#_무제_그라디언트_656"/>
+    <linearGradient id="_무제_그라디언트_3" data-name="무제 그라디언트 3" x1="15.8" y1="10.7" x2="15.8" y2="10.7" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffff96"/>
+      <stop offset=".2" stop-color="#f2ff8f"/>
+      <stop offset=".5" stop-color="#d2ff7c"/>
+      <stop offset=".9" stop-color="#9fff5f"/>
+      <stop offset="1" stop-color="#96ff5a"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_4" data-name="무제 그라디언트 4" x1="12" y1="14" x2="12" y2="14" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffff96"/>
+      <stop offset=".2" stop-color="#f2ff8f"/>
+      <stop offset=".5" stop-color="#d2ff7c"/>
+      <stop offset=".9" stop-color="#9fff5f"/>
+      <stop offset="1" stop-color="#96ff5a"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_5" data-name="무제 그라디언트 5" x1="11.1" y1="9.2" x2="11.1" y2="9.2" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffff96"/>
+      <stop offset=".2" stop-color="#f2ff8f"/>
+      <stop offset=".5" stop-color="#d2ff7c"/>
+      <stop offset=".9" stop-color="#9fff5f"/>
+      <stop offset="1" stop-color="#96ff5a"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_6" data-name="무제 그라디언트 6" x1="7.2" y1="12.1" x2="7.2" y2="12.1" gradientTransform="translate(0 26) scale(1 -1)" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffff96"/>
+      <stop offset=".2" stop-color="#f2ff8f"/>
+      <stop offset=".5" stop-color="#d2ff7c"/>
+      <stop offset=".9" stop-color="#9fff5f"/>
+      <stop offset="1" stop-color="#96ff5a"/>
+    </linearGradient>
   </defs>
-  <g id="_레이어_1-2" data-name="레이어 1">
-    <g>
-      <rect class="cls-8" width="24" height="24"/>
-      <g>
-        <path class="cls-7" d="M12,4.96c-3.89,0-7.03,3.15-7.03,7.03s3.15,7.03,7.03,7.03,7.03-3.15,7.03-7.03c-1.49.46-3.06-.38-3.52-1.86-.17-.54-.17-1.12,0-1.65-1.49.46-3.06-.38-3.52-1.86-.17-.54-.17-1.12,0-1.65"/>
-        <path class="cls-1" d="M9.54,9.53h0"/>
-        <path class="cls-2" d="M14.81,14.45h0"/>
-        <path class="cls-3" d="M12,11.99h0"/>
-        <path class="cls-6" d="M11.3,15.51h0"/>
-        <path class="cls-4" d="M8.48,13.4h0"/>
-      </g>
-      <path class="cls-5" d="M22.55,12c0,5.82-4.72,10.55-10.55,10.55S1.45,17.82,1.45,12,6.18,1.45,12,1.45c2.95,0,5.78,1.17,7.9,3.21l2.65,2.65"/>
-      <path class="cls-5" d="M22.55,3.2v4.11h-4.11"/>
-    </g>
-  </g>
+  <rect class="st6" width="24" height="24"/>
+  <path class="st3" d="M12,2.5C6.7,2.5,2.5,6.7,2.5,12s4.3,9.5,9.5,9.5,9.5-4.3,9.5-9.5c-2,.6-4.1-.5-4.8-2.5-.2-.7-.2-1.5,0-2.2-2,.6-4.1-.5-4.8-2.5-.2-.7-.2-1.5,0-2.2"/>
+  <path class="st4" d="M8.7,8.7h0"/>
+  <path class="st5" d="M15.8,15.3h0"/>
+  <path class="st0" d="M12,12h0"/>
+  <path class="st2" d="M11.1,16.8h0"/>
+  <path class="st1" d="M7.2,13.9h0"/>
 </svg>
