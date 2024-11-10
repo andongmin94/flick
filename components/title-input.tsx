@@ -56,7 +56,7 @@ export function TitleInput({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={cn("", className)}>제목 수정하기</Button>
+        <Button className={cn("h-8", className)}>제목 수정하기</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -72,7 +72,7 @@ export function TitleInput({
           <AutoResizeTextarea
             value={inputValue}
             onChange={(e: any) => setInputValue(e.target.value)}
-            className="border border-primary rounded-lg text-5xl font-bold text-center resize-none focus:outline-none w-full"
+            className="w-full resize-none rounded-lg border border-primary text-center text-5xl font-bold focus:outline-none"
             placeholder="제목을 입력하세요"
             style={{ lineHeight: "1.1" }}
             spellCheck={false} // 맞춤법 검사 비활성화
@@ -81,7 +81,7 @@ export function TitleInput({
         <DialogFooter>
           <DialogClose
             onClick={handleSave}
-            className="bg-gray-700 font-bold text-white rounded-lg px-4 py-3"
+            className="rounded-lg bg-gray-700 px-4 py-3 font-bold text-white"
           >
             저장
           </DialogClose>
