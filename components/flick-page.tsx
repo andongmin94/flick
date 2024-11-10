@@ -25,7 +25,7 @@ export default function FlickPage({
   };
 
   return (
-    <Pagination className={cn("py-2 border border-b-primary", className)}>
+    <Pagination className={cn("border border-b-primary py-2", className)}>
       <PaginationContent>
         <PaginationPrevious
           onClick={() => handlePageChange(currentPage - 1)}

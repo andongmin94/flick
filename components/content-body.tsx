@@ -30,14 +30,14 @@ export default function ContentBody({ currentPage, titles }: ContentBodyProps) {
               <Link href={`/${encodeURL(post.href)}`}>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start mb-4 text-left hover:bg-secondary rounded-lg border-2 border-secondary hover:border-primary transition-all duration-300 overflow-hidden group"
+                  className="group mb-4 w-full justify-start overflow-hidden rounded-lg border-2 border-secondary text-left transition-all duration-300 hover:border-primary hover:bg-secondary"
                 >
-                  <div className="flex items-center w-full">
-                    <div className="bg-primary text-primary-foreground rounded-full p-2 mr-3 group-hover:bg-secondary-foreground transition-colors duration-300">
+                  <div className="flex w-full items-center">
+                    <div className="mr-3 rounded-full bg-primary p-2 text-primary-foreground transition-colors duration-300 group-hover:bg-secondary-foreground">
                       <MessageCircleMore className="size-4" />
                     </div>
                     <div className="grow truncate">{post.title}</div>
-                    <div className="bg-secondary-foreground text-secondary rounded-full px-2 py-1 text-xs ml-2">
+                    <div className="ml-2 rounded-full bg-secondary-foreground px-2 py-1 text-xs text-secondary">
                       인기
                     </div>
                   </div>
