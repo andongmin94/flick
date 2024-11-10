@@ -7,7 +7,7 @@ import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { TitleInput } from "@/components/title-input";
-import { decodeURL } from '@/lib/utils';
+import { decodeURL } from "@/lib/utils";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -102,7 +102,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="text-6xl flex justify-center items-center h-screen bg-primary text-primary-foreground font-bold">
+      <div className="flex h-screen items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
         <p>로딩 중...</p>
       </div>
     );
@@ -110,7 +110,7 @@ export default function PostPage() {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen text-red-500">
+      <div className="flex h-screen items-center justify-center text-red-500">
         <Card className="border-4 border-red-500 shadow-lg">
           <CardContent className="pt-6 font-bold">{error}</CardContent>
         </Card>
@@ -119,18 +119,18 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="relative border-4 border-y-0 border-primary shadow-xl rounded-none">
-      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground border-primary pt-[38px] pb-9 flex flex-col items-center justify-end">
+    <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl">
+      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary py-6 text-primary-foreground">
         <TitleInput
-          className="bg-primary hover:bg-gray-700 text-primary hover:text-white"
+          className="bg-primary text-primary hover:bg-gray-700 hover:text-white"
           editableTitle={editableTitle}
           setEditableTitle={setEditableTitle}
         />
-        <div className="flex flex-col h-36 justify-end w-full">
+        <div className="flex h-auto w-full flex-col">
           <AutoResizeDiv
             value={editableTitle}
             onChange={(e: any) => setEditableTitle(e.currentTarget.innerHTML)}
-            className="bg-transparent text-6xl font-bold text-center resize-none focus:outline-none w-full"
+            className="w-full resize-none bg-transparent text-center text-6xl font-bold focus:outline-none"
             style={{ lineHeight: "1.2" }}
           />
         </div>
@@ -148,7 +148,7 @@ export default function PostPage() {
                     alt={`Image ${index}`}
                     width={500}
                     height={300}
-                    className="rounded-lg shadow-md mb-4 w-full"
+                    className="mb-4 w-full rounded-lg shadow-md"
                   />
                 );
               }
@@ -160,7 +160,7 @@ export default function PostPage() {
         )}
         {comments && comments.length > 0 && (
           <div className="mt-8">
-            <h3 className="flex text-2xl font-semibold mb-4 items-center border-b-2 border-primary pb-2">
+            <h3 className="mb-4 flex items-center border-b-2 border-primary pb-2 text-2xl font-semibold">
               {/* <MessageCircle className="mr-2" /> */}
               댓글
             </h3>
@@ -173,7 +173,7 @@ export default function PostPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="bg-secondary p-3 rounded-lg mb-2 flex items-center border border-primary"
+                    className="mb-2 flex items-center rounded-lg border border-primary bg-secondary p-3"
                   >
                     {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
                     <MessageCircle className="mr-3 size-8" />
@@ -187,8 +187,8 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <div className="sticky bottom-0 h-[245px] bg-primary pb-12 text-primary-foreground flex items-center justify-end text-6xl font-bold border-primary text-center">
-        <p className="text-6xl font-bold border-primary text-center">
+      <div className="sticky bottom-0 flex h-[245px] items-center justify-end border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
+        <p className="border-primary text-center text-6xl font-bold">
           {postTitle}
         </p>
       </div>

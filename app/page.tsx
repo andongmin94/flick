@@ -40,7 +40,7 @@ export default function Component() {
 
   if (error) {
     return (
-      <div className="flex justify-center items-center h-screen text-red-500">
+      <div className="flex h-screen items-center justify-center text-red-500">
         <Card className="border-4 border-red-500 shadow-lg">
           <CardContent className="pt-6 font-bold">{error}</CardContent>
         </Card>
@@ -49,9 +49,9 @@ export default function Component() {
   }
 
   return (
-    <Card className="relative border-4 border-t-0 border-primary shadow-xl rounded-none">
-      <CardHeader className="z-10 sticky top-0 bg-primary text-primary-foreground">
-        <CardTitle className="text-6xl font-bold text-center">
+    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
+      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground">
+        <CardTitle className="text-center text-6xl font-bold">
           <Image
             src={"/icon.png"}
             alt={`안동민`}
@@ -64,7 +64,7 @@ export default function Component() {
         </CardTitle>
       </CardHeader>
       <FlickPage
-        className="z-10 sticky top-32 bg-white"
+        className="sticky top-32 z-10 bg-white"
         currentPage={currentPage}
         setCurrentPage={setCurrentPage}
       />
