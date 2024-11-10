@@ -120,7 +120,7 @@ export default function PostPage() {
 
   return (
     <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary py-6 text-primary-foreground">
+      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary pt-0 pb-6 text-primary-foreground">
         <TitleInput
           className="bg-primary text-primary hover:bg-gray-700 hover:text-white"
           editableTitle={editableTitle}

@@ -56,7 +56,7 @@ export function TitleInput({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={cn("h-8", className)}>제목 수정하기</Button>
+        <Button className={cn("h-full mt-4 mb-2", className)}>제목 수정하기</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
