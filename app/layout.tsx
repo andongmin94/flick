@@ -1,11 +1,38 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
-  title: "Flick",
+  title: {
+    default: `${siteConfig.name} | ${siteConfig.description}`,
+    template: `%s - ${siteConfig.name}`,
+  },
+  description: siteConfig.description,
+  authors: [
+    {
+      name: "andongmin",
+    },
+  ],
+  creator: "andongmin",
+  metadataBase: new URL(siteConfig.url),
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: siteConfig.url,
+    title: siteConfig.name,
+    description: siteConfig.description,
+    siteName: siteConfig.name,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: siteConfig.name,
+    description: siteConfig.description,
+    images: [siteConfig.ogImage],
+    creator: "@andongmin94",
+  },
   icons: [
-    { rel: "icon", url: "/flick.svg" },
-    { rel: "apple-touch-icon", url: "/flick.svg" },
+    { rel: "icon", url: `${siteConfig.url}/flick.svg` },
+    { rel: "apple-touch-icon", url: `${siteConfig.url}/flick.svg` },
   ],
 };
 
