@@ -108,7 +108,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="flex h-screen items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
+      <div className="flex h-[100.03vh] items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
         <p>로딩 중...</p>
       </div>
     );
@@ -141,7 +141,7 @@ export default function PostPage() {
           />
         </div>
       </CardHeader>
-      <CardContent className="p-8">
+      <CardContent className="p-4">
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
