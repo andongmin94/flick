@@ -108,7 +108,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="flex h-[100.03vh] items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
+      <div className="flex h-[100.1vh] items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
         <p>로딩 중...</p>
       </div>
     );
