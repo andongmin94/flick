@@ -29,7 +29,7 @@ export default function WordRotate({
 
   useEffect(() => {
     setParseWords(
-      words.map((word) => (word.length < 16 ? word : word.slice(0, 17) + "…")),
+      words.map((word) => (word.length < 16 && word.length != 0 ? word : word.slice(0, 17) + "…")),
     );
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % words.length);
