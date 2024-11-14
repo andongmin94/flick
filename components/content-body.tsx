@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircleMore } from "lucide-react";
 import Link from "next/link";
-import { encodeURL } from '@/lib/utils';
+import { encodeURL } from "@/lib/utils";
 
 interface ContentBodyProps {
   currentPage: number;
