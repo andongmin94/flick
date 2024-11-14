@@ -25,8 +25,8 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx"],
-      "parser": "@typescript-eslint/parser",
-      "excludedFiles": "components/ui/*"
+      "parser": "@typescript-eslint/parser"
     }
-  ]
+  ],
+  "ignorePatterns": ["components/ui/*"]
 }
