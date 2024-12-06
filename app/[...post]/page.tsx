@@ -9,6 +9,7 @@ import { TitleInput } from "@/components/title-input";
 import { decodeURL } from "@/lib/utils";
 import WordRotate from "@/components/ui/word-rotate";
 import { Button } from "@/components/ui/button";
+import Image from "next/image";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -20,7 +21,7 @@ function AutoResizeDiv(props: any) {
     }
   }, [props.value]);
 
-  const handleInput = (e: any) => {
+  const handleInput = (e: Event) => {
     props.onChange(e);
   };
 
@@ -36,7 +37,7 @@ function AutoResizeDiv(props: any) {
             range.surroundContents(span);
             selection.removeAllRanges();
           } catch (error) {
-            // 에러가 발생해도 아무 작업도 하지 않음
+            console.error("Error fetching data:", error);
           }
         }
       }
@@ -83,6 +84,7 @@ export default function PostPage() {
         setComments(data.comments);
         setLoading(false);
       } catch (error) {
+        console.error("Error fetching data:", error);
         setError("게시글 내용을 불러오는데 실패했습니다");
         setLoading(false);
       }
@@ -126,7 +128,7 @@ export default function PostPage() {
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center text-red-500">
-        <Card className="border-4 border-red-500 shadow-lg">
+        <Card className="border-4 border-red-500 shadow-lg py-0 gap-0">
           <CardContent className="pt-6 font-bold">{error}</CardContent>
         </Card>
       </div>
@@ -134,8 +136,8 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 border-primary bg-primary pb-2 pt-10 text-primary-foreground">
+    <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl py-0 gap-0">
+      <CardHeader className="sticky top-0 z-10 flex flex-col w-[26.5vw]  items-center justify-end space-y-0 border-primary bg-primary pb-2 pt-10 text-primary-foreground">
         <TitleInput
           className="bg-primary text-white hover:bg-gray-700"
           editableTitle={editableTitle}
@@ -164,13 +166,14 @@ export default function PostPage() {
               if (imgMatch) {
                 return (
                   <div key={index} className="relative overflow-hidden">
-                    <img
+                    <Image
+                      width={imageSize}
+                      height={0}
+                      priority
                       src={imgMatch[1]}
                       alt={`Image ${index}`}
                       style={{
-                        width: `${imageSize}px`,
                         maxWidth: "none",
-                        height: "auto",
                         position: "relative",
                         left: "50%",
                         transform: "translateX(-50%)",
@@ -220,7 +223,7 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <div className="sticky bottom-0 flex h-[250px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
+      <div className="sticky bottom-0 flex h-[250px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground w-[26.5vw] ">
         <WordRotate
           className="inline max-w-[450px] text-center text-3xl font-bold text-white"
           words={comments}
