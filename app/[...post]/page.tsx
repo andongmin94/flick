@@ -143,10 +143,16 @@ export default function PostPage() {
           editableTitle={editableTitle}
           setEditableTitle={setEditableTitle}
         />
-        <Button className="absolute top-32 ml-[800px]" onClick={handleZoomIn}>
+        <Button
+          className="absolute top-32 ml-[800px] hover:bg-gray-700 hover:cursor-pointer"
+          onClick={handleZoomIn}
+        >
           이미지 확대
         </Button>
-        <Button className="absolute top-48 ml-[800px]" onClick={handleZoomOut}>
+        <Button
+          className="absolute top-48 ml-[800px] hover:bg-gray-700 hover:cursor-pointer"
+          onClick={handleZoomOut}
+        >
           이미지 축소
         </Button>
         <div className="flex h-auto w-full flex-col">

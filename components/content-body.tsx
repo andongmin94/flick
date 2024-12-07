@@ -39,7 +39,7 @@ export default function ContentBody({
                 <Link href={`/${encodeURL(post.href)}`}>
                   <Button
                     variant="ghost"
-                    className="group mb-4 w-full justify-start overflow-hidden rounded-lg border-2 border-secondary text-left transition-all duration-300 hover:border-primary hover:bg-secondary"
+                    className="group mb-4 w-full justify-start overflow-hidden rounded-lg border-2 border-secondary text-left hover:cursor-pointer transition-all duration-300 hover:border-primary hover:bg-secondary"
                   >
                     <div className="flex w-full items-center">
                       <div className="mr-3 rounded-full bg-primary p-2 text-primary-foreground transition-colors duration-300 group-hover:bg-secondary-foreground">
