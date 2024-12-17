@@ -8,7 +8,10 @@ const compat = new FlatCompat({
 const config = [
   ...compat.extends("next/core-web-vitals", "next/typescript", "prettier"),
   {
-    rules: { "@typescript-eslint/no-explicit-any": "off" },
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "react/jsx-key": "off",
+    },
     ignores: ["components/ui/*", "hooks/*", "lib/*"],
   },
 ];
