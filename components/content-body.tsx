@@ -10,10 +10,18 @@ interface ContentBodyProps {
   isLoading: boolean;
 }
 
-export default function ContentBody({ currentPage, titles, isLoading }: ContentBodyProps) {
+export default function ContentBody({
+  currentPage,
+  titles,
+  isLoading,
+}: ContentBodyProps) {
   return (
     <AnimatePresence mode="wait">
-      {isLoading ? (<div className="flex items-center justify-center text-5xl font-bold h-[79.6vh] pb-40">로딩 중...</div>) : (
+      {isLoading ? (
+        <div className="flex items-center justify-center text-5xl font-bold h-[79.6vh] pb-40">
+          로딩 중...
+        </div>
+      ) : (
         <motion.div
           key={`titles-${currentPage}`}
           initial={{ opacity: 0, y: 20 }}
