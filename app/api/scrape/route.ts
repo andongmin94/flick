@@ -12,9 +12,15 @@ async function scrapeRuliweb(page: number) {
   // Vercel의 fetch 캐싱 활용
   const response = await fetch(url, {
     next: {
-      revalidate: 1800, // 30분 캐싱
-      tags: [`ruliweb-page-${page}`], // 태그 기반 캐시 무효화를 위한 태그
+      revalidate: 1800,
+      tags: [`ruliweb-page-${page}`],
     },
+    headers: {
+      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+      'Accept': 'text/html,application/xhtml+xml,application/xml',
+      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+      'Referer': 'https://bbs.ruliweb.com/'
+    }
   });
   
   if (!response.ok) {
