@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { AnimatePresence, HTMLMotionProps, motion } from "framer-motion";
-import { MessageCircle } from "lucide-react";
+// import { MessageCircle } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -25,12 +25,8 @@ export default function WordRotate({
   className,
 }: WordRotateProps) {
   const [index, setIndex] = useState(0);
-  const [pasreWords, setParseWords] = useState<string[]>([]);
 
   useEffect(() => {
-    setParseWords(
-      words.map((word) => (word.length < 16 && word.length != 0 ? word : word.slice(0, 17) + "…")),
-    );
     const interval = setInterval(() => {
       setIndex((prevIndex) => (prevIndex + 1) % words.length);
     }, duration);
@@ -40,15 +36,17 @@ export default function WordRotate({
   }, [words, duration]);
 
   return (
-    <div className="overflow-hidden pt-6">
+    <div className="pt-8 max-w-[400px]">
       <AnimatePresence mode="wait">
         <motion.h1
           key={words[index]}
           className={cn(className)}
           {...framerProps}
         >
-          <MessageCircle className="mb-1 mr-3 inline size-8" />
-          {pasreWords[index]}
+          <p className="text-2xl" style={{ lineHeight: "1.5" }}>
+            {/* <MessageCircle className="mb-1 mr-2 inline size-6" /> */}
+            {words[index]}
+          </p>
         </motion.h1>
       </AnimatePresence>
     </div>
