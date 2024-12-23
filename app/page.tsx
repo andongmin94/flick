@@ -10,8 +10,11 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Component() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = searchParams.get("page");
   const [titles, setTitles] = useState<{ title: string; href: string }[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(Number(page) || 1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
@@ -29,6 +32,17 @@ export default function Component() {
 
     fetchData(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    if (page) {
+      setCurrentPage(Number(page));
+    }
+  }, [page]);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    router.push(`/?page=${newPage}`, { scroll: false });
+  };
 
   // 상태 추가
   const [randomHref, setRandomHref] = useState<string>("");
@@ -71,7 +85,7 @@ export default function Component() {
       <FlickPage
         className="sticky top-32 z-10 bg-white"
         currentPage={currentPage}
-        setCurrentPage={setCurrentPage}
+        setCurrentPage={handlePageChange}
       />
       <CardContent className="p-0">
       <ContentBody
