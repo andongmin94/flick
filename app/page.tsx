@@ -11,15 +11,19 @@ import Link from "next/link";
 export default function Component() {
   const [titles, setTitles] = useState<{ title: string; href: string }[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     async function fetchData(page: number) {
+      setIsLoading(true);
       try {
         const response = await fetch(`/api/scrape?page=${page}`);
         const data = await response.json();
         setTitles(data.ruliweb.titles);
       } catch (error) {
         alert("데이터를 불러오는데 실패했습니다");
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -70,10 +74,10 @@ export default function Component() {
         setCurrentPage={setCurrentPage}
       />
       <CardContent className="p-0">
-        <ContentBody
+      <ContentBody
           currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
           titles={titles}
+          isLoading={isLoading}
         />
       </CardContent>
     </Card>
