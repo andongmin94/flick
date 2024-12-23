@@ -7,6 +7,7 @@ import FlickPage from "@/components/flick-page";
 import ContentBody from "@/components/content-body";
 import { encodeURL } from "@/lib/utils";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Component() {
   const [titles, setTitles] = useState<{ title: string; href: string }[]>([]);
@@ -20,10 +21,9 @@ export default function Component() {
         const response = await fetch(`/api/scrape?page=${page}`);
         const data = await response.json();
         setTitles(data.ruliweb.titles);
+        setIsLoading(false);
       } catch (error) {
         alert("데이터를 불러오는데 실패했습니다");
-      } finally {
-        setIsLoading(false);
       }
     }
 
