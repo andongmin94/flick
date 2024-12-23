@@ -9,7 +9,7 @@ import { encodeURL } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function Component() {
+function Component() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get("page");
@@ -62,40 +62,46 @@ export default function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Suspense>
-      <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
-        <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground">
-          <CardTitle className="text-center text-6xl font-bold">
-            {titles.length > 0 && (
-              <Link
-                href={randomHref}
-                onMouseDown={() => setRandomHref(generateRandomHref())}
-              >
-                <Image
-                  src={"/icon.png"}
-                  alt={`안동민`}
-                  width={80}
-                  height={80}
-                  className="mr-5 inline hover:cursor-pointer"
-                />
-              </Link>
-            )}
-            안동민의 플릭
-          </CardTitle>
-        </CardHeader>
-        <FlickPage
-          className="sticky top-32 z-10 bg-white"
+    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
+      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground">
+        <CardTitle className="text-center text-6xl font-bold">
+          {titles.length > 0 && (
+            <Link
+              href={randomHref}
+              onMouseDown={() => setRandomHref(generateRandomHref())}
+            >
+              <Image
+                src={"/icon.png"}
+                alt={`안동민`}
+                width={80}
+                height={80}
+                className="mr-5 inline hover:cursor-pointer"
+              />
+            </Link>
+          )}
+          안동민의 플릭
+        </CardTitle>
+      </CardHeader>
+      <FlickPage
+        className="sticky top-32 z-10 bg-white"
+        currentPage={currentPage}
+        setCurrentPage={handlePageChange}
+      />
+      <CardContent className="p-0">
+        <ContentBody
           currentPage={currentPage}
-          setCurrentPage={handlePageChange}
+          titles={titles}
+          isLoading={isLoading}
         />
-        <CardContent className="p-0">
-          <ContentBody
-            currentPage={currentPage}
-            titles={titles}
-            isLoading={isLoading}
-          />
-        </CardContent>
-      </Card>
+      </CardContent>
+    </Card>
+  );
+}
+
+export default function Page() {
+  return (
+    <Suspense>
+      <Component />
     </Suspense>
   );
 }
