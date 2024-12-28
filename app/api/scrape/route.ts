@@ -26,13 +26,13 @@ async function scrapeRuliweb(page: number) {
   const titles: { title: string; href: string }[] = [];
 
   // 최적화된 셀렉터와 데이터 추출
-  $("board_list_table").each((_, element) => {
-    // 단순화된 텍스트 추출 (중첩 루프 제거)
-    const textContent = $(element).text().trim();
-    const href = "https://bbs.ruliweb.com" + $(element).attr("href");
+  $("tbody a.subject_link.deco").each((_, element) => {
+    const $element = $(element);
+    const title = $element.text().trim();
+    const href = $element.attr("href");
     
-    if (textContent && href) {
-      titles.push({ title: textContent, href });
+    if (title && href) {
+      titles.push({ title, href });
     }
   });
 
