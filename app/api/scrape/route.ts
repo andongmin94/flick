@@ -17,9 +17,9 @@ async function scrapeRuliweb(page: number) {
     },
     headers: {
       'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml',
+      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
       'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-      'Referer': 'https://bbs.ruliweb.com/'
+      'Referer': 'https://bbs.ruliweb.com/' // 레퍼러를 루리웹으로 변경하여 차단 방지
     }
   });
   
