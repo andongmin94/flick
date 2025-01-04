@@ -47,6 +47,7 @@ export async function GET(req: NextRequest) {
     const ruliwebData = await scrapeRuliweb(page);
     return NextResponse.json({ ruliweb: ruliwebData });
   } catch (error) {
+    console.error("Error scraping data:", error);
     return NextResponse.json(
       { error: "Failed to scrape data" },
       { status: 500 },
