@@ -1,6 +1,6 @@
+import { revalidateTag } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
-import { revalidateTag } from "next/cache";
 
 const ruliweb =
   "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
@@ -8,7 +8,7 @@ const ruliweb =
 // 루리웹 스크래핑 함수
 async function scrapeRuliweb(page: number) {
   const url = ruliweb + page;
-  
+
   // Vercel의 fetch 캐싱 활용
   const response = await fetch(url, {
     next: {
@@ -16,11 +16,11 @@ async function scrapeRuliweb(page: number) {
       tags: [`ruliweb-page-${page}`], // 태그 기반 캐시 무효화를 위한 태그
     },
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch data: ${response.status}`);
   }
-  
+
   const text = await response.text();
   const $ = cheerio.load(text);
   const titles: { title: string; href: string }[] = [];
@@ -30,7 +30,7 @@ async function scrapeRuliweb(page: number) {
     // 단순화된 텍스트 추출 (중첩 루프 제거)
     const textContent = $(element).text().trim();
     const href = "https://bbs.ruliweb.com" + $(element).attr("href");
-    
+
     if (textContent && href) {
       titles.push({ title: textContent, href });
     }
@@ -44,16 +44,16 @@ export async function GET(req: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1", 10);
 
   try {
-    // 응답 자체도 Vercel Edge Network에서 캐싱되도록 헤더 설정
     const ruliwebData = await scrapeRuliweb(page);
-    
+
     return NextResponse.json(
       { ruliweb: ruliwebData },
       {
         headers: {
-          'Cache-Control': 'max-age=1800, s-maxage=1800, stale-while-revalidate=3600',
+          "Cache-Control":
+            "max-age=1800, s-maxage=1800, stale-while-revalidate=3600",
         },
-      }
+      },
     );
   } catch (error) {
     console.error("Error fetching data:", error);
@@ -68,14 +68,15 @@ export async function GET(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const page = searchParams.get("page");
-  
+
   if (page) {
     // 특정 페이지 캐시만 무효화
     await revalidateTag(`ruliweb-page-${page}`);
     return NextResponse.json({ message: `Cache for page ${page} cleared` });
   } else {
     // 모든 페이지 캐시 무효화
-    for (let i = 1; i <= 10; i++) { // 일반적인 페이지 범위 가정
+    for (let i = 1; i <= 10; i++) {
+      // 일반적인 페이지 범위 가정
       await revalidateTag(`ruliweb-page-${i}`);
     }
     return NextResponse.json({ message: "All cache cleared" });
