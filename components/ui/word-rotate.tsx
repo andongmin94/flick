@@ -36,7 +36,7 @@ export default function WordRotate({
   }, [words, duration]);
 
   return (
-    <div className="pt-4 max-w-[400px]">
+    <div className="pt-6 max-w-[400px]">
       <AnimatePresence mode="wait">
         <motion.h1
           key={words[index]}
