@@ -196,7 +196,7 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <div className="sticky bottom-0 flex h-[205px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
+      <div className="sticky bottom-0 flex h-[300px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground">
         <WordRotate
           className="inline max-w-[450px] text-center text-3xl font-bold text-white"
           words={comments}
