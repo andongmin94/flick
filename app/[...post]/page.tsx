@@ -142,7 +142,7 @@ export default function PostPage() {
           />
         </div>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-1">
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
