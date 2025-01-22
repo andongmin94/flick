@@ -63,7 +63,7 @@ function Component() {
 
   return (
     <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0 z-10 bg-primary text-primary-foreground">
+      <CardHeader className="sticky top-0 z-10 h-[128px] bg-primary p-3 text-primary-foreground">
         <CardTitle className="text-center text-6xl font-bold">
           {titles.length > 0 && (
             <Link
@@ -71,15 +71,14 @@ function Component() {
               onMouseDown={() => setRandomHref(generateRandomHref())}
             >
               <Image
-                src={"/icon.png"}
-                alt={`안동민`}
-                width={80}
-                height={80}
-                className="mr-5 inline hover:cursor-pointer"
+                src={"/typo.png"}
+                alt={"typo"}
+                width={180}
+                height={0}
+                className="inline hover:cursor-pointer"
               />
             </Link>
           )}
-          안동민의 플릭
         </CardTitle>
       </CardHeader>
       <FlickPage
