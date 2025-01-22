@@ -184,7 +184,7 @@ export default function PostPage() {
                     transition={{ delay: index * 0.1 }}
                     className="mb-2 flex items-center rounded-lg border border-primary bg-secondary p-3"
                   >
-                    {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
+                    {/* <Image key={index} src={"/icon.png"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
                     <MessageCircle className="mr-3 size-8" />
                     <div
                       dangerouslySetInnerHTML={{ __html: comment }}

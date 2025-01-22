@@ -31,8 +31,8 @@ export const metadata: Metadata = {
     creator: "@andongmin94",
   },
   icons: [
-    { rel: "icon", url: `${siteConfig.url}/flick.svg` },
-    { rel: "apple-touch-icon", url: `${siteConfig.url}/flick.svg` },
+    { rel: "icon", url: "/icon.png" },
+    { rel: "apple-touch-icon", url: "/icon.png" },
   ],
 };
 
