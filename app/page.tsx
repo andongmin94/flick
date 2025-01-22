@@ -71,9 +71,9 @@ function Component() {
               onMouseDown={() => setRandomHref(generateRandomHref())}
             >
               <Image
-                src={"/logo.png"}
-                alt={"logo"}
-                width={300}
+                src={"/typo.png"}
+                alt={"typo"}
+                width={180}
                 height={0}
                 className="inline hover:cursor-pointer"
               />
