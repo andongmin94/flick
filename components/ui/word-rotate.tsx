@@ -25,27 +25,37 @@ export default function WordRotate({
   className,
 }: WordRotateProps) {
   const [index, setIndex] = useState(0);
+  const [filteredWords, setFilteredWords] = useState<string[]>([]);
 
   useEffect(() => {
+    // 30자 이하인 단어만 필터링
+    const filtered = words.filter(word => word.length <= 45);
+    setFilteredWords(filtered);
+  }, [words]);
+
+  useEffect(() => {
+    if (filteredWords.length === 0) return;
+    
     const interval = setInterval(() => {
-      setIndex((prevIndex) => (prevIndex + 1) % words.length);
+      setIndex((prevIndex) => (prevIndex + 1) % filteredWords.length);
     }, duration);
 
-    // Clean up interval on unmount
     return () => clearInterval(interval);
-  }, [words, duration]);
+  }, [filteredWords, duration]);
+
+  if (filteredWords.length === 0) return null;
 
   return (
     <div className="pt-6 max-w-[400px]">
       <AnimatePresence mode="wait">
         <motion.h1
-          key={words[index]}
+          key={filteredWords[index]}
           className={cn(className)}
           {...framerProps}
         >
           <p className="text-2xl" style={{ lineHeight: "1.5" }}>
             {/* <MessageCircle className="mb-1 mr-2 inline size-6" /> */}
-            {words[index]}
+            {filteredWords[index]}
           </p>
         </motion.h1>
       </AnimatePresence>
