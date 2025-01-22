@@ -54,6 +54,7 @@ export function TitleInput({
   };
 
   return (
+    <div className="absolute ml-[800px] top-12">
     <Dialog>
       <DialogTrigger asChild>
         <Button className={cn("mt-2 h-full", className)}>제목 수정하기</Button>
@@ -87,6 +88,6 @@ export function TitleInput({
           </DialogClose>
         </DialogFooter>
       </DialogContent>
-    </Dialog>
+    </Dialog></div>
   );
 }
