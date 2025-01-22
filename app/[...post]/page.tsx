@@ -97,10 +97,10 @@ export default function PostPage() {
 
   const [imageSize, setImageSize] = useState(500); // 기본 너비
   const handleZoomIn = () => {
-    setImageSize(prev => Math.min(prev + 50, 500)); // 최대 2000px
+    setImageSize((prev) => Math.min(prev + 50, 500)); // 최대 2000px
   };
   const handleZoomOut = () => {
-    setImageSize(prev => Math.max(prev - 50, 100)); // 최소 400px
+    setImageSize((prev) => Math.max(prev - 50, 100)); // 최소 400px
   };
 
   // useEffect에서 editableTitle 초기화
@@ -142,8 +142,12 @@ export default function PostPage() {
           editableTitle={editableTitle}
           setEditableTitle={setEditableTitle}
         />
-        <Button className="absolute ml-[800px] top-32" onClick={handleZoomIn}>이미지 확대</Button>
-        <Button className="absolute ml-[800px] top-48" onClick={handleZoomOut}>이미지 축소</Button>
+        <Button className="absolute top-32 ml-[800px]" onClick={handleZoomIn}>
+          이미지 확대
+        </Button>
+        <Button className="absolute top-48 ml-[800px]" onClick={handleZoomOut}>
+          이미지 축소
+        </Button>
         <div className="flex h-auto w-full flex-col">
           <AutoResizeDiv
             value={editableTitle}

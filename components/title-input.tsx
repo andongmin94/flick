@@ -54,40 +54,43 @@ export function TitleInput({
   };
 
   return (
-    <div className="absolute ml-[800px] top-12">
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button className={cn("mt-2 h-full", className)}>제목 수정하기</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>제목 수정</DialogTitle>
-          <DialogDescription>
-            새로운 제목을 입력하고 저장하세요.
-          </DialogDescription>
-        </DialogHeader>
-        <div className="py-4">
-          <Label htmlFor="title" className="sr-only">
-            제목
-          </Label>
-          <AutoResizeTextarea
-            value={inputValue}
-            onChange={(e: any) => setInputValue(e.target.value)}
-            className="w-full resize-none rounded-lg border border-primary text-center text-5xl font-bold focus:outline-none"
-            placeholder="제목을 입력하세요"
-            style={{ lineHeight: "1.1" }}
-            spellCheck={false} // 맞춤법 검사 비활성화
-          />
-        </div>
-        <DialogFooter>
-          <DialogClose
-            onClick={handleSave}
-            className="rounded-lg bg-gray-700 px-4 py-3 font-bold text-white"
-          >
-            저장
-          </DialogClose>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog></div>
+    <div className="absolute top-12 ml-[800px]">
+      <Dialog>
+        <DialogTrigger asChild>
+          <Button className={cn("mt-2 h-full", className)}>
+            제목 수정하기
+          </Button>
+        </DialogTrigger>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>제목 수정</DialogTitle>
+            <DialogDescription>
+              새로운 제목을 입력하고 저장하세요.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4">
+            <Label htmlFor="title" className="sr-only">
+              제목
+            </Label>
+            <AutoResizeTextarea
+              value={inputValue}
+              onChange={(e: any) => setInputValue(e.target.value)}
+              className="w-full resize-none rounded-lg border border-primary text-center text-5xl font-bold focus:outline-none"
+              placeholder="제목을 입력하세요"
+              style={{ lineHeight: "1.1" }}
+              spellCheck={false} // 맞춤법 검사 비활성화
+            />
+          </div>
+          <DialogFooter>
+            <DialogClose
+              onClick={handleSave}
+              className="rounded-lg bg-gray-700 px-4 py-3 font-bold text-white"
+            >
+              저장
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
   );
 }
