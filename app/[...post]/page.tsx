@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import { TitleInput } from "@/components/title-input";
 import { decodeURL } from "@/lib/utils";
 import WordRotate from "@/components/ui/word-rotate";
+import { Button } from "@/components/ui/button";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -94,6 +95,14 @@ export default function PostPage() {
   // 상태 추가
   const [editableTitle, setEditableTitle] = useState<string>("");
 
+  const [imageSize, setImageSize] = useState(500); // 기본 너비
+  const handleZoomIn = () => {
+    setImageSize(prev => Math.min(prev + 50, 500)); // 최대 2000px
+  };
+  const handleZoomOut = () => {
+    setImageSize(prev => Math.max(prev - 50, 100)); // 최소 400px
+  };
+
   // useEffect에서 editableTitle 초기화
   useEffect(() => {
     if (postTitle) {
@@ -133,6 +142,8 @@ export default function PostPage() {
           editableTitle={editableTitle}
           setEditableTitle={setEditableTitle}
         />
+        <Button className="absolute ml-[800px] top-32" onClick={handleZoomIn}>이미지 확대</Button>
+        <Button className="absolute ml-[800px] top-48" onClick={handleZoomOut}>이미지 축소</Button>
         <div className="flex h-auto w-full flex-col">
           <AutoResizeDiv
             value={editableTitle}
@@ -154,9 +165,9 @@ export default function PostPage() {
                       key={index}
                       src={imgMatch[1]}
                       alt={`Image ${index}`}
-                      width={1000}
+                      width={imageSize}
                       height={0}
-                      className="mb-4 w-full rounded-lg shadow-md"
+                      className="mb-4 rounded-lg shadow-md"
                     />
                   </div>
                 );
