@@ -5,7 +5,7 @@ import NodeCache from "node-cache";
 const cache = new NodeCache({ stdTTL: 1800 }); // 30분 동안 캐싱
 
 const ruliweb =
-  "https://bbs.ruliweb.com/best/humor_only/now?m=humor_only&t=default&page=";
+  "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
 
 // 루리웹 스크래핑 함수
 async function scrapeRuliweb(page: number) {
