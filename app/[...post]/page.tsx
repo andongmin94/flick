@@ -3,7 +3,6 @@
 import { usePathname } from "next/navigation";
 import React, { useRef, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import Image from "next/image";
 import { MessageCircle } from "lucide-react";
 import { motion } from "framer-motion";
 import { TitleInput } from "@/components/title-input";
@@ -95,12 +94,12 @@ export default function PostPage() {
   // 상태 추가
   const [editableTitle, setEditableTitle] = useState<string>("");
 
-  const [imageSize, setImageSize] = useState(500); // 기본 너비
+  const [imageSize, setImageSize] = useState(507); // 기본 너비
   const handleZoomIn = () => {
-    setImageSize((prev) => Math.min(prev + 50, 500)); // 최대 2000px
+    setImageSize((prev) => Math.min(prev + 50));
   };
   const handleZoomOut = () => {
-    setImageSize((prev) => Math.max(prev - 50, 100)); // 최소 400px
+    setImageSize((prev) => Math.max(prev - 50));
   };
 
   // useEffect에서 editableTitle 초기화
@@ -157,33 +156,42 @@ export default function PostPage() {
           />
         </div>
       </CardHeader>
-      <CardContent className="p-1">
+      <CardContent className="p-0">
         {postContent && (
           <div className="prose prose-sm max-w-none">
             {postContent.split("\n").map((line, index) => {
               const imgMatch = line.match(/<img[^>]+src="([^">]+)"/);
               if (imgMatch) {
                 return (
-                  <div key={index} className="flex justify-center">
-                    <Image
-                      key={index}
+                  <div key={index} className="relative overflow-hidden">
+                    <img
                       src={imgMatch[1]}
                       alt={`Image ${index}`}
-                      width={imageSize}
-                      height={0}
-                      className="mb-4 rounded-lg shadow-md"
+                      style={{
+                        width: `${imageSize}px`,
+                        maxWidth: "none",
+                        height: "auto",
+                        position: "relative",
+                        left: "50%",
+                        transform: "translateX(-50%)",
+                      }}
+                      className="mb-4"
                     />
                   </div>
                 );
               }
               return (
-                <p key={index} dangerouslySetInnerHTML={{ __html: line }} />
+                <p
+                  key={index}
+                  dangerouslySetInnerHTML={{ __html: line }}
+                  className="px-1"
+                />
               );
             })}
           </div>
         )}
         {comments && comments.length > 0 && (
-          <div className="mt-8">
+          <div className="mt-8 px-1">
             <h3 className="mb-4 flex items-center border-b-2 border-primary pb-2 text-2xl font-semibold">
               {/* <MessageCircle className="mr-2" /> */}
               댓글
