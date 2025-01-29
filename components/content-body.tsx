@@ -18,7 +18,7 @@ export default function ContentBody({
   return (
     <AnimatePresence mode="wait">
       {isLoading ? (
-        <div className="flex h-[79.6vh] items-center justify-center pb-40 text-5xl font-bold">
+        <div className="flex h-[79.2vh] items-center justify-center pb-40 text-5xl font-bold">
           로딩 중...
         </div>
       ) : (
@@ -28,7 +28,7 @@ export default function ContentBody({
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
         >
-          <div className="h-full p-4">
+          <div className="h-full min-h-[79.2vh] p-4">
             {titles.map((post, index) => (
               <motion.div
                 key={index}
