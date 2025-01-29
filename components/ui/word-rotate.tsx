@@ -28,8 +28,8 @@ export default function WordRotate({
   const [filteredWords, setFilteredWords] = useState<string[]>([]);
 
   useEffect(() => {
-    // 30자 이하인 단어만 필터링
-    const filtered = words.filter(word => word.length <= 45);
+    // 35자 이하인 단어만 필터링
+    const filtered = words.filter(word => word.length <= 35);
     setFilteredWords(filtered);
   }, [words]);
 
@@ -53,7 +53,7 @@ export default function WordRotate({
           className={cn(className)}
           {...framerProps}
         >
-          <p className="text-2xl" style={{ lineHeight: "1.5" }}>
+          <p className="text-xl" style={{ lineHeight: "1.5" }}>
             {/* <MessageCircle className="mb-1 mr-2 inline size-6" /> */}
             {filteredWords[index]}
           </p>
