@@ -200,7 +200,7 @@ export default function PostPage() {
             {comments.map(
               (comment, index) =>
                 comment.trim() !== "" &&
-                comment.trim().length <= 35 && (
+                comment.trim().length <= 25 && (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, y: 20 }}

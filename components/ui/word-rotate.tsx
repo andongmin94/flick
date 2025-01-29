@@ -15,7 +15,7 @@ interface WordRotateProps {
 
 export default function WordRotate({
   words,
-  duration = 5000,
+  duration = 3000,
   framerProps = {
     initial: { opacity: 0, y: -50 },
     animate: { opacity: 1, y: 0 },
@@ -28,8 +28,8 @@ export default function WordRotate({
   const [filteredWords, setFilteredWords] = useState<string[]>([]);
 
   useEffect(() => {
-    // 35자 이하인 단어만 필터링
-    const filtered = words.filter(word => word.length <= 35);
+    // 25자 이하인 단어만 필터링
+    const filtered = words.filter(word => word.length <= 25);
     setFilteredWords(filtered);
   }, [words]);
 
