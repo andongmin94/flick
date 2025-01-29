@@ -8,6 +8,7 @@ import ContentBody from "@/components/content-body";
 import { encodeURL } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Button } from "@/components/ui/button";
 
 function Component() {
   const router = useRouter();
@@ -64,11 +65,22 @@ function Component() {
   return (
     <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
       <CardHeader className="sticky top-0 z-10 h-[128px] bg-primary p-3 text-primary-foreground">
+        <a
+          href={randomHref}
+          onMouseDown={() => setRandomHref(generateRandomHref())}
+          target="_blank"
+        >
+          <Button className="absolute top-14 ml-[600px]">랜덤</Button>
+        </a>
         <CardTitle className="text-center text-6xl font-bold">
           {titles.length > 0 && (
             <Link
-              href={randomHref}
-              onMouseDown={() => setRandomHref(generateRandomHref())}
+              // href={randomHref}
+              // onMouseDown={() => setRandomHref(generateRandomHref())}
+              href="#"
+              onClick={() => {
+                window.location.href = "/";
+              }}
             >
               <Image
                 src={"/typo.png"}
