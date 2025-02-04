@@ -1,9 +1,0 @@
-build
-.contentlayer
-dist
-.next
-node_modules
-*.mdx
-components/ui/*
-hooks/*
-lib/*
