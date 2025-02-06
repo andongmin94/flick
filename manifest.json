@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "Board to Shorts Formatter",
+  "description": "커뮤니티 게시글을 유튜브 쇼츠형(9:16) 뷰로 재구성하여 스크롤 경험을 개선합니다.",
+  "version": "0.1.0",
+  "permissions": ["storage", "scripting"],
+  "host_permissions": [
+    "https://www.fmkorea.com/*",
+    "http://www.fmkorea.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
+      "js": ["content/shortsize.js"],
+      "css": ["content/shorts.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "Shorts View",
+    "default_popup": "popup/popup.html"
+  },
+  "options_page": "options/options.html"
+}

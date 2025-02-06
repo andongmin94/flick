@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<title>Shorts View</title>
+<style>
+body {margin:0; font:14px system-ui, sans-serif; width:260px; padding:14px;}
+button {cursor:pointer; padding:6px 10px; border-radius:6px; background:#111; color:#fff; border:1px solid #333;}
+button:hover {background:#222;}
+.label {font-weight:600; margin-bottom:6px; display:block;}
+small {color:#666;}
+</style>
+</head>
+<body>
+  <span class="label">쇼츠 모드</span>
+  <button id="openBtn">현재 탭에서 열기 (Shift+S)</button>
+  <p><small>페이지 로드 후 자동 표시됨. 단축키 Shift+S 로 다시 열 수 있음.</small></p>
+  <p><small>현재는 fmkorea best/* URL 만 매칭.</small></p>
+<script>
+  document.getElementById('openBtn').addEventListener('click', ()=>{
+    // 컨텐츠 스크립트 단축키 이벤트 활용: 다시 삽입 트리거
+    chrome.tabs.query({active:true, currentWindow:true}, tabs => {
+      chrome.scripting.executeScript({
+        target:{tabId: tabs[0].id},
+        func: () => { if(!document.querySelector('.s2s-wrap-injected')) document.dispatchEvent(new KeyboardEvent('keydown',{key:'s', shiftKey:true})); }
+      });
+    });
+  });
+</script>
+</body>
+</html>
