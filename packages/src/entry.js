@@ -46,9 +46,13 @@ if (document.readyState === "loading")
   document.addEventListener("DOMContentLoaded", ensureButton);
 else ensureButton();
 
-// optional keyboard shortcut (Shift+S)
+// keyboard shortcut: F4 로 쇼츠 열기/닫기 토글
 window.addEventListener("keydown", (e) => {
-  if (e.key === "S" && e.shiftKey) {
+  // 입력 필드 포커스 중에는 방해하지 않음
+  const tag = (e.target && e.target.tagName) || "";
+  if (["INPUT", "TEXTAREA"].includes(tag) || e.target?.isContentEditable) return;
+  if (e.key === "F4") {
+    e.preventDefault();
     toggle();
   }
 });
