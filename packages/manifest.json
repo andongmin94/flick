@@ -4,12 +4,12 @@
   "description": "youtube short formatting extension",
   "version": "0.0.1",
   "icons": {
-    "16": "icons/flick.png",
-    "32": "icons/flick.png",
-    "48": "icons/flick.png",
-    "128": "icons/flick.png",
-    "256": "icons/flick.png",
-    "512": "icons/flick.png"
+    "16": "public/flick.png",
+    "32": "public/flick.png",
+    "48": "public/flick.png",
+    "128": "public/flick.png",
+    "256": "public/flick.png",
+    "512": "public/flick.png"
   },
   "permissions": ["storage", "scripting"],
   "host_permissions": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
@@ -25,12 +25,12 @@
   ],
   "action": {
     "default_title": "Shorts View",
-    "default_popup": "popup/popup.html",
+    "default_popup": "public/popup.html",
     "default_icon": {
-      "16": "icons/flick.png",
-      "24": "icons/flick.png",
-      "32": "icons/flick.png"
+      "16": "public/flick.png",
+      "24": "public/flick.png",
+      "32": "public/flick.png"
     }
   },
-  "options_page": "options/options.html"
+  "options_page": "public/options.html"
 }
