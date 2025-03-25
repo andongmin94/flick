@@ -20,43 +20,27 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(cachedData);
   }
 
+  // 빠르게 응답 보내기
+  fetchAndCache(decodedUrl); // 비동기 처리
+  return NextResponse.json({ message: "Fetching in background, try again later" });
+}
+
+async function fetchAndCache(url: string) {
   try {
-    const response = await fetch(decodedUrl);
+    const response = await fetch(url);
     const text = await response.text();
     const $ = cheerio.load(text);
 
-    // board_main_view 태그 안의 이미지 URL을 절대 경로로 변환
-    $(".board_main_view img").each((_, img) => {
-      const src = $(img).attr("src");
-      if (src && !src.startsWith("http")) {
-        const absoluteSrc = new URL(src, decodedUrl).href;
-        $(img).attr("src", absoluteSrc);
-      }
-    });
-
-    // class가 row relative인 요소 제거
-    $(".board_main_view .row.relative").remove();
-
-    // class가 text인 요소만 필터링하여 HTML을 배열로 수집
-    const filteredComments = $(".comment_view_wrapper.row .text")
-      .map(function () {
-        return $(this).html();
-      })
-      .get();
-
     const title = $(".subject_inner_text").text();
     const content = $(".board_main_view").html();
-    const data = { title, content, comments: filteredComments };
+    const comments = $(".comment_view_wrapper.row .text")
+      .map((_, el) => $(el).html())
+      .get();
 
-    // 캐시에 데이터 저장
-    cache.set(decodedUrl, data);
-
-    return NextResponse.json(data);
+    const data = { title, content, comments };
+    cache.set(url, data);
   } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch post content" },
-      { status: 500 },
-    );
+    console.error("크롤링 실패:", error);
   }
 }
 
