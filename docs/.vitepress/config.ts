@@ -140,7 +140,7 @@ const config = async (): Promise<UserConfig> => {
 
       socialLinks: [
       { icon: "github", link: "https://github.com/andongmin94/flick" },
-    ],
+      ],
 
       sidebarMenuLabel: "메뉴",
 
