@@ -10,7 +10,7 @@ const ruliweb =
 // 루리웹 스크래핑 함수
 async function scrapeRuliweb(page: number) {
   const cachedData = cache.get(ruliweb + page);
-  if (cachedData){
+  if (cachedData) {
     return cachedData;
   }
 
