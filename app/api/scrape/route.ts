@@ -19,16 +19,18 @@ async function scrapeRuliweb(page: number) {
   const $ = cheerio.load(text);
   const titles: { title: string; href: string }[] = [];
 
-  $("tr a.deco").each((_, element) => {
-    // 최적화된 텍스트 추출 방법
-    const textContent = $(element).clone().children().remove().end().text().trim();
-    const href = $(element).attr("href");
-    
-    if (textContent && href) {
-      titles.push({ 
-        title: textContent, 
-        href: "https://bbs.ruliweb.com" + href 
+  $("tr a.deco").each((index, element) => {
+    let textContent = "";
+    $(element)
+      .contents()
+      .each((_, node) => {
+        if (node.type === "text") {
+          textContent += $(node).text().trim();
+        }
       });
+    const href = "https://bbs.ruliweb.com" + $(element).attr("href");
+    if (textContent && href) {
+      titles.push({ title: textContent, href });
     }
   });
 
@@ -43,13 +45,7 @@ export async function GET(req: NextRequest) {
 
   try {
     const ruliwebData = await scrapeRuliweb(page);
-    
-    // HTTP 캐싱 헤더 추가
-    return NextResponse.json({ ruliweb: ruliwebData }, {
-      headers: {
-        'Cache-Control': 'public, s-maxage=1800, stale-while-revalidate=3600'
-      }
-    });
+    return NextResponse.json({ ruliweb: ruliwebData });
   } catch (error) {
     return NextResponse.json(
       { error: "Failed to scrape data" },
