@@ -63,8 +63,8 @@ function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0 z-10 h-[128px] bg-primary p-3 text-primary-foreground">
+    <Card className="relative rounded-none top-0 border-4 border-t-0 border-primary shadow-xl">
+      <CardHeader className="sticky z-10 h-[128px] bg-primary p-3 text-primary-foreground">
         <a
           href={randomHref}
           onMouseDown={() => setRandomHref(generateRandomHref())}
