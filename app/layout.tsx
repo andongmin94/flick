@@ -44,7 +44,7 @@ export default function RootLayout({
   return (
     <html>
       <body className="h-[100.1vh] bg-[#F3FAFF]">
-        <div className="mx-auto w-[28.4vw] text-foreground">{children}</div>
+        <div className="mx-auto w-[26.9vw] text-foreground">{children}</div>
       </body>
     </html>
   );
