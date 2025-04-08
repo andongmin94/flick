@@ -71,7 +71,9 @@ function Component() {
           onMouseDown={() => setRandomHref(generateRandomHref())}
           target="_blank"
         >
-          <Button className="absolute top-14 ml-[600px]">랜덤</Button>
+          <Button className="absolute top-14 ml-[600px] hover:bg-gray-700 hover:cursor-pointer">
+            랜덤
+          </Button>
         </a>
         <CardTitle className="text-center text-6xl font-bold">
           {titles.length > 0 && (
