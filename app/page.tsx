@@ -1,14 +1,15 @@
 "use client";
 
-import { useState, useEffect, useCallback, Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import Image from "next/image";
-import FlickPage from "@/components/flick-page";
-import ContentBody from "@/components/content-body";
-import { encodeURL } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { encodeURL } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import ContentBody from "@/components/content-body";
+import FlickPage from "@/components/flick-page";
 
 function Component() {
   const router = useRouter();
@@ -64,14 +65,14 @@ function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl py-0 gap-0">
-      <CardHeader className="sticky top-0 z-10 h-[128px] w-[26.5vw] bg-primary p-3 text-primary-foreground">
+    <Card className="border-primary relative gap-0 rounded-none border-4 border-t-0 py-0 shadow-xl">
+      <CardHeader className="bg-primary text-primary-foreground sticky top-0 z-10 h-[128px] w-[26.5vw] p-3">
         <a
           href={randomHref}
           onMouseDown={() => setRandomHref(generateRandomHref())}
           target="_blank"
         >
-          <Button className="absolute top-14 ml-[600px] hover:bg-gray-700 hover:cursor-pointer">
+          <Button className="absolute top-14 ml-[600px] hover:cursor-pointer hover:bg-gray-700">
             랜덤
           </Button>
         </a>
