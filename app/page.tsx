@@ -27,6 +27,7 @@ function Component() {
         setTitles(data.ruliweb.titles);
         setIsLoading(false);
       } catch (error) {
+        console.error("Error fetching data:", error);
         alert("데이터를 불러오는데 실패했습니다");
       }
     }
@@ -63,8 +64,8 @@ function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl">
-      <CardHeader className="sticky top-0  z-10 h-[128px] w-[26.5vw] bg-primary p-3 text-primary-foreground">
+    <Card className="relative rounded-none border-4 border-t-0 border-primary shadow-xl py-0 gap-0">
+      <CardHeader className="sticky top-0 z-10 h-[128px] w-[26.5vw] bg-primary p-3 text-primary-foreground">
         <a
           href={randomHref}
           onMouseDown={() => setRandomHref(generateRandomHref())}

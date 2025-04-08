@@ -1,14 +1,12 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from "next";
+
+const nextConfig: NextConfig = {
+  /* config options here */
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "bbs.ruliweb.com",
-      },
-      {
-        protocol: "https",
-        hostname: "ssl.pstatic.net",
       },
       {
         protocol: "https",
@@ -21,10 +19,6 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "i3.ruliweb.com",
-      },
-      {
-        protocol: "https",
-        hostname: "image.fmkorea.com",
       },
     ],
   },
