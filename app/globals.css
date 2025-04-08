@@ -152,6 +152,7 @@
   .Pretendard-ExtraBold {
     font-family: "Pretendard-ExtraBold";
   }
+  
   * {
     @apply border-border;
   }
@@ -167,14 +168,5 @@
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
