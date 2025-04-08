@@ -1,16 +1,17 @@
+import { useEffect, useRef, useState } from "react";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-  DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { useState, useRef, useEffect } from "react";
 
 function AutoResizeTextarea(props: any) {
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -55,7 +56,7 @@ export function TitleInput({
     <div className="absolute top-12 ml-[800px]">
       <Dialog>
         <DialogTrigger asChild>
-          <Button className="mt-2 h-full hover:bg-gray-700 hover:cursor-pointer">
+          <Button className="mt-2 h-full hover:cursor-pointer hover:bg-gray-700">
             제목 수정하기
           </Button>
         </DialogTrigger>
@@ -73,7 +74,7 @@ export function TitleInput({
             <AutoResizeTextarea
               value={inputValue}
               onChange={(e: any) => setInputValue(e.target.value)}
-              className="w-full resize-none rounded-lg border border-primary text-center text-5xl font-bold focus:outline-none"
+              className="border-primary w-full resize-none rounded-lg border text-center text-5xl font-bold focus:outline-none"
               placeholder="제목을 입력하세요"
               style={{ lineHeight: "1.1" }}
               spellCheck={false} // 맞춤법 검사 비활성화

@@ -1,8 +1,9 @@
-import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircleMore } from "lucide-react";
 import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { MessageCircleMore } from "lucide-react";
+
 import { encodeURL } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 
 interface ContentBodyProps {
   currentPage: number;
@@ -39,14 +40,14 @@ export default function ContentBody({
                 <Link href={`/${encodeURL(post.href)}`}>
                   <Button
                     variant="ghost"
-                    className="group mb-4 w-full justify-start overflow-hidden rounded-lg border-2 border-secondary text-left hover:cursor-pointer transition-all duration-300 hover:border-primary hover:bg-secondary"
+                    className="group border-secondary hover:border-primary hover:bg-secondary mb-4 w-full justify-start overflow-hidden rounded-lg border-2 text-left transition-all duration-300 hover:cursor-pointer"
                   >
                     <div className="flex w-full items-center">
-                      <div className="mr-3 rounded-full bg-primary p-2 text-primary-foreground transition-colors duration-300 group-hover:bg-secondary-foreground">
+                      <div className="bg-primary text-primary-foreground group-hover:bg-secondary-foreground mr-3 rounded-full p-2 transition-colors duration-300">
                         <MessageCircleMore className="size-4" />
                       </div>
                       <div className="grow truncate">{post.title}</div>
-                      <div className="ml-2 rounded-full bg-secondary-foreground px-2 py-1 text-xs text-secondary">
+                      <div className="bg-secondary-foreground text-secondary ml-2 rounded-full px-2 py-1 text-xs">
                         인기
                       </div>
                     </div>

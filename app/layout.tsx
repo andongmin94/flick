@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+
 import "./globals.css";
+
 import { siteConfig } from "@/config/site";
 
 export const metadata: Metadata = {
@@ -44,7 +46,7 @@ export default function RootLayout({
   return (
     <html>
       <body className="h-[100.1vh] bg-[#F3FAFF]">
-        <div className="mx-auto w-[26.9vw] text-foreground">{children}</div>
+        <div className="text-foreground mx-auto w-[26.9vw]">{children}</div>
       </body>
     </html>
   );

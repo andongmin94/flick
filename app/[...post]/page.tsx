@@ -1,15 +1,16 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import React, { useRef, useEffect, useState } from "react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
-import { TitleInput } from "@/components/title-input";
-import { decodeURL } from "@/lib/utils";
-import WordRotate from "@/components/ui/word-rotate";
-import { Button } from "@/components/ui/button";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
+import { MessageCircle } from "lucide-react";
+
+import { decodeURL } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import WordRotate from "@/components/ui/word-rotate";
+import { TitleInput } from "@/components/title-input";
 
 function AutoResizeDiv(props: any) {
   const divRef = useRef<HTMLDivElement>(null);
@@ -119,7 +120,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="flex h-[100.1vh] items-center justify-center bg-primary text-6xl font-bold text-primary-foreground">
+      <div className="bg-primary text-primary-foreground flex h-[100.1vh] items-center justify-center text-6xl font-bold">
         <p>로딩 중...</p>
       </div>
     );
@@ -128,7 +129,7 @@ export default function PostPage() {
   if (error) {
     return (
       <div className="flex h-screen items-center justify-center text-red-500">
-        <Card className="border-4 border-red-500 shadow-lg py-0 gap-0">
+        <Card className="gap-0 border-4 border-red-500 py-0 shadow-lg">
           <CardContent className="pt-6 font-bold">{error}</CardContent>
         </Card>
       </div>
@@ -136,21 +137,21 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="relative rounded-none border-4 border-y-0 border-primary shadow-xl py-0 gap-0">
-      <CardHeader className="sticky top-0 z-10 flex flex-col w-[26.5vw]  items-center justify-end space-y-0 border-primary bg-primary pb-2 pt-10 text-primary-foreground">
+    <Card className="border-primary relative gap-0 rounded-none border-4 border-y-0 py-0 shadow-xl">
+      <CardHeader className="border-primary bg-primary text-primary-foreground sticky top-0 z-10 flex w-[26.5vw] flex-col items-center justify-end space-y-0 pt-10 pb-2">
         <TitleInput
           className="bg-primary text-white hover:bg-gray-700"
           editableTitle={editableTitle}
           setEditableTitle={setEditableTitle}
         />
         <Button
-          className="absolute top-32 ml-[800px] hover:bg-gray-700 hover:cursor-pointer"
+          className="absolute top-32 ml-[800px] hover:cursor-pointer hover:bg-gray-700"
           onClick={handleZoomIn}
         >
           이미지 확대
         </Button>
         <Button
-          className="absolute top-48 ml-[800px] hover:bg-gray-700 hover:cursor-pointer"
+          className="absolute top-48 ml-[800px] hover:cursor-pointer hover:bg-gray-700"
           onClick={handleZoomOut}
         >
           이미지 축소
@@ -201,7 +202,7 @@ export default function PostPage() {
         )}
         {comments && comments.length > 0 && (
           <div className="mt-8 px-1">
-            <h3 className="mb-4 flex items-center border-b-2 border-primary pb-2 text-2xl font-semibold">
+            <h3 className="border-primary mb-4 flex items-center border-b-2 pb-2 text-2xl font-semibold">
               {/* <MessageCircle className="mr-2" /> */}
               댓글
             </h3>
@@ -215,7 +216,7 @@ export default function PostPage() {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
-                    className="mb-2 flex items-center rounded-lg border border-primary bg-secondary p-3"
+                    className="border-primary bg-secondary mb-2 flex items-center rounded-lg border p-3"
                   >
                     {/* <Image key={index} src={"/flick.svg"} alt={`flick`} width={30} height={30} className="mr-4" /> */}
                     <MessageCircle className="mr-3 size-8" />
@@ -229,7 +230,7 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <div className="sticky bottom-0 flex h-[250px] items-start justify-center border-primary bg-primary pb-12 text-center text-6xl font-bold text-primary-foreground w-[26.5vw] ">
+      <div className="border-primary bg-primary text-primary-foreground sticky bottom-0 flex h-[250px] w-[26.5vw] items-start justify-center pb-12 text-center text-6xl font-bold">
         <WordRotate
           className="inline max-w-[450px] text-center text-3xl font-bold text-white"
           words={comments}
