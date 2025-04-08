@@ -152,7 +152,7 @@
   .Pretendard-ExtraBold {
     font-family: "Pretendard-ExtraBold";
   }
-  
+
   * {
     @apply border-border;
   }
