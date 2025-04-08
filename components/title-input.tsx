@@ -10,7 +10,6 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 
 function AutoResizeTextarea(props: any) {
@@ -35,7 +34,6 @@ function AutoResizeTextarea(props: any) {
 }
 
 export function TitleInput({
-  className,
   editableTitle,
   setEditableTitle,
 }: {
@@ -57,7 +55,7 @@ export function TitleInput({
     <div className="absolute top-12 ml-[800px]">
       <Dialog>
         <DialogTrigger asChild>
-          <Button className={cn("mt-2 h-full ", className)}>
+          <Button className="mt-2 h-full hover:bg-gray-700 hover:cursor-pointer">
             제목 수정하기
           </Button>
         </DialogTrigger>
