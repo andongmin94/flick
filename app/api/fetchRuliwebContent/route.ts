@@ -18,9 +18,15 @@ export async function GET(req: NextRequest) {
 
   const decodedUrl = decodeURIComponent(url);
   const cacheTag = createCacheTag(decodedUrl);
+
+  // CORS 프록시 URL
+  const proxyOptions = [
+    "https://api.allorigins.win/raw?url=",
+    "https://thingproxy.freeboard.io/fetch/",
+  ];
   
-  // CORS 프록시 URL 추가
-  const proxyUrl = "https://api.allorigins.win/raw?url=";
+  // 첫 번째 프록시로 시도
+  const proxyUrl = proxyOptions[0];
   const proxiedUrl = proxyUrl + encodeURIComponent(decodedUrl);
 
   try {
