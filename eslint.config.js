@@ -2,7 +2,7 @@ const path = require("path");
 const { FlatCompat } = require("@eslint/eslintrc");
 
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
+  baseDirectory: __dirname, // __dirname은 CommonJS에서 기본 제공됨
 });
 
 const config = [
