@@ -18,14 +18,23 @@ export async function GET(req: NextRequest) {
 
   const decodedUrl = decodeURIComponent(url);
   const cacheTag = createCacheTag(decodedUrl);
+  
+  // CORS 프록시 URL 추가
+  const proxyUrl = "https://api.allorigins.win/raw?url=";
+  const proxiedUrl = proxyUrl + encodeURIComponent(decodedUrl);
 
   try {
-    // Vercel의 fetch 캐싱 활용
-    const response = await fetch(decodedUrl, {
+    // 프록시를 통해 요청
+    const response = await fetch(proxiedUrl, {
       next: {
-        revalidate: 1800, // 30분 캐싱
-        tags: [cacheTag], // 태그 기반 캐시 무효화를 위한 태그
+        revalidate: 1800,
+        tags: [cacheTag],
       },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
+      }
     });
 
     if (!response.ok) {
