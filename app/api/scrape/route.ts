@@ -2,8 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 import { revalidateTag } from "next/cache";
 
-export const runtime = "nodejs"; // 이 한 줄 추가!
-
 const ruliweb =
   "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
 
@@ -11,18 +9,12 @@ const ruliweb =
 async function scrapeRuliweb(page: number) {
   const url = ruliweb + page;
   
-  // 브라우저처럼 보이게 헤더 추가
+  // Vercel의 fetch 캐싱 활용
   const response = await fetch(url, {
     next: {
-      revalidate: 1800, 
-      tags: [`ruliweb-page-${page}`],
+      revalidate: 1800, // 30분 캐싱
+      tags: [`ruliweb-page-${page}`], // 태그 기반 캐시 무효화를 위한 태그
     },
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-      'Referer': 'https://bbs.ruliweb.com/' // 레퍼러를 루리웹으로 변경하여 차단 방지
-    }
   });
   
   if (!response.ok) {
