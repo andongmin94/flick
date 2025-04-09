@@ -5,8 +5,8 @@ import { revalidateTag } from "next/cache";
 const ruliweb =
   "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
 
-// 타임아웃 설정과 함께 수정된 스크래핑 함수
-async function scrapeRuliwebWithTimeout(page: number) {
+// 루리웹 스크래핑 함수
+async function scrapeRuliweb(page: number) {
   return new Promise(async (resolve, reject) => {
     // 9초 타임아웃 설정 (10초보다 약간 짧게)
     const timeoutId = setTimeout(() => {
@@ -74,7 +74,7 @@ async function scrapeRuliwebWithTimeout(page: number) {
       // 일부 데이터라도 있으면 반환
       if (titles.length > 0) {
         console.log(`Error occurred but returning ${titles.length} items`);
-        resolve({ titles, isPartial: true, error: error.message });
+        resolve({ titles, isPartial: true, error: error instanceof Error ? error.message : String(error) });
       } else {
         reject(error);
       }
@@ -87,17 +87,12 @@ export async function GET(req: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1", 10);
 
   try {
-    // 타임아웃 처리가 된 스크래핑 함수 호출
-    const result: any = await scrapeRuliwebWithTimeout(page);
+    // 응답 자체도 Vercel Edge Network에서 캐싱되도록 헤더 설정
+    const ruliwebData = await scrapeRuliweb(page);
     
-    // 부분적 데이터인지 여부를 응답에 포함
     return NextResponse.json(
-      { 
-        ruliweb: result,
-        isPartial: result.isPartial || false
-      },
+      { ruliweb: ruliwebData },
       {
-        status: result.isPartial ? 206 : 200, // 부분 콘텐츠는 206 상태 코드 사용
         headers: {
           'Cache-Control': 'max-age=1800, s-maxage=1800, stale-while-revalidate=3600',
         },
@@ -106,7 +101,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(
-      { error: "Failed to scrape data", message: error.message },
+      { error: "Failed to scrape data" },
       { status: 500 },
     );
   }
