@@ -11,9 +11,7 @@ async function scrapeRuliweb(page: number) {
   // CORS 프록시 URL
   const proxyOptions = [
     "https://api.allorigins.win/raw?url=",
-    "https://cors-anywhere.herokuapp.com/",
     "https://thingproxy.freeboard.io/fetch/",
-    // corsproxy.io는 제외
   ];
   
   // 첫 번째 프록시로 시도
