@@ -5,44 +5,81 @@ import { revalidateTag } from "next/cache";
 const ruliweb =
   "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
 
-// 루리웹 스크래핑 함수
-async function scrapeRuliweb(page: number) {
-  const url = ruliweb + page;
-  
-  // Vercel의 fetch 캐싱 활용
-  const response = await fetch(url, {
-    next: {
-      revalidate: 1800,
-      tags: [`ruliweb-page-${page}`],
-    },
-    headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml',
-      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
-      'Referer': 'https://bbs.ruliweb.com/'
-    }
-  });
-  
-  if (!response.ok) {
-    throw new Error(`Failed to fetch data: ${response.status}`);
-  }
-  
-  const text = await response.text();
-  const $ = cheerio.load(text);
-  const titles: { title: string; href: string }[] = [];
+// 타임아웃 설정과 함께 수정된 스크래핑 함수
+async function scrapeRuliwebWithTimeout(page: number) {
+  return new Promise(async (resolve, reject) => {
+    // 9초 타임아웃 설정 (10초보다 약간 짧게)
+    const timeoutId = setTimeout(() => {
+      // 타임아웃 시 현재까지 수집된 데이터로 완료
+      if (titles.length > 0) {
+        console.log(`Timeout reached but returning ${titles.length} items`);
+        resolve({ titles, isPartial: true });
+      } else {
+        reject(new Error("Timeout and no data collected"));
+      }
+    }, 9000);
 
-  // 최적화된 셀렉터와 데이터 추출
-  $("tr a.deco").each((_, element) => {
-    // 단순화된 텍스트 추출 (중첩 루프 제거)
-    const textContent = $(element).text().trim();
-    const href = "https://bbs.ruliweb.com" + $(element).attr("href");
+    const url = ruliweb + page;
+    const titles: { title: string; href: string }[] = [];
     
-    if (textContent && href) {
-      titles.push({ title: textContent, href });
+    try {
+      console.log(`Fetching page ${page} from ${url}`);
+      const startTime = Date.now();
+      
+      // Vercel의 fetch 캐싱 활용
+      const response = await fetch(url, {
+        next: {
+          revalidate: 1800,
+          tags: [`ruliweb-page-${page}`],
+        },
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+          'Accept': 'text/html,application/xhtml+xml,application/xml',
+          'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7',
+          'Referer': 'https://bbs.ruliweb.com/'
+        }
+      });
+      
+      console.log(`Fetch completed in ${Date.now() - startTime}ms`);
+      
+      if (!response.ok) {
+        clearTimeout(timeoutId);
+        reject(new Error(`Failed to fetch data: ${response.status}`));
+        return;
+      }
+      
+      const text = await response.text();
+      console.log(`Response body received in ${Date.now() - startTime}ms`);
+      
+      const $ = cheerio.load(text);
+      
+      // 데이터를 점진적으로 추출하고, 중간에 타임아웃이 발생해도 일부라도 반환
+      $("tr a.deco").each((_, element) => {
+        const textContent = $(element).text().trim();
+        const href = "https://bbs.ruliweb.com" + $(element).attr("href");
+        
+        if (textContent && href) {
+          titles.push({ title: textContent, href });
+        }
+      });
+      
+      // 모든 처리가 완료되면 타임아웃 취소하고 결과 반환
+      clearTimeout(timeoutId);
+      console.log(`Completed scraping in ${Date.now() - startTime}ms, found ${titles.length} titles`);
+      resolve({ titles, isPartial: false });
+      
+    } catch (error) {
+      clearTimeout(timeoutId);
+      
+      // 일부 데이터라도 있으면 반환
+      if (titles.length > 0) {
+        console.log(`Error occurred but returning ${titles.length} items`);
+        resolve({ titles, isPartial: true, error: error.message });
+      } else {
+        reject(error);
+      }
     }
   });
-
-  return { titles };
 }
 
 export async function GET(req: NextRequest) {
@@ -50,12 +87,17 @@ export async function GET(req: NextRequest) {
   const page = parseInt(searchParams.get("page") || "1", 10);
 
   try {
-    // 응답 자체도 Vercel Edge Network에서 캐싱되도록 헤더 설정
-    const ruliwebData = await scrapeRuliweb(page);
+    // 타임아웃 처리가 된 스크래핑 함수 호출
+    const result: any = await scrapeRuliwebWithTimeout(page);
     
+    // 부분적 데이터인지 여부를 응답에 포함
     return NextResponse.json(
-      { ruliweb: ruliwebData },
+      { 
+        ruliweb: result,
+        isPartial: result.isPartial || false
+      },
       {
+        status: result.isPartial ? 206 : 200, // 부분 콘텐츠는 206 상태 코드 사용
         headers: {
           'Cache-Control': 'max-age=1800, s-maxage=1800, stale-while-revalidate=3600',
         },
@@ -64,7 +106,7 @@ export async function GET(req: NextRequest) {
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(
-      { error: "Failed to scrape data" },
+      { error: "Failed to scrape data", message: error.message },
       { status: 500 },
     );
   }
