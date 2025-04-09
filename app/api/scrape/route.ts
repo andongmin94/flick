@@ -25,16 +25,12 @@ async function scrapeRuliweb(page: number) {
   const $ = cheerio.load(text);
   const titles: { title: string; href: string }[] = [];
 
-  $("tr a.deco").each((index, element) => {
-    let textContent = "";
-    $(element)
-      .contents()
-      .each((_, node) => {
-        if (node.type === "text") {
-          textContent += $(node).text().trim();
-        }
-      });
+  // 최적화된 셀렉터와 데이터 추출
+  $("tr a.deco").each((_, element) => {
+    // 단순화된 텍스트 추출 (중첩 루프 제거)
+    const textContent = $(element).text().trim();
     const href = "https://bbs.ruliweb.com" + $(element).attr("href");
+    
     if (textContent && href) {
       titles.push({ title: textContent, href });
     }
