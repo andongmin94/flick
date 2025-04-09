@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
 import { revalidateTag } from "next/cache";
 
+export const runtime = "nodejs"; // 이 한 줄 추가!
+
 const ruliweb =
   "https://bbs.ruliweb.com/best/humor_only/now?orderby=recommend&range=24h&m=humor_only&t=now&page=";
 
