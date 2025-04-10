@@ -1,57 +1,97 @@
-// src/rules/fmkorea.js
+// src/rules/fmkorea.js (#bd_capture 내부 컨테이너 순서 + 내부 이미지/텍스트 분할)
 export function extractFmkorea(cfg) {
-  const article = document.querySelector("article");
-  const title =
-    (article &&
-      (article.querySelector("h1,h2,h3")?.textContent || "").trim()) ||
-    document.title ||
-    "제목 없음";
-  if (!article) return { title, blocks: [] };
+  const root = document.querySelector('#bd_capture');
+  const content = root && (root.querySelector('.xe_content') || root);
+  const title = (root && (root.querySelector('h1,h2,h3')?.textContent || '').trim()) || document.title || '제목 없음';
+  if (!content) return { title, blocks: [] };
   const skipSel = cfg && cfg.skipClosest;
   const blocks = [];
-  const addedImg = new Set();
+  const seenImg = new Set();
   const seenText = new Set();
-  // 이미지/텍스트를 분리 수집하면 이미지가 먼저 몰리는 문제 → 단일 selector 로 DOM 순서 유지
-  const selector = "img, p, h1, h2, h3, h4, h5, h6, li, blockquote, pre";
-  article.querySelectorAll(selector).forEach((el) => {
-    if (skipSel && el.closest(skipSel)) return;
-    if (el.tagName === "IMG") {
-      const img = el;
-      const src =
-        img.getAttribute("data-src") ||
-        img.getAttribute("data-original") ||
-        img.src;
-      if (!src || addedImg.has(src)) return;
-      addedImg.add(src);
-      blocks.push({ type: "image", src, alt: img.alt || "" });
-      return;
-    }
-    // 텍스트 블록 처리
-    const txt = (el.textContent || "").replace(/\s+/g, " ").trim();
-    if (!txt) return;
-    if (txt.length === 1 && /[\p{P}\p{S}]/u.test(txt)) return; // 단일 기호 제외
-    if (seenText.has(txt)) return; // 완전 동일 텍스트 중복 제거
-    seenText.add(txt);
-    if (el.tagName === "PRE") blocks.push({ type: "html", html: el.outerHTML });
-    else blocks.push({ type: "html", html: el.innerHTML.trim() });
-  });
-  const hasText = blocks.some((b) => b.type === "html");
-  if (!hasText) {
-    const raw = article.innerText
-      .split(/\n+/)
-      .map((l) => l.trim())
-      .filter((l) => l.length > 1);
-    raw.forEach((line) => {
-      if (seenText.has(line)) return;
-      seenText.add(line);
-      blocks.push({ type: "html", html: line });
-    });
+
+  function normSrc(src) {
+    if (!src) return '';
+    if (src.startsWith('//')) return location.protocol + src;
+    if (src.startsWith('/')) return location.origin + src;
+    return src;
   }
-  try {
-    console.debug("[FLICK fmkorea extract]", {
-      images: addedImg.size,
-      textBlocks: blocks.filter((b) => b.type === "html").length,
-    });
-  } catch (_) {}
+
+  function pushImage(rawSrc, alt) {
+    const src = normSrc(rawSrc);
+    if (!src || seenImg.has(src)) return;
+    seenImg.add(src);
+    blocks.push({ type: 'image', src, alt: alt || '' });
+  }
+
+  function cleanText(t) {
+    return t
+      .replace(/\u00A0/g, ' ')
+      .replace(/\s+$/g, '')
+      .replace(/^\s+/g, '')
+      .replace(/[ \t]+/g, ' ')
+      .replace(/\n{2,}/g, '\n')
+      .trim();
+  }
+
+  function flushBuffer(buf) {
+    const raw = buf.join('');
+    const cleaned = cleanText(raw);
+    if (!cleaned) return;
+    if (seenText.has(cleaned)) return; // 동일 문단 중복 제거 (짧은 캡션 반복 방지)
+    seenText.add(cleaned);
+    // 줄바꿈은 <br> 로 보존
+    const html = cleaned.split(/\n+/).map(line => line.trim()).filter(Boolean).join('<br>');
+    if (html) blocks.push({ type: 'html', html });
+  }
+
+  function walkInline(node, buf) {
+    if (!node) return;
+    if (node.nodeType === 1) { // ELEMENT
+      const el = node;
+      if (skipSel && el.closest(skipSel)) return;
+      const tag = el.tagName;
+      if (tag === 'IMG') {
+        // flush text before image
+        flushBuffer(buf);
+        buf.length = 0;
+        const src = el.getAttribute('data-original') || el.getAttribute('data-src') || el.getAttribute('src');
+        pushImage(src, el.getAttribute('alt') || '');
+        return;
+      }
+      if (tag === 'PRE') {
+        flushBuffer(buf);
+        buf.length = 0;
+        blocks.push({ type: 'html', html: el.outerHTML });
+        return;
+      }
+      if (tag === 'BR') {
+        buf.push('\n');
+        return;
+      }
+      // Anchor: descend (이미지/텍스트 혼재 가능)
+      // Generic container: descend.
+      for (const child of Array.from(el.childNodes)) {
+        walkInline(child, buf);
+      }
+      return;
+    } else if (node.nodeType === 3) { // TEXT
+      const text = node.nodeValue.replace(/\s+/g, ' ');
+      if (text.trim()) buf.push(text);
+    }
+  }
+
+  // 컨테이너: .xe_content 직속 자식 순회 (div, p, etc.)
+  const containers = Array.from(content.children);
+  containers.forEach(container => {
+    const tag = container.tagName;
+    // 완전 비어있는 / <br> 만 있는 컨테이너 skip
+    const onlyBreaks = !container.querySelector('img,pre') && container.textContent.replace(/\u00A0/g,' ').trim().replace(/br/ig,'') === '' && /^(\s|<br\s*\/?>)*$/i.test(container.innerHTML.replace(/\u00A0/g,' '));
+    if (onlyBreaks) return;
+
+    const buf = [];
+    walkInline(container, buf);
+    flushBuffer(buf);
+  });
+
   return { title, blocks };
 }
