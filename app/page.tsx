@@ -65,8 +65,8 @@ function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Card className="border-primary relative gap-0 rounded-none border-4 border-t-0 py-0 shadow-xl">
-      <CardHeader className="bg-primary text-primary-foreground sticky top-0 z-10 h-[128px] w-[26.5vw] p-3">
+    <Card className="border-primary relative gap-0 rounded-none">
+      <CardHeader className="bg-primary text-primary-foreground -mt-6 py-4">
         <a
           href={randomHref}
           onMouseDown={() => setRandomHref(generateRandomHref())}
@@ -98,7 +98,7 @@ function Component() {
         </CardTitle>
       </CardHeader>
       <FlickPage
-        className="sticky top-32 z-10 bg-white"
+        className="bg-white"
         currentPage={currentPage}
         setCurrentPage={handlePageChange}
       />

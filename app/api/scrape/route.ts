@@ -13,24 +13,26 @@ async function scrapeRuliweb(page: number) {
     "https://api.allorigins.win/raw?url=",
     "https://thingproxy.freeboard.io/fetch/",
   ];
-  
+
   // 첫 번째 프록시로 시도
   const proxyUrl = proxyOptions[0];
   const url = proxyUrl + encodeURIComponent(targetUrl);
-  
+
   // 직접 fetch 사용, 캐싱 제거 (프록시와 함께 사용하면 문제 발생 가능)
   const response = await fetch(url, {
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
-      'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-      'Accept-Language': 'ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7'
-    }
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+      Accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+      "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+    },
   });
-  
+
   if (!response.ok) {
     throw new Error(`Failed to fetch data: ${response.status}`);
   }
-  
+
   const text = await response.text();
   const $ = cheerio.load(text);
   const titles: { title: string; href: string }[] = [];
@@ -39,7 +41,7 @@ async function scrapeRuliweb(page: number) {
   $("tbody a.subject_link.deco").each((_, element) => {
     const textContent = $(element).text().trim();
     const href = "https://bbs.ruliweb.com" + $(element).attr("href");
-    
+
     if (textContent && href) {
       titles.push({ title: textContent, href });
     }
