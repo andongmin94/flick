@@ -120,7 +120,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="bg-primary text-primary-foreground flex h-[100.1vh] items-center justify-center text-6xl font-bold">
+      <div className="bg-primary text-primary-foreground flex h-[99.95vh] items-center justify-center text-6xl font-bold">
         <p>로딩 중...</p>
       </div>
     );
@@ -137,8 +137,9 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="border-primary relative gap-0 rounded-none border-4 border-y-0 py-0 shadow-xl">
-      <CardHeader className="border-primary bg-primary text-primary-foreground sticky top-0 z-10 flex w-[26.5vw] flex-col items-center justify-end space-y-0 pt-10 pb-2">
+    <Card className="border-primary relative w-[26.5vw] gap-0 rounded-none border-1 py-0">
+      <style>{`::-webkit-scrollbar { display: none; }`}</style>
+      <CardHeader className="border-primary bg-primary text-primary-foreground sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 pt-10 pb-2">
         <TitleInput
           className="bg-primary text-white hover:bg-gray-700"
           editableTitle={editableTitle}
@@ -230,9 +231,9 @@ export default function PostPage() {
           </div>
         )}
       </CardContent>
-      <div className="border-primary bg-primary text-primary-foreground sticky bottom-0 flex h-[250px] w-[26.5vw] items-start justify-center pb-12 text-center text-6xl font-bold">
+      <div className="border-primary bg-primary text-primary-foreground sticky bottom-0 flex h-[250px] items-start justify-center pb-12 text-center text-6xl font-bold">
         <WordRotate
-          className="inline max-w-[450px] text-center text-3xl font-bold text-white"
+          className="inline text-center text-3xl font-bold text-white"
           words={comments}
         />
       </div>
