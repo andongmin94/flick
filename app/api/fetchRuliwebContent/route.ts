@@ -26,12 +26,11 @@ export async function GET(req: NextRequest) {
   ];
   
   // 첫 번째 프록시로 시도
-  const proxyUrl = proxyOptions[0];
-  const proxiedUrl = proxyUrl + encodeURIComponent(decodedUrl);
+  const proxyUrl = proxyOptions[0] + encodeURIComponent(decodedUrl);
 
   try {
     // 프록시를 통해 요청
-    const response = await fetch(proxiedUrl, {
+    const response = await fetch(proxyUrl, {
       next: {
         revalidate: 1800,
         tags: [cacheTag],
