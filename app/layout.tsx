@@ -45,8 +45,8 @@ export default function RootLayout({
 }>) {
   return (
     <html>
-      <body className="h-[100.1vh] bg-[#F3FAFF]">
-        <div className="text-foreground mx-auto w-[26.9vw]">{children}</div>
+      <body className="flex min-h-screen items-center justify-center bg-[#F3FAFF]">
+        <div className="aspect-[9/16]">{children}</div>
       </body>
     </html>
   );
