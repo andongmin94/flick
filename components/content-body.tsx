@@ -19,11 +19,13 @@ export default function ContentBody({
   return (
     <AnimatePresence mode="wait">
       {isLoading ? (
-        <div className="flex h-[75.7vh] items-center justify-center pb-10 text-4xl font-bold">
+        <div className="flex h-[75.5vh] w-[26vw] items-center justify-center pb-10 text-4xl font-bold">
+          <style>{`::-webkit-scrollbar { display: none; }`}</style>
           로딩 중...
         </div>
       ) : (
-        <div className="scrollbar-thin scrollbar-thumb-primary scrollbar-track-secondary h-[75.7vh] w-[26vw] overflow-y-auto">
+        <div className="scrollbar-thin scrollbar-thumb-primary scrollbar-track-secondary h-[75.5vh] w-[26vw] overflow-y-auto">
+          <style>{`::-webkit-scrollbar { display: none; }`}</style>
           <motion.div
             key={`titles-${currentPage}`}
             initial={{ opacity: 0, y: 20 }}
