@@ -21,73 +21,81 @@ export async function GET(req: NextRequest) {
 
   // CORS 프록시 URL
   const proxyOptions = [
-    "https://api.allorigins.win/raw?url=",
-    "https://thingproxy.freeboard.io/fetch/",
+    "https://api.allorigins.win/raw?url=", // All Origins
+    "https://thingproxy.freeboard.io/fetch/", // ThingProxy
+    "https://corsproxy.io/?", // CORS Proxy
+    "https://cors-anywhere.herokuapp.com/", // CORS Anywhere (요청 제한이 있을 수 있음)
+    "https://api.codetabs.com/v1/proxy?quest=", // CodeTabs Proxy
+    "https://cors-proxy.htmldriven.com/?url=", // CORS Proxy by HTMLDriven
+    "https://proxy.cors.sh/", // CORS.SH
+    "https://cors.bridged.cc/", // Bridged CORS Proxy
+    "https://crossorigin.me/", // CrossOrigin.me
+    "https://yacdn.org/proxy/", // YaCDN
   ];
 
-  // 첫 번째 프록시로 시도
-  const proxyUrl = proxyOptions[0];
-  const proxiedUrl = proxyUrl + encodeURIComponent(decodedUrl);
+  // 모든 프록시를 순차적으로 시도
+  for (const proxyUrl of proxyOptions) {
+    try {
+      // 프록시를 통해 요청
+      const url = proxyUrl + encodeURIComponent(decodedUrl);
+      const response = await fetch(url, {
+        next: {
+          revalidate: 1800,
+          tags: [cacheTag],
+        },
+        headers: {
+          "User-Agent":
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+          Accept:
+            "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
+          "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
+        },
+      });
 
-  try {
-    // 프록시를 통해 요청
-    const response = await fetch(proxiedUrl, {
-      next: {
-        revalidate: 1800,
-        tags: [cacheTag],
-      },
-      headers: {
-        "User-Agent":
-          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
-        Accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Language": "ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7",
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch: ${response.status}`);
-    }
-
-    const text = await response.text();
-    const $ = cheerio.load(text);
-
-    // board_main_view 태그 안의 이미지 URL을 절대 경로로 변환
-    $(".board_main_view img").each((_, img) => {
-      const src = $(img).attr("src");
-      if (src && !src.startsWith("http")) {
-        const absoluteSrc = new URL(src, decodedUrl).href;
-        $(img).attr("src", absoluteSrc);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch: ${response.status}`);
       }
-    });
 
-    // class가 row relative인 요소 제거
-    $(".board_main_view .row.relative").remove();
+      const text = await response.text();
+      const $ = cheerio.load(text);
 
-    // class가 text인 요소만 필터링하여 HTML을 배열로 수집
-    const filteredComments = $(".comment_view_wrapper.row .text")
-      .map(function () {
-        return $(this).html();
-      })
-      .get();
+      // board_main_view 태그 안의 이미지 URL을 절대 경로로 변환
+      $(".board_main_view img").each((_, img) => {
+        const src = $(img).attr("src");
+        if (src && !src.startsWith("http")) {
+          const absoluteSrc = new URL(src, decodedUrl).href;
+          $(img).attr("src", absoluteSrc);
+        }
+      });
 
-    const title = $(".subject_inner_text").text();
-    const content = $(".board_main_view").html();
-    const data = { title, content, comments: filteredComments };
+      // class가 row relative인 요소 제거
+      $(".board_main_view .row.relative").remove();
 
-    // 캐시 헤더를 포함한 응답 반환
-    return NextResponse.json(data, {
-      headers: {
-        "Cache-Control":
-          "max-age=1800, s-maxage=1800, stale-while-revalidate=3600",
-      },
-    });
-  } catch (error) {
-    console.error("Error fetching post content:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch post content" },
-      { status: 500 },
-    );
+      // class가 text인 요소만 필터링하여 HTML을 배열로 수집
+      const filteredComments = $(".comment_view_wrapper.row .text")
+        .map(function () {
+          return $(this).html();
+        })
+        .get();
+
+      const title = $(".subject_inner_text").text();
+      const content = $(".board_main_view").html();
+      const data = { title, content, comments: filteredComments };
+
+      // 캐시 헤더를 포함한 응답 반환
+      return NextResponse.json(data, {
+        headers: {
+          "Cache-Control":
+            "max-age=1800, s-maxage=1800, stale-while-revalidate=3600",
+        },
+      });
+    } catch (error) {
+      console.error("Error fetching post content:", error);
+      return NextResponse.json(
+        { error: "Failed to fetch post content" },
+        { status: 500 },
+      );
+    }
   }
 }
 
