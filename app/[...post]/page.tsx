@@ -120,7 +120,7 @@ export default function PostPage() {
 
   if (loading) {
     return (
-      <div className="bg-primary text-primary-foreground flex h-[99.9vh] w-[26.1vw] items-center justify-center text-6xl font-bold">
+      <div className="bg-primary text-primary-foreground flex h-[99.9vh] w-[26.7vw] items-center justify-center text-6xl font-bold">
         <style>{`::-webkit-scrollbar { display: none; }`}</style>
         <p>로딩 중...</p>
       </div>
@@ -138,7 +138,7 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="border-primary relative w-[26.1vw] gap-0 rounded-none border-1 py-0">
+    <Card className="border-primary relative w-[26.7vw] gap-0 rounded-none border-1 py-0">
       <style>{`::-webkit-scrollbar { display: none; }`}</style>
       <CardHeader className="border-primary bg-primary text-primary-foreground sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 pt-10 pb-2">
         <TitleInput
