@@ -137,7 +137,7 @@ export default function PostPage() {
   }
 
   return (
-    <Card className="border-primary relative w-[26.5vw] gap-0 rounded-none border-1 py-0">
+    <Card className="border-primary relative w-[26.1vw] gap-0 rounded-none border-1 py-0">
       <style>{`::-webkit-scrollbar { display: none; }`}</style>
       <CardHeader className="border-primary bg-primary text-primary-foreground sticky top-0 z-10 flex flex-col items-center justify-end space-y-0 pt-10 pb-2">
         <TitleInput
