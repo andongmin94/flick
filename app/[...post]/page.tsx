@@ -118,7 +118,7 @@ export default function PostPage() {
     }
   }, [editableTitle]);
 
-  if (!loading) {
+  if (loading) {
     return (
       <div className="bg-primary text-primary-foreground flex h-[99.9vh] w-[26.1vw] items-center justify-center text-6xl font-bold">
         <style>{`::-webkit-scrollbar { display: none; }`}</style>
