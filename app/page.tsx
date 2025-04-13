@@ -65,7 +65,7 @@ function Component() {
   }, [generateRandomHref]); // randomHref 대신 generateRandomHref 사용
 
   return (
-    <Card className="border-primary relative gap-0 rounded-none">
+    <Card className="border-primary relative gap-0 rounded-none border-t-3">
       <CardHeader className="bg-primary text-primary-foreground -mt-6 py-4">
         <a
           href={randomHref}
