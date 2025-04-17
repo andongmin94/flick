@@ -4,7 +4,8 @@ export const sites = [
     id: "fmkorea",
     match: /https?:\/\/(www\.)?fmkorea\.com\//i,
     articleMatch: /(\/best\/)|\/(\d+)(?:$|[?#])|index\.php\?mid=/i,
-    skipClosest: ".mediaelement_video, .document_address",
+  // video 도 수집해야 하므로 mediaelement_video 제거
+  skipClosest: ".document_address",
     ruleId: "fmkorea",
   },
 ];
