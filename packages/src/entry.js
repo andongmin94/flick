@@ -13,11 +13,42 @@ const API = {
 };
 window.FLICK = API;
 
+let __flickVideoVolumes = {};
+function snapshotOriginalVideoVolumes() {
+  __flickVideoVolumes = {};
+  document.querySelectorAll("#bd_capture video").forEach((v) => {
+    try {
+      const src =
+        v.getAttribute("src") ||
+        v.querySelector("source[src]")?.getAttribute("src") ||
+        v.getAttribute("data-original") ||
+        "";
+      if (src && !(src in __flickVideoVolumes))
+        __flickVideoVolumes[src] = v.volume;
+    } catch (_) {}
+  });
+}
+function applyShortsVideoVolumes() {
+  document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
+    try {
+      const src = v.getAttribute("src");
+      if (src && __flickVideoVolumes[src] != null)
+        v.volume = __flickVideoVolumes[src];
+      else if (!src && Object.keys(__flickVideoVolumes).length === 1) {
+        const val = Object.values(__flickVideoVolumes)[0];
+        v.volume = val;
+      }
+    } catch (_) {}
+  });
+}
+
 function openShorts() {
+  snapshotOriginalVideoVolumes();
   pauseOriginalVideos();
   const data = extractPost();
   buildUI(data);
   autoPlayShortsVideos();
+  applyShortsVideoVolumes();
 }
 
 function toggle() {
@@ -55,6 +86,7 @@ function autoPlayShortsVideos() {
   document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
     try {
       v.autoplay = true;
+      v.muted = false; // 원본 볼륨 적용 전 mute 해제 (브라우저 정책에 따라 재생 실패시 다시 mute 가능)
       v.play().catch(() => {});
     } catch (_) {}
   });
