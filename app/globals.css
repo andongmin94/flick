@@ -41,26 +41,6 @@
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) + 4px);
-  --animate-accordion-down: accordion-down 0.2s ease-out;
-  --animate-accordion-up: accordion-up 0.2s ease-out;
-
-  @keyframes accordion-down {
-    from {
-      height: 0;
-    }
-    to {
-      height: var(--radix-accordion-content-height);
-    }
-  }
-
-  @keyframes accordion-up {
-    from {
-      height: var(--radix-accordion-content-height);
-    }
-    to {
-      height: 0;
-    }
-  }
 }
 
 :root {
@@ -133,6 +113,19 @@
 }
 
 @layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Pretendard";
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+  .Pretendard-ExtraBold {
+    font-family: "Pretendard-ExtraBold";
+  }
   @font-face {
     font-family: "Pretendard";
     src: url("/fonts/PretendardVariable.woff2") format("woff2");
@@ -140,31 +133,9 @@
     font-style: normal;
     font-display: swap;
   }
-
   @font-face {
     font-family: "Pretendard-ExtraBold";
     src: url("/fonts/Pretendard-ExtraBold.otf") format("opentype");
     font-display: swap;
-  }
-
-  .Pretendard-ExtraBold {
-    font-family: "Pretendard-ExtraBold";
-  }
-
-  * {
-    @apply border-border;
-  }
-
-  html {
-    /* scroll-padding-top: 4rem; */
-    @apply scroll-pt-16 lg:scroll-pt-0;
-  }
-
-  body {
-    @apply bg-background text-foreground;
-    font-family: "Pretendard";
-    font-feature-settings:
-      "rlig" 1,
-      "calt" 1;
   }
 }
