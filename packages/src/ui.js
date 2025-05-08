@@ -142,6 +142,7 @@ export function buildUI(data) {
   }
   stage.addEventListener("mousedown", onDown);
   createFontSizePanel(KEY_TITLE_FS, title);
+  enableTitleFormatToolbar(title);
 }
 
 export function closeShorts() {
@@ -151,6 +152,8 @@ export function closeShorts() {
   document.body.classList.remove("flick-body-lock");
   const fpanel = document.querySelector(".flick-fontsize-panel");
   if (fpanel) fpanel.remove();
+  const fmt = document.querySelector('.flick-format-toolbar');
+  if (fmt) fmt.remove();
 }
 
 function createFontSizePanel(storageKey, titleEl){
@@ -204,4 +207,69 @@ function createFontSizePanel(storageKey, titleEl){
   place();
   window.addEventListener('resize', place, { once:true });
   document.body.appendChild(panel);
+}
+
+function enableTitleFormatToolbar(titleEl){
+  let toolbar = null;
+  function ensureToolbar(){
+    if (toolbar) return toolbar;
+    toolbar = document.createElement('div');
+    toolbar.className = 'flick-format-toolbar';
+    toolbar.innerHTML = [
+      {c:'yellow',t:'노랑'},
+      {c:'red',t:'빨강'},
+      {c:'green',t:'초록'},
+      {c:'blue',t:'파랑'},
+      {c:'reset',t:'초기'}
+    ].map(o=>`<button data-color="${o.c}">${o.t}</button>`).join('');
+    document.body.appendChild(toolbar);
+    toolbar.addEventListener('mousedown', e=> e.preventDefault());
+    toolbar.addEventListener('click', onToolbarClick);
+    return toolbar;
+  }
+  function onToolbarClick(e){
+    const btn = e.target.closest('button[data-color]');
+    if(!btn) return;
+    applyColor(btn.getAttribute('data-color'));
+  }
+  function applyColor(color){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+    const range = sel.getRangeAt(0);
+    if(!titleEl.contains(range.commonAncestorContainer)) return;
+    if(range.collapsed) return;
+    const span = document.createElement('span');
+    if(color==='reset') span.className=''; else span.className = 'flick-color-' + color;
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
+    // range 재설정 (끝으로)
+    sel.removeAllRanges();
+    const nr = document.createRange();
+    nr.selectNodeContents(span);
+    nr.collapse(false);
+    sel.addRange(nr);
+  }
+  function showToolbar(){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) { hideToolbar(); return; }
+    const range = sel.getRangeAt(0);
+    if(range.collapsed || !titleEl.contains(range.commonAncestorContainer)) { hideToolbar(); return; }
+    const rect = range.getBoundingClientRect();
+    const tb = ensureToolbar();
+    tb.style.top = (window.scrollY + rect.top) + 'px';
+    tb.style.left = (window.scrollX + rect.left + rect.width/2) + 'px';
+  }
+  function hideToolbar(){
+    if(toolbar){ toolbar.remove(); toolbar=null; }
+  }
+  document.addEventListener('selectionchange', () => {
+    // 약간의 지연 후 위치 갱신 (DOM 업데이트 반영)
+    setTimeout(showToolbar, 0);
+  });
+  titleEl.addEventListener('blur', ()=>{
+    // 다른 곳 클릭 시 제거
+    setTimeout(()=>{ const sel = window.getSelection();
+      if(!sel || !sel.rangeCount) hideToolbar();
+    },100);
+  });
 }

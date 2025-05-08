@@ -233,3 +233,39 @@ body.flick-body-lock {
 .flick-toggle-anchor {
   position: relative;
 }
+
+/* 제목 강조 색상 */
+.flick-color-yellow { color:#ffe600; }
+.flick-color-red { color:#ff0000; }
+.flick-color-green { color:#1aff22; }
+.flick-color-blue { color:#0077ff; }
+.flick-color-reset { color:#fff; }
+
+/* 포맷 툴바 */
+.flick-format-toolbar {
+  position: fixed;
+  z-index:1000004;
+  display:flex;
+  gap:4px;
+  background:rgba(0,0,0,0.78);
+  backdrop-filter:blur(4px);
+  padding:4px 6px;
+  border:1px solid #222;
+  border-radius:8px;
+  font:12px/1 var(--shorts-font);
+  color:#eee;
+  box-shadow:0 4px 12px -2px rgba(0,0,0,0.55);
+  transform:translate(-50%, -8px);
+}
+.flick-format-toolbar button {
+  all:unset;
+  cursor:pointer;
+  padding:2px 6px 3px;
+  border-radius:4px;
+  font-size:11px;
+  line-height:1.1;
+  background:rgba(255,255,255,0.08);
+  color:#eee;
+}
+.flick-format-toolbar button:hover { background:rgba(255,255,255,0.18); }
+.flick-format-toolbar button:active { background:rgba(255,255,255,0.32); }
