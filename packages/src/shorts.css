@@ -234,12 +234,7 @@ body.flick-body-lock {
   position: relative;
 }
 
-/* 제목 강조 색상 */
-.flick-color-yellow { color:#ffe600; }
-.flick-color-red { color:#ff0000; }
-.flick-color-green { color:#1aff22; }
-.flick-color-blue { color:#0077ff; }
-.flick-color-reset { color:#fff; }
+/* (사용자 지정 강조색은 인라인 style.color 로 적용) */
 
 /* 포맷 툴바 */
 .flick-format-toolbar {

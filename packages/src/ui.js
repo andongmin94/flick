@@ -215,39 +215,67 @@ function enableTitleFormatToolbar(titleEl){
     if (toolbar) return toolbar;
     toolbar = document.createElement('div');
     toolbar.className = 'flick-format-toolbar';
-    toolbar.innerHTML = [
-      {c:'yellow',t:'노랑'},
-      {c:'red',t:'빨강'},
-      {c:'green',t:'초록'},
-      {c:'blue',t:'파랑'},
-      {c:'reset',t:'초기'}
-    ].map(o=>`<button data-color="${o.c}">${o.t}</button>`).join('');
+    const KEY_HL = 'flick:highlightColor';
+    let hlColor = '#ffeb3b';
+    try {
+      const saved = localStorage.getItem(KEY_HL);
+      if (saved && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(saved)) hlColor = saved;
+    } catch(_){}
+    toolbar.innerHTML = `
+      <input type="color" class="flick-hl-picker" value="${hlColor}" title="강조색" />
+      <button data-action="apply" title="강조 적용">적용</button>
+      <button data-action="reset" title="강조 제거">초기</button>
+    `;
     document.body.appendChild(toolbar);
     toolbar.addEventListener('mousedown', e=> e.preventDefault());
     toolbar.addEventListener('click', onToolbarClick);
     return toolbar;
   }
   function onToolbarClick(e){
-    const btn = e.target.closest('button[data-color]');
+    const btn = e.target.closest('button[data-action]');
     if(!btn) return;
-    applyColor(btn.getAttribute('data-color'));
+    const action = btn.getAttribute('data-action');
+    const picker = toolbar.querySelector('.flick-hl-picker');
+    if(action==='apply') {
+      const color = picker?.value || '#ffeb3b';
+      applyHighlight(color);
+    } else if(action==='reset') {
+      resetHighlight();
+    }
   }
-  function applyColor(color){
+  function applyHighlight(color){
+    saveColor(color);
     const sel = window.getSelection();
     if(!sel || sel.rangeCount===0) return;
     const range = sel.getRangeAt(0);
-    if(!titleEl.contains(range.commonAncestorContainer)) return;
-    if(range.collapsed) return;
+    if(!titleEl.contains(range.commonAncestorContainer) || range.collapsed) return;
     const span = document.createElement('span');
-    if(color==='reset') span.className=''; else span.className = 'flick-color-' + color;
+    span.style.color = color;
     span.appendChild(range.extractContents());
     range.insertNode(span);
-    // range 재설정 (끝으로)
     sel.removeAllRanges();
     const nr = document.createRange();
     nr.selectNodeContents(span);
     nr.collapse(false);
     sel.addRange(nr);
+  }
+  function resetHighlight(){
+    const sel = window.getSelection();
+    if(!sel || sel.rangeCount===0) return;
+    const range = sel.getRangeAt(0);
+    if(!titleEl.contains(range.commonAncestorContainer) || range.collapsed) return;
+    const span = document.createElement('span');
+    span.style.color = 'inherit';
+    span.appendChild(range.extractContents());
+    range.insertNode(span);
+    sel.removeAllRanges();
+    const nr = document.createRange();
+    nr.selectNodeContents(span);
+    nr.collapse(false);
+    sel.addRange(nr);
+  }
+  function saveColor(c){
+    try { localStorage.setItem('flick:highlightColor', c); } catch(_){}
   }
   function showToolbar(){
     const sel = window.getSelection();
