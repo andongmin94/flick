@@ -7,7 +7,6 @@
   --shorts-font: "Noto Sans KR", system-ui, sans-serif;
   --shorts-header-bg: #000; /* 헤더만 다크 */
   --shorts-footer-bg: #000; /* 푸터만 다크 */
-  --shorts-border: 2px solid #000;
 }
 
 .flick-wrap-injected {
@@ -36,7 +35,6 @@
   height: min(100vh, calc(100vw * 16 / 9));
   width: min(100vw, calc(100vh * 9 / 16));
   background-clip: padding-box;
-  box-shadow: 0 4px 18px -2px rgba(0, 0, 0, 0.25);
 }
 .flick-header {
   padding: 8px 12px;
@@ -72,7 +70,6 @@
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
-  padding: 16px 18px 18px;
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -124,7 +121,6 @@
 .flick-img {
   width: 100%;
   height: auto;
-  border-radius: 12px;
   object-fit: contain;
   max-height: none;
   display: block;
@@ -268,64 +264,90 @@ body.flick-body-lock {
 }
 /* Font size slider (no hover color change; pointer only on actual bar/thumb) */
 .flick-fontsize-input {
-  -webkit-appearance:none;
-  appearance:none;
-  width:140px;
-  height:20px; /* provide enough hit area but cursor default */
-  background:transparent;
-  border:none;
-  padding:0;
-  margin:0;
-  cursor:default; /* default outside bar */
-  position:relative;
-  --fs-fill:#2e6fb8; /* 약간 더 어두운 블루 */
-  --fs-empty:#ffffff;
-  --fs-thumb:#2e6fb8;
+  -webkit-appearance: none;
+  appearance: none;
+  width: 140px;
+  height: 20px; /* provide enough hit area but cursor default */
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: default; /* default outside bar */
+  position: relative;
+  --fs-fill: #2e6fb8; /* 약간 더 어두운 블루 */
+  --fs-empty: #ffffff;
+  --fs-thumb: #2e6fb8;
 }
 /* WebKit track */
 .flick-fontsize-input::-webkit-slider-runnable-track {
-  height:5px;
-  background:linear-gradient(90deg,var(--fs-fill) var(--_percent,0%), var(--fs-empty) var(--_percent,0%));
-  border-radius:4px;
-  box-shadow:0 0 0 1px rgba(0,0,0,0.08) inset;
-  cursor:pointer; /* pointer only when over bar */
+  height: 5px;
+  background: linear-gradient(
+    90deg,
+    var(--fs-fill) var(--_percent, 0%),
+    var(--fs-empty) var(--_percent, 0%)
+  );
+  border-radius: 4px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  cursor: pointer; /* pointer only when over bar */
 }
-.flick-fontsize-input::-webkit-slider-runnable-track:hover { /* force no color shift */
-  background:linear-gradient(90deg,var(--fs-fill) var(--_percent,0%), var(--fs-empty) var(--_percent,0%));
+.flick-fontsize-input::-webkit-slider-runnable-track:hover {
+  /* force no color shift */
+  background: linear-gradient(
+    90deg,
+    var(--fs-fill) var(--_percent, 0%),
+    var(--fs-empty) var(--_percent, 0%)
+  );
 }
 .flick-fontsize-input::-webkit-slider-thumb {
-  -webkit-appearance:none;
-  width:16px; height:16px; border-radius:50%;
-  background:var(--fs-thumb);
-  border:0; /* 흰색 테두리 제거 */
-  box-shadow:0 2px 5px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.15); /* 약한 외곽선 대체 */
-  margin-top:-5.5px; /* center */
-  cursor:pointer;
-  transition:none; /* no hover change */
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fs-thumb);
+  border: 0; /* 흰색 테두리 제거 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.15); /* 약한 외곽선 대체 */
+  margin-top: -5.5px; /* center */
+  cursor: pointer;
+  transition: none; /* no hover change */
 }
 /* Firefox */
 .flick-fontsize-input::-moz-range-track {
-  height:5px; border-radius:4px; background:var(--fs-empty);
-  box-shadow:0 0 0 1px rgba(0,0,0,0.08) inset;
-  cursor:pointer;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--fs-empty);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.08) inset;
+  cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-progress {
-  height:5px; border-radius:4px; background:var(--fs-fill);
-  cursor:pointer;
+  height: 5px;
+  border-radius: 4px;
+  background: var(--fs-fill);
+  cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-thumb {
-  width:16px; height:16px; border-radius:50%;
-  background:var(--fs-thumb);
-  border:0; /* 흰색 테두리 제거 */
-  box-shadow:0 2px 5px rgba(0,0,0,0.35), 0 0 0 1px rgba(0,0,0,0.15);
-  cursor:pointer;
-  transition:none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--fs-thumb);
+  border: 0; /* 흰색 테두리 제거 */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  transition: none;
 }
 .flick-fontsize-input:focus,
-.flick-fontsize-input:focus-visible { outline:none !important; box-shadow:none; }
-.flick-fontsize-input::-webkit-slider-thumb:focus { outline:none; }
-.flick-fontsize-input::-moz-focus-outer { border:0; }
-.flick-fontsize-input { -webkit-tap-highlight-color:transparent; }
+.flick-fontsize-input:focus-visible {
+  outline: none !important;
+  box-shadow: none;
+}
+.flick-fontsize-input::-webkit-slider-thumb:focus {
+  outline: none;
+}
+.flick-fontsize-input::-moz-focus-outer {
+  border: 0;
+}
+.flick-fontsize-input {
+  -webkit-tap-highlight-color: transparent;
+}
 .flick-fontsize-val {
   color: #98a2b3;
 }
@@ -442,17 +464,45 @@ input.flick-hl-picker-main:active {
 /* ==== Slider focus ring hard kill (cross-browser) ==== */
 .flick-fontsize-input:focus,
 .flick-fontsize-input:focus-visible,
-.flick-fontsize-input:active { outline:none !important; box-shadow:none !important; }
-.flick-fontsize-input::-webkit-focus-inner { border:0; outline:0; }
-.flick-fontsize-input::-webkit-slider-thumb:focus { outline:0; }
-.flick-fontsize-input::-webkit-slider-runnable-track:focus { outline:0; }
-.flick-fontsize-input::-moz-focus-inner { border:0; }
-.flick-fontsize-input::-moz-range-track:focus { outline:0; }
-.flick-fontsize-input::-moz-range-thumb:focus { outline:0; }
+.flick-fontsize-input:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.flick-fontsize-input::-webkit-focus-inner {
+  border: 0;
+  outline: 0;
+}
+.flick-fontsize-input::-webkit-slider-thumb:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-webkit-slider-runnable-track:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-moz-focus-inner {
+  border: 0;
+}
+.flick-fontsize-input::-moz-range-track:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-moz-range-thumb:focus {
+  outline: 0;
+}
 /* Legacy / Edge / IE (defensive) */
-.flick-fontsize-input::-ms-track { background:transparent; border-color:transparent; color:transparent; }
+.flick-fontsize-input::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
 .flick-fontsize-input::-ms-fill-lower,
-.flick-fontsize-input::-ms-fill-upper { background:var(--fs-empty); border:0; }
-.flick-fontsize-input::-ms-thumb { border:0; background:var(--fs-thumb); }
+.flick-fontsize-input::-ms-fill-upper {
+  background: var(--fs-empty);
+  border: 0;
+}
+.flick-fontsize-input::-ms-thumb {
+  border: 0;
+  background: var(--fs-thumb);
+}
 /* Remove accidental text selection highlight while dragging */
-.flick-fontsize-input::selection { background:transparent; }
+.flick-fontsize-input::selection {
+  background: transparent;
+}
