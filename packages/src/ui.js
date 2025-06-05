@@ -73,9 +73,9 @@ export function buildUI(data) {
   footer.innerHTML = "<span>Flick Prototype</span>";
 
   const handleHeader = document.createElement("div");
-  handleHeader.className = "flick-resize-handle flick-resize-header";
+  handleHeader.className = "flick-resize-handle";
   const handleFooter = document.createElement("div");
-  handleFooter.className = "flick-resize-handle flick-resize-footer";
+  handleFooter.className = "flick-resize-handle";
   stage.appendChild(header);
   stage.appendChild(handleHeader);
   stage.appendChild(body);
