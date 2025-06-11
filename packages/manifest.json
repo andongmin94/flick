@@ -16,10 +16,16 @@
   "content_scripts": [
     {
       "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
-      "js": [
-        "content/bundle.js"
+      "js": ["content/bundle.js"],
+      "css": [
+        "src/styles/base.css",
+        "src/styles/layout.css",
+        "src/styles/controls.css",
+        "src/styles/panel.css",
+        "src/styles/toolbar.css",
+        "src/styles/resize.css",
+        "src/styles/utility.css"
       ],
-  "css": ["src/shorts.css"],
       "run_at": "document_idle"
     }
   ],

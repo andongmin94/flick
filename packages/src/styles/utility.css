@@ -1,0 +1,59 @@
+.flick-img {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  max-height: none;
+  display: block;
+}
+.flick-nav-btn {
+  cursor: pointer;
+  padding: 6px 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+}
+.flick-nav-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+/* Slider focus ring kill + legacy bits */
+.flick-fontsize-input:focus,
+.flick-fontsize-input:focus-visible,
+.flick-fontsize-input:active {
+  outline: none !important;
+  box-shadow: none !important;
+}
+.flick-fontsize-input::-webkit-focus-inner {
+  border: 0;
+  outline: 0;
+}
+.flick-fontsize-input::-webkit-slider-thumb:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-webkit-slider-runnable-track:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-moz-focus-inner {
+  border: 0;
+}
+.flick-fontsize-input::-moz-range-track:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-moz-range-thumb:focus {
+  outline: 0;
+}
+.flick-fontsize-input::-ms-track {
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+.flick-fontsize-input::-ms-fill-lower,
+.flick-fontsize-input::-ms-fill-upper {
+  background: var(--fs-empty);
+  border: 0;
+}
+.flick-fontsize-input::-ms-thumb {
+  border: 0;
+  background: var(--fs-thumb);
+}
+.flick-fontsize-input::selection {
+  background: transparent;
+}
