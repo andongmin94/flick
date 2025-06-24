@@ -2,6 +2,8 @@
 import { isSupportedArticle, getActiveSiteConfig } from "./sites.js";
 import { extractPost } from "./extract.js";
 import { buildUI, closeShorts } from "./ui.js";
+import "./styles/styles.css"; // aggregate all CSS for single bundle
+
 // fmkorea 전용 비디오 처리 훅
 import {
   preFmkoreaPrepare,

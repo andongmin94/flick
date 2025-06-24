@@ -9,6 +9,11 @@ export default defineConfig({
       input: resolve(__dirname, "src/entry.js"),
       output: {
         entryFileNames: "bundle.js",
+        // CSS asset naming
+        assetFileNames: (assetInfo) => {
+          if (/\.css$/i.test(assetInfo.name || "")) return "bundle.css"; // single css
+          return assetInfo.name || "[name]";
+        },
       },
     },
   },
