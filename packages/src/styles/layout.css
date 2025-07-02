@@ -19,11 +19,12 @@
   color: #fff;
 }
 .flick-title[contenteditable="true"]:focus {
-  outline: 2px solid #0f52ba;
+  /* 동적 강조색: 로컬스토리지 flick:highlightColor -> --flick-hl -> (--shorts-accent fallback) */
+  outline: 2px solid var(--flick-hl, #003cff);
+  outline-offset: 2px;
   background: #ffffff;
-  border-radius: 8px;
-  color: #111;
-  box-shadow: 0 0 0 3px rgba(15, 82, 186, 0.25);
+  border-radius: 4px;
+  color: #000;
 }
 .flick-body {
   flex: 1;
