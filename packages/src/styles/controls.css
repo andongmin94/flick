@@ -20,10 +20,42 @@
   background: #f2f2f2;
   box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.18);
 }
-.flick-toggle-floating {
+.flick-toggle-wrapper {
   position: fixed;
-  top: 72px;
+  top: 40px; /* 로고 + 버튼 묶음 전체 Y 위치 */
   left: 16px;
+  z-index: 1000002;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-start;
+  font-family: var(--shorts-font);
+}
+.flick-logo-badge {
+  padding: 4px 8px 3px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  border-radius: 6px;
+  background: linear-gradient(90deg,#facf26,#f84b05);
+  color: #222;
+  border: 1px solid #dca21a;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  user-select: none;
+  cursor: default;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+}
+.flick-logo-badge:after {
+  content: ' beta';
+  font-weight: 400;
+  font-size: 10px;
+  margin-left: 2px;
+  opacity: .75;
+}
+.flick-toggle-floating {
+  position: relative; /* wrapper 기준 */
+  top: 0;
+  left: 0;
 }
 .flick-toggle-anchor {
   position: relative;
