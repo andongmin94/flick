@@ -1,25 +1,3 @@
-.flick-toggle-btn {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  z-index: 1000002;
-  padding: 6px 10px;
-  background: #fff;
-  color: #222;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font: 13px var(--shorts-font);
-  cursor: pointer;
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  transition: background 0.15s, box-shadow 0.2s;
-}
-.flick-toggle-btn:hover {
-  background: #f2f2f2;
-  box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.18);
-}
 .flick-toggle-wrapper {
   position: fixed;
   top: 40px; /* 로고 + 버튼 묶음 전체 Y 위치 */
@@ -42,7 +20,7 @@
   border: 1px solid #dca21a;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
   user-select: none;
-  cursor: default;
+  cursor: pointer;
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
 }
 .flick-logo-badge:after {

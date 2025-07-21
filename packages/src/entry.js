@@ -44,21 +44,20 @@ function ensureButton() {
   const logo = document.createElement("div");
   logo.className = "flick-logo-badge";
   logo.textContent = "FLICK"; // 필요시 SVG나 이미지로 교체
+  logo.title = "쇼츠 보기/닫기"; // 시각적 텍스트는 붙이지 않음
+  logo.addEventListener("click", () => {
+    const open = !!document.querySelector(".flick-wrap-injected");
+    open ? closeShorts() : openShorts();
+    updateBtn();
+  });
   wrap.appendChild(logo);
-
-  const btn = document.createElement("button");
-  btn.className = "flick-toggle-btn flick-toggle-floating";
-  btn.type = "button";
-  btn.textContent = "쇼츠 보기";
-  btn.addEventListener("click", toggle);
-  wrap.appendChild(btn);
   document.body.appendChild(wrap);
   updateBtn();
 }
 function updateBtn() {
   const open = !!document.querySelector(".flick-wrap-injected");
-  const main = document.querySelector(".flick-toggle-btn");
-  if (main) main.textContent = open ? "쇼츠 닫기" : "쇼츠 보기";
+  const logo = document.querySelector(".flick-logo-badge");
+  if (logo) logo.setAttribute("data-open", open ? "true" : "false");
   const cap = document.querySelector(".flick-capture-btn");
   if (cap) cap.disabled = open;
 }
