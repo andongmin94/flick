@@ -211,14 +211,17 @@ function createFontSizePanel(storageKey, titleEl) {
     const v = parseFloat(input.value) || min;
     const p = ((v - min) / (max - min)) * 100;
     input.style.setProperty("--_percent", p + "%");
-  // Thumb 색상 보간 (start: #FACF26, end: #F84B05)
-  const t = Math.max(0, Math.min(1, p / 100));
-  const s = { r: 0xFA, g: 0xCF, b: 0x26 }; // start color
-  const eC = { r: 0xF8, g: 0x4B, b: 0x05 }; // end color
-  const lerp = (a,b)=>Math.round(a + (b-a)*t);
-  const r = lerp(s.r, eC.r), g = lerp(s.g, eC.g), b = lerp(s.b, eC.b);
-  const hex = '#'+[r,g,b].map(n=>n.toString(16).padStart(2,'0')).join('');
-  input.style.setProperty('--fs-thumb', hex);
+    // Thumb 색상 보간 (start: #FACF26, end: #F84B05)
+    const t = Math.max(0, Math.min(1, p / 100));
+    const s = { r: 0xfa, g: 0xcf, b: 0x26 }; // start color
+    const eC = { r: 0xf8, g: 0x4b, b: 0x05 }; // end color
+    const lerp = (a, b) => Math.round(a + (b - a) * t);
+    const r = lerp(s.r, eC.r),
+      g = lerp(s.g, eC.g),
+      b = lerp(s.b, eC.b);
+    const hex =
+      "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("");
+    input.style.setProperty("--fs-thumb", hex);
   };
   setPercent();
   input.addEventListener("input", () => {
@@ -280,9 +283,10 @@ function enableAutoHighlight(titleEl) {
   }
   function mergeAdjacent(parent, color) {
     if (!parent) return;
-    const nodes = [...parent.querySelectorAll('[data-flick-hl]')];
+    const nodes = [...parent.querySelectorAll("[data-flick-hl]")];
     for (let i = 0; i < nodes.length - 1; i++) {
-      const a = nodes[i], b = nodes[i+1];
+      const a = nodes[i],
+        b = nodes[i + 1];
       if (a.nextSibling === b && a.style.color === b.style.color) {
         while (b.firstChild) a.appendChild(b.firstChild);
         b.remove();
@@ -294,8 +298,8 @@ function enableAutoHighlight(titleEl) {
     if (!sel || !sel.rangeCount) return;
     const r = sel.getRangeAt(0);
     if (!validRange(r)) return;
-    const span = document.createElement('span');
-    span.setAttribute('data-flick-hl','');
+    const span = document.createElement("span");
+    span.setAttribute("data-flick-hl", "");
     span.style.color = getStoredColor();
     span.appendChild(r.extractContents());
     r.insertNode(span);
@@ -307,8 +311,8 @@ function enableAutoHighlight(titleEl) {
     sel.addRange(nr);
     mergeAdjacent(span.parentNode, span.style.color);
   }
-  document.addEventListener('mouseup', () => setTimeout(applySelection, 0));
-  document.addEventListener('keyup', (e) => {
-    if (e.key === 'Shift') setTimeout(applySelection,0);
+  document.addEventListener("mouseup", () => setTimeout(applySelection, 0));
+  document.addEventListener("keyup", (e) => {
+    if (e.key === "Shift") setTimeout(applySelection, 0);
   });
 }
