@@ -32,6 +32,8 @@
         color: var(--fg-dim);
         line-height: 1.6;
       }
+  /* letter-spacing 통일 (카드 내부 요소) */
+  .card h2, .sub, .hint, .domain-pill, button.primary, button.secondary, .tag { letter-spacing: .4px; }
       .grid {
         display: grid;
         gap: 22px;
@@ -85,6 +87,11 @@
         margin-top: 12px;
         min-height: 28px;
       }
+  .domain-pill {text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 10px;border:1px solid var(--border);background:var(--bg-panel-alt);border-radius:999px;font:500 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.4px;color:var(--fg);box-shadow:0 2px 6px -2px rgba(0,0,0,.08),0 0 0 1px rgba(255,255,255,.04) inset;transition:background .3s,border-color .3s,box-shadow .3s,color .3s}
+  .domain-pill:hover {background:var(--bg-panel);border-color:var(--accent2);box-shadow:0 3px 10px -4px rgba(0,0,0,.2),0 0 0 1px rgba(255,255,255,.05) inset;color:var(--fg)}
+  .domain-pill:focus-visible {outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(248,75,5,.35)}
+  .domain-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-grad);box-shadow:0 0 0 1px rgba(0,0,0,.25) inset,0 0 0 1px rgba(255,255,255,.25)}
+  @media (prefers-color-scheme: dark){.domain-pill{box-shadow:0 2px 6px -2px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset}}
   .tag{--c:var(--accent);position:relative;background:var(--accent-grad);color:#1b2027;font-size:12px;padding:5px 9px 5px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;font-weight:600;letter-spacing:.3px;box-shadow:0 4px 14px -6px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.07) inset;animation:fadeIn .35s ease}
       .tag button {
         all: unset;
@@ -223,9 +230,8 @@
               color: transparent;
             "
           >
-            지원 도메인
+            현재 적용 대상 사이트 목록
           </h2>
-          <p class="sub">현재 적용 대상 사이트 목록</p>
         </div>
         <div>
           <ul
