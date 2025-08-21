@@ -1,0 +1,89 @@
+:root { /* CSS 변수 */
+  --shorts-fg: #222;
+  --shorts-stage-bg: #fff; /* 내부 흰 배경 */
+  --shorts-overlay-bg: #fff; /* 레터박스 바를 검은색으로 */
+  --shorts-accent: #ff0050;
+  --shorts-radius: 0; /* 라운딩 제거 */
+  --shorts-font: 'Noto Sans KR', system-ui, sans-serif;
+  --shorts-header-bg: rgba(255,255,255,.85);
+  --shorts-footer-bg: rgba(255,255,255,.92);
+  --shorts-border: 2px solid #000; /* 검정 테두리 */
+}
+
+.s2s-wrap-injected {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--shorts-overlay-bg);
+  display: flex;
+  align-items: center; /* 수직 가운데 => 위아래 검은 바 */
+  justify-content: center;
+  z-index: 999999;
+  font-family: var(--shorts-font);
+  box-sizing: border-box;
+}
+
+.s2s-stage {
+  background: var(--shorts-stage-bg);
+  color: var(--shorts-fg);
+  border-radius: var(--shorts-radius);
+  border: var(--shorts-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  /* 9:16 비율 유지 - 세로가 여유 있으면 세로 기준, 아니면 가로 기준 */
+  height: min(100vh, calc(100vw * 16 / 9));
+  width: calc(var(--s2s-stage-height, 100%) * 9 / 16);
+  /* JS 없이 width 계산 위해 아래에서 다시 설정: 실제로는 가로 우선 -> 재정의 */
+  width: min(100vw, calc(100vh * 9 / 16));
+  background-clip: padding-box;
+}
+
+.s2s-header {padding:8px 12px; font-size:14px; display:flex; align-items:center; justify-content:center; background:var(--shorts-header-bg); border-bottom:1px solid #000;}
+.s2s-title {font-weight:600; line-height:1.25; flex:1; text-align:center; cursor:text; color:#111;}
+.s2s-title[contenteditable="true"]:focus {outline:2px solid var(--shorts-accent); background:#fffbe8; border-radius:6px;}
+.s2s-close {display:none !important;}
+
+.s2s-body {flex:1; overflow-y:auto; scroll-behavior:smooth; padding:16px 18px 18px; display:flex; flex-direction:column; gap:18px; background:transparent; scrollbar-width:none; -ms-overflow-style:none;}
+.s2s-body::-webkit-scrollbar {width:0; height:0; display:none;}
+.s2s-block {font-size:16px; line-height:1.55; white-space:normal; word-break:break-word; color:inherit;}
+.s2s-block pre {white-space:pre; overflow:auto; padding:10px; background:#f6f6f6; border:1px solid #ddd; border-radius:6px; font-size:13px;}
+.s2s-block h2, .s2s-block h3, .s2s-block h4 {margin:0 0 6px;}
+.s2s-img {width:100%; border-radius:12px; object-fit:cover; max-height:80%;}
+
+.s2s-footer {padding:6px 12px; display:flex; justify-content:space-between; align-items:center; font-size:11px; background:var(--shorts-footer-bg); color:#333;} 
+.s2s-nav-btn {cursor:pointer; padding:6px 10px; background:rgba(255,255,255,.1); border-radius:6px;} 
+.s2s-nav-btn:hover {background:rgba(255,255,255,.25);} 
+
+body.s2s-body-lock {overflow:hidden !important; touch-action:none;}
+
+/* 전환 애니메이션 */
+.s2s-fade-in {animation: s2s-fade .35s ease;}
+@keyframes s2s-fade {from {opacity:0; transform:translateY(12px);} to {opacity:1; transform:translateY(0);} }
+
+/* 토글 버튼 */
+.s2s-toggle-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 500;
+  padding: 6px 10px;
+  background: #fff;
+  color: #222;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: 13px var(--shorts-font);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0,0,0,.12);
+  transition: background .15s, box-shadow .2s;
+}
+.s2s-toggle-btn:hover {background:#f2f2f2; box-shadow:0 3px 10px -2px rgba(0,0,0,.18);} 
+.s2s-toggle-floating { position: fixed; top: 72px; left: 16px; }
+
+/* 페이지 컨테이너가 relative가 아닐 경우 대비 */
+.s2s-toggle-anchor { position: relative; }
