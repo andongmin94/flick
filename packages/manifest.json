@@ -1,8 +1,16 @@
 {
   "manifest_version": 3,
   "name": "FLICK",
-  "description": "youtube short formatting chrome extension",
+  "description": "youtube short formatting extension",
   "version": "0.1.0",
+  "icons": {
+    "16": "icons/flick.png",
+    "32": "icons/flick.png",
+    "48": "icons/flick.png",
+    "128": "icons/flick.png",
+    "256": "icons/flick.png",
+    "512": "icons/flick.png"
+  },
   "permissions": ["storage", "scripting"],
   "host_permissions": [
     "https://www.fmkorea.com/*",
@@ -23,7 +31,12 @@
   ],
   "action": {
     "default_title": "Shorts View",
-    "default_popup": "popup/popup.html"
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/flick.png",
+      "24": "icons/flick.png",
+      "32": "icons/flick.png"
+    }
   },
   "options_page": "options/options.html"
 }
