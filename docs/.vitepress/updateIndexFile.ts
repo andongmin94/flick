@@ -12,8 +12,8 @@ async function updateIndexMd(releaseData: {
 
     // name 필드 업데이트
     content = content.replace(
-      /name: 챗뷰 v[0-9]+\.[0-9]+\.[0-9]+/,
-      `name: 챗뷰 ${releaseData.version}`
+      /name: FLICK v[0-9]+\.[0-9]+\.[0-9]+/,
+      `name: FLICK ${releaseData.version}`
     );
 
     // 다운로드 링크 업데이트
