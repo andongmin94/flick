@@ -1,37 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
-<head>
-<meta charset="utf-8" />
-<title>Shorts 옵션</title>
-<style>
-body {font:14px system-ui, sans-serif; padding:20px; max-width:640px;}
-label {display:block; margin-top:14px; font-weight:600;}
-input[type=text] {width:100%; padding:6px 8px;}
-small {color:#666;}
-</style>
-</head>
-<body>
-  <h1>Shorts View 옵션</h1>
-  <p>향후: 자동 표시 여부, 지원 도메인, 폰트 크기 등을 설정할 수 있도록 확장 예정.</p>
-  <label>커스텀 지원 도메인 (쉼표로 구분)
-    <input id="domains" type="text" placeholder="예: fmkorea.com,example.com" />
-  </label>
-  <button id="save">저장</button>
-  <p id="status"></p>
-<script>
-  const key='s2s_domains';
-  chrome.storage.sync.get([key], res => {
-    if(res[key]) document.getElementById('domains').value = res[key].join(',');
-  });
-  document.getElementById('save').addEventListener('click', ()=>{
-    const raw = document.getElementById('domains').value.trim();
-    const arr = raw? raw.split(/[,\n]/).map(s=>s.trim()).filter(Boolean):[];
-    chrome.storage.sync.set({[key]:arr}, ()=>{
-      const s=document.getElementById('status');
-      s.textContent='저장됨';
-      setTimeout(()=>s.textContent='',1500);
-    });
-  });
-</script>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Shorts 옵션</title>
+    <style>
+      body {
+        font: 14px system-ui, sans-serif;
+        padding: 20px;
+        max-width: 640px;
+      }
+      label {
+        display: block;
+        margin-top: 14px;
+        font-weight: 600;
+      }
+      input[type="text"] {
+        width: 100%;
+        padding: 6px 8px;
+      }
+      small {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Shorts View 옵션</h1>
+    <p>
+      향후: 자동 표시 여부, 지원 도메인, 폰트 크기 등을 설정할 수 있도록 확장
+      예정.
+    </p>
+    <label
+      >커스텀 지원 도메인 (쉼표로 구분)
+      <input
+        id="domains"
+        type="text"
+        placeholder="예: fmkorea.com,example.com"
+      />
+    </label>
+    <button id="save">저장</button>
+    <p id="status"></p>
+    <script>
+      const key = "s2s_domains";
+      chrome.storage.sync.get([key], (res) => {
+        if (res[key])
+          document.getElementById("domains").value = res[key].join(",");
+      });
+      document.getElementById("save").addEventListener("click", () => {
+        const raw = document.getElementById("domains").value.trim();
+        const arr = raw
+          ? raw
+              .split(/[,\n]/)
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [];
+        chrome.storage.sync.set({ [key]: arr }, () => {
+          const s = document.getElementById("status");
+          s.textContent = "저장됨";
+          setTimeout(() => (s.textContent = ""), 1500);
+        });
+      });
+    </script>
+  </body>
 </html>
