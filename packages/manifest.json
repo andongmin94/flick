@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Board to Shorts Formatter",
-  "description": "커뮤니티 게시글을 유튜브 쇼츠형(9:16) 뷰로 재구성하여 스크롤 경험을 개선합니다.",
+  "name": "FLICK",
+  "description": "youtube short formatting chrome extension",
   "version": "0.1.0",
   "permissions": ["storage", "scripting"],
   "host_permissions": [
@@ -11,7 +11,12 @@
   "content_scripts": [
     {
       "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
-      "js": ["content/shortsize.js"],
+      "js": [
+        "content/s2s_sites.js",
+        "content/s2s_extract.js",
+        "content/s2s_ui.js",
+        "content/shortsize.js"
+      ],
       "css": ["content/shorts.css"],
       "run_at": "document_idle"
     }

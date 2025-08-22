@@ -68,7 +68,8 @@ body.s2s-body-lock {overflow:hidden !important; touch-action:none;}
   position: absolute;
   top: 4px;
   left: 4px;
-  z-index: 500;
+  /* 오버레이(.s2s-wrap-injected z-index:999999) 위에 항상 보이도록 더 높게 */
+  z-index: 1000002;
   padding: 6px 10px;
   background: #fff;
   color: #222;
