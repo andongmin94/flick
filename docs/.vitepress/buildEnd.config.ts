@@ -3,19 +3,19 @@ import { writeFileSync } from "fs";
 import { Feed } from "feed";
 import { createContentLoader, type SiteConfig } from "vitepress";
 
-const siteUrl = "https://chat-view.andongmin.com";
+const siteUrl = "https://flick.andongmin.com";
 const blogUrl = `${siteUrl}/blog`;
 
 export const buildEnd = async (config: SiteConfig) => {
   const feed = new Feed({
-    title: "챗뷰",
-    description: "GUI Library for Desktop App Development",
+    title: "FLICK",
+    description: "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션",
     id: blogUrl,
     link: blogUrl,
     language: "ko",
-    image: "https://chat-view.andongmin.com/flick.png",
-    favicon: "https://chat-view.andongmin.com/flick.png",
-    copyright: "Copyright © 2024 andongmin",
+    image: "https://flick.andongmin.com/flick.png",
+    favicon: "https://flick.andongmin.com/flick.png",
+    copyright: "Copyright © 2025 andongmin",
   });
 
   const posts = await createContentLoader("blog/*.md", {

@@ -5,10 +5,10 @@ import { updateIndexMd } from "./updateIndexFile";
 import fs from "node:fs/promises";
 import path from "node:path";
 
-const ogTitle = "챗뷰";
-const ogDescription = "모니터 하나로 위플랩 / 치지직 / 숲 채팅 모니터링";
-const ogUrl = "https://chat-view.andongmin.com";
-const ogImage = "https://chat-view.andongmin.com/flick.png";
+const ogTitle = "FLICK";
+const ogDescription = "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션";
+const ogUrl = "https://flick.andongmin.com";
+const ogImage = "https://flick.andongmin.com/flick.png";
 
 async function generateReleaseNotes(releases: any) {
   const releaseDir = path.resolve(__dirname, "../guide/release");
@@ -103,8 +103,8 @@ const config = async (): Promise<UserConfig> => {
   }));
 
   return {
-    title: "챗뷰",
-    description: "GUI Library for Desktop App Development",
+    title: "FLICK",
+    description: "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션",
 
     head: [
       ["link", { rel: "icon", type: "image/svg+xml", href: "/flick.png" }],
@@ -151,21 +151,21 @@ const config = async (): Promise<UserConfig> => {
 
       footer: {
         message: `Released under the EULA License`,
-        copyright: "Copyright © 2024 안동민",
+        copyright: "Copyright © 2025 안동민",
       },
 
       nav: [
-        { text: "챗뷰 가이드", link: "/guide", activeMatch: "/guide" },
-        { text: "챗뷰 개발자", link: "/maintainer" },
+        { text: "FLICK 가이드", link: "/guide", activeMatch: "/guide" },
+        { text: "FLICK 개발자", link: "/maintainer" },
       ],
 
       sidebar: {
         "/guide/": [
           {
-            text: "챗뷰 가이드",
+            text: "FLICK 가이드",
             items: [
               {
-                text: "챗뷰 시작하기",
+                text: "FLICK 시작하기",
                 link: "/guide/",
               },
               {

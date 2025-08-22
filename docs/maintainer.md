@@ -1,7 +1,7 @@
 ---
 layout: page
-title: 챗뷰 개발자
-description: 챗뷰 개발자
+title: FLICK 개발자
+description: FLICK 개발자
 ---
 
 <script setup>
