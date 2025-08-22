@@ -1,23 +1,22 @@
 ---
 layout: home
 
-title: 챗뷰
-titleTemplate: 채팅 모니터링 프로그램
+title: FLICK
+titleTemplate: 유머 쇼츠 포매터
 
 hero:
-  name: 챗뷰 v0.0.0
-  text: 채팅 모니터링 프로그램
-  tagline: 모니터 하나로 위플랩 / 치지직 / 숲 채팅 모니터링
+  name: FLICK
+  text: 유머 쇼츠 포매터
+  tagline: 유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션
   image:
     src: /flick.png
-    alt: chat-view
+    alt: flick
   actions:
     - theme: brand
-      text: 챗뷰 가이드
+      text: FLICK 가이드
       link: /guide/
     - theme: alt
-      text: 사용 방법 (Youtube)
-      link: https://youtu.be/15xH4RvpjAE
+      text: (준비 중) 사용 방법 (Youtube)
 
 features:
   - icon:
@@ -26,7 +25,7 @@ features:
      width: 100px
     title: Windows 다운로드
     linkText: ChatView.exe (0 MB)
-    link: https://github.com/andongmin94/chat-view/releases/download/v0.0.0/ChatView.exe
+    link: https://github.com/andongmin94/flick/releases/download/v0.0.0/ChatView.exe
   - icon:
      dark: /apple-white.svg
      light: /apple-black.svg
