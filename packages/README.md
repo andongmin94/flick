@@ -13,17 +13,27 @@
 3. "압축해제된 확장 프로그램을 로드" 클릭 후 이 폴더 선택
 4. fmkorea 게시글 (best/*) 들어가면 자동 표시
 
+## 빌드 (Vite 도입 후)
+```
+npm install
+npm run build
+```
+생성물: `content/bundle.js` (manifest가 이 파일을 content script 로 로드)
+
 ## 구조 (주요 파일)
 ```
 manifest.json
-content/
-  sites.js              # 사이트 매칭 & 규칙 식별(ruleId)
+src/
+  sites.js
   rules/
-    fmkorea.js          # fmkorea 전용 추출 규칙 (ruleId=fmkorea)
-  extract.js            # 규칙 디스패처 (__FLICK.extractPost)
-  ui.js                 # 오버레이 UI 빌드 (__FLICK.buildUI)
-  shortsize.js          # 부트스트랩 & 토글 버튼
-  shorts.css            # 스타일 (flick-* 클래스)
+    fmkorea.js
+  extract.js
+  ui.js
+  entry.js              # 번들 엔트리 (토글 버튼/핫키 포함)
+  shorts.css            # 스타일 소스 (Vite가 content/shorts.css 로 출력)
+content/
+  bundle.js             # 빌드 결과 (Vite)
+  shorts.css            # 스타일 (수동 유지)
 ```
 
 ## 향후 개선 아이디어
