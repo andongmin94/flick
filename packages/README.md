@@ -1,6 +1,6 @@
-# Board to Shorts Formatter
+# Flick – Board to Shorts Formatter
 
-fmkorea 등의 커뮤니티 게시글을 9:16 (유튜브 쇼츠) 단일 카드 레이아웃으로 재구성하는 실험용 크롬 확장.
+커뮤니티 게시글을 9:16 (유튜브 쇼츠 스타일) 단일 카드 레이아웃으로 재구성하는 실험용 크롬 확장.
 
 ## 기능
 - fmkorea `best/*` 글 접속 시 자동 쇼츠 뷰 오버레이 표시
@@ -13,25 +13,29 @@ fmkorea 등의 커뮤니티 게시글을 9:16 (유튜브 쇼츠) 단일 카드 �
 3. "압축해제된 확장 프로그램을 로드" 클릭 후 이 폴더 선택
 4. fmkorea 게시글 (best/*) 들어가면 자동 표시
 
-## 구조
+## 구조 (주요 파일)
 ```
 manifest.json
 content/
-  shorts.css
-  shortsize.js
-popup/
-  popup.html
-options/
-  options.html
+  sites.js              # 사이트 매칭 & 규칙 식별(ruleId)
+  rules/
+    fmkorea.js          # fmkorea 전용 추출 규칙 (ruleId=fmkorea)
+  extract.js            # 규칙 디스패처 (__FLICK.extractPost)
+  ui.js                 # 오버레이 UI 빌드 (__FLICK.buildUI)
+  shortsize.js          # 부트스트랩 & 토글 버튼
+  shorts.css            # 스타일 (flick-* 클래스)
 ```
 
 ## 향후 개선 아이디어
 - 다수 이미지 슬라이드/Paging
 - 텍스트 자동 분량 분할 (현재는 단락 그대로)
 - 폰트 크기/다크 테마 사용자 설정
-- 더 많은 커뮤니티 패턴 인식 (clien, ruliweb 등)
+- 더 많은 커뮤니티 패턴 인식 (clien, ruliweb 등: rule_<site>.js 추가 + sites.js 등록)
 - AI 요약(선택) + 핵심 문장 하이라이트
 - Lazy load / IntersectionObserver 활용 이미지 최적화
 
+## 네임스페이스
+전역 객체: `window.__FLICK` (필요 시 다른 스크립트에서 확장 가능)
+
 ## 라이선스
-MIT (단, 사이트 TOS 준수 필요)
+MIT (사이트 TOS 준수 필요)
