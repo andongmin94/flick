@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "FLICK",
   "description": "youtube short formatting extension",
-  "version": "0.1.0",
+  "version": "0.0.1",
   "icons": {
     "16": "icons/flick.png",
     "32": "icons/flick.png",
@@ -17,11 +17,7 @@
     {
       "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
       "js": [
-        "content/sites.js",
-        "content/rules/fmkorea.js",
-        "content/extract.js",
-        "content/ui.js",
-        "content/shortsize.js"
+        "content/bundle.js"
       ],
       "css": ["content/shorts.css"],
       "run_at": "document_idle"

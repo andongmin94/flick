@@ -1,0 +1,13 @@
+{
+  "name": "flick",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^7.1.3"
+  }
+}
