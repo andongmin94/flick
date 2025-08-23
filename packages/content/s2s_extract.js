@@ -1,42 +1,28 @@
-// 단순화: 사이트 설정 무시하고 문서 첫 <article> 내부만 추출
-(function (ns) {
-  ns.extractPost = function () {
-    const article = document.querySelector('article');
-    const title = (article && (article.querySelector('h1,h2,h3')?.textContent || '').trim())
-      || (document.title || '제목 없음');
-    if (!article) return { title, blocks: [] };
-
-    const blocks = [];
-    const addedImg = new Set();
+/**
+ * s2s_extract.js (Dispatcher)
+ * ------------------------------------------------------------
+ * 사이트별 개별 추출 로직(rule_*.js) 을 선택 실행하는 디스패처.
+ * - s2s_sites.js 에서 site.ruleId 로 어떤 규칙 사용할지 지정.
+ * - 규칙들은 window.__S2S.__RULES[ruleId] 형태로 등록.
+ * - 규칙 함수 시그니처: (siteConfig) => { title, blocks }
+ * - 규칙 없거나 실패 시 기본 fallback (빈 blocks) 반환.
+ */
+(function(ns){
+  ns.extractPost = function(){
     const cfg = ns.getActiveSiteConfig && ns.getActiveSiteConfig();
-    const skipSel = cfg && cfg.skipClosest; // 가까운 조상 필터
-
-    // 이미지 먼저 수집 (본문 순서대로)
-    article.querySelectorAll('img').forEach(img => {
-      if (skipSel && img.closest(skipSel)) return;
-      const src = img.getAttribute('data-src') || img.getAttribute('data-original') || img.src;
-      if (!src || addedImg.has(src)) return;
-      addedImg.add(src);
-      blocks.push({ type: 'image', src, alt: img.alt || '' });
-    });
-
-    // 텍스트/블록 요소 수집 (단순)
-    const seenText = new Set();
-    article.querySelectorAll('p, h1, h2, h3, h4, h5, h6, li, blockquote, pre').forEach(el => {
-      if (skipSel && el.closest(skipSel)) return;
-      const txt = (el.textContent || '').replace(/\s+/g, ' ').trim();
-      if (!txt) return;
-      // 너무 짧은 구두점 단독 제외
-      if (txt.length === 1 && /[\p{P}\p{S}]/u.test(txt)) return;
-      if (seenText.has(txt)) return; // 완전 중복 방지
-      seenText.add(txt);
-      if (el.tagName === 'PRE') {
-        blocks.push({ type: 'html', html: el.outerHTML });
-      } else {
-        blocks.push({ type: 'html', html: el.innerHTML.trim() });
+    if(!cfg) return { title: '지원되지 않는 사이트', blocks: [] };
+    const ruleId = cfg.ruleId;
+    const registry = ns.__RULES || {};
+    const ruleFn = ruleId && registry[ruleId];
+    try {
+      if (typeof ruleFn === 'function') {
+        return ruleFn(cfg) || { title: document.title || '제목 없음', blocks: [] };
       }
-    });
-
-    return { title, blocks };
+      // ruleId 없으면 향후 공통 휴리스틱 로직 자리
+      return { title: document.title || '제목 없음', blocks: [] };
+    } catch(err){
+      console.error('[S2S extract error]', err);
+      return { title: document.title || '제목 없음', blocks: [] };
+    }
   };
 })(window.__S2S = window.__S2S || {});
