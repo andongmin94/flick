@@ -11,7 +11,7 @@
   --shorts-border: 2px solid #000; /* 검정 테두리 */
 }
 
-.s2s-wrap-injected {
+.flick-wrap-injected {
   position: fixed;
   inset: 0;
   width: 100vw;
@@ -25,7 +25,7 @@
   box-sizing: border-box;
 }
 
-.s2s-stage {
+.flick-stage {
   background: var(--shorts-stage-bg);
   color: var(--shorts-fg);
   border-radius: var(--shorts-radius);
@@ -36,13 +36,12 @@
   position: relative;
   /* 9:16 비율 유지 - 세로가 여유 있으면 세로 기준, 아니면 가로 기준 */
   height: min(100vh, calc(100vw * 16 / 9));
-  width: calc(var(--s2s-stage-height, 100%) * 9 / 16);
-  /* JS 없이 width 계산 위해 아래에서 다시 설정: 실제로는 가로 우선 -> 재정의 */
+  width: calc(var(--flick-stage-height, 100%) * 9 / 16);
   width: min(100vw, calc(100vh * 9 / 16));
   background-clip: padding-box;
 }
 
-.s2s-header {
+.flick-header {
   padding: 8px 12px;
   font-size: 14px;
   display: flex;
@@ -51,7 +50,7 @@
   background: var(--shorts-header-bg);
   border-bottom: 1px solid #000;
 }
-.s2s-title {
+.flick-title {
   font-weight: 600;
   line-height: 1.25;
   flex: 1;
@@ -59,16 +58,14 @@
   cursor: text;
   color: #111;
 }
-.s2s-title[contenteditable="true"]:focus {
+.flick-title[contenteditable="true"]:focus {
   outline: 2px solid var(--shorts-accent);
   background: #fffbe8;
   border-radius: 6px;
 }
-.s2s-close {
-  display: none !important;
-}
+.flick-close { display: none !important; }
 
-.s2s-body {
+.flick-body {
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
@@ -80,117 +77,24 @@
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
-.s2s-body::-webkit-scrollbar {
-  width: 0;
-  height: 0;
-  display: none;
-}
-.s2s-block {
-  font-size: 16px;
-  line-height: 1.55;
-  white-space: normal;
-  word-break: break-word;
-  color: inherit;
-}
-.s2s-block img { /* HTML 블록 안에 남은 이미지 보호 */
-  max-width: 100%;
-  height: auto;
-  object-fit: contain;
-  display: block;
-}
-.s2s-block pre {
-  white-space: pre;
-  overflow: auto;
-  padding: 10px;
-  background: #f6f6f6;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 13px;
-}
-.s2s-block h2,
-.s2s-block h3,
-.s2s-block h4 {
-  margin: 0 0 6px;
-}
-.s2s-img {
-  width: 100%;
-  height: auto; /* 원본 비율 유지 */
-  border-radius: 12px;
-  object-fit: contain; /* 혹시 height 지정 시 비율 유지 */
-  max-height: none; /* 크롭 제한 제거 */
-  display: block;
-}
+.flick-body::-webkit-scrollbar { width:0; height:0; display:none; }
 
-.s2s-footer {
-  padding: 6px 12px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 11px;
-  background: var(--shorts-footer-bg);
-  color: #333;
-}
-.s2s-nav-btn {
-  cursor: pointer;
-  padding: 6px 10px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
-}
-.s2s-nav-btn:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
+.flick-block { font-size:16px; line-height:1.55; white-space:normal; word-break:break-word; color:inherit; }
+.flick-block img { max-width:100%; height:auto; object-fit:contain; display:block; }
+.flick-block pre { white-space:pre; overflow:auto; padding:10px; background:#f6f6f6; border:1px solid #ddd; border-radius:6px; font-size:13px; }
+.flick-block h2, .flick-block h3, .flick-block h4 { margin:0 0 6px; }
+.flick-img { width:100%; height:auto; border-radius:12px; object-fit:contain; max-height:none; display:block; }
 
-body.s2s-body-lock {
-  overflow: hidden !important;
-  touch-action: none;
-}
+.flick-footer { padding:6px 12px; display:flex; justify-content:space-between; align-items:center; font-size:11px; background:var(--shorts-footer-bg); color:#333; }
+.flick-nav-btn { cursor:pointer; padding:6px 10px; background:rgba(255,255,255,0.1); border-radius:6px; }
+.flick-nav-btn:hover { background:rgba(255,255,255,0.25); }
 
-/* 전환 애니메이션 */
-.s2s-fade-in {
-  animation: s2s-fade 0.35s ease;
-}
-@keyframes s2s-fade {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+body.flick-body-lock { overflow:hidden !important; touch-action:none; }
 
-/* 토글 버튼 */
-.s2s-toggle-btn {
-  position: absolute;
-  top: 4px;
-  left: 4px;
-  /* 오버레이(.s2s-wrap-injected z-index:999999) 위에 항상 보이도록 더 높게 */
-  z-index: 1000002;
-  padding: 6px 10px;
-  background: #fff;
-  color: #222;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font: 13px var(--shorts-font);
-  cursor: pointer;
-  display: inline-flex;
-  gap: 4px;
-  align-items: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
-  transition: background 0.15s, box-shadow 0.2s;
-}
-.s2s-toggle-btn:hover {
-  background: #f2f2f2;
-  box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.18);
-}
-.s2s-toggle-floating {
-  position: fixed;
-  top: 72px;
-  left: 16px;
-}
+.flick-fade-in { animation:flick-fade 0.35s ease; }
+@keyframes flick-fade { from { opacity:0; transform:translateY(12px);} to { opacity:1; transform:translateY(0);} }
 
-/* 페이지 컨테이너가 relative가 아닐 경우 대비 */
-.s2s-toggle-anchor {
-  position: relative;
-}
+.flick-toggle-btn { position:absolute; top:4px; left:4px; z-index:1000002; padding:6px 10px; background:#fff; color:#222; border:1px solid #ccc; border-radius:6px; font:13px var(--shorts-font); cursor:pointer; display:inline-flex; gap:4px; align-items:center; box-shadow:0 2px 6px rgba(0,0,0,0.12); transition:background 0.15s, box-shadow 0.2s; }
+.flick-toggle-btn:hover { background:#f2f2f2; box-shadow:0 3px 10px -2px rgba(0,0,0,0.18); }
+.flick-toggle-floating { position:fixed; top:72px; left:16px; }
+.flick-toggle-anchor { position:relative; }

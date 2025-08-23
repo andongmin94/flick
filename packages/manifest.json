@@ -12,18 +12,15 @@
     "512": "icons/flick.png"
   },
   "permissions": ["storage", "scripting"],
-  "host_permissions": [
-    "https://www.fmkorea.com/*",
-    "http://www.fmkorea.com/*"
-  ],
+  "host_permissions": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
   "content_scripts": [
     {
       "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
       "js": [
-        "content/s2s_sites.js",
-        "content/rule_fmkorea.js",
-        "content/s2s_extract.js",
-        "content/s2s_ui.js",
+        "content/sites.js",
+        "content/rules/fmkorea.js",
+        "content/extract.js",
+        "content/ui.js",
         "content/shortsize.js"
       ],
       "css": ["content/shorts.css"],
