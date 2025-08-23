@@ -6,21 +6,9 @@
       match: /https?:\/\/(www\.)?fmkorea\.com\//i,
       // 게시글 URL 패턴: /best/ 포함하거나, /숫자 (문서 번호), 혹은 index.php?mid= 형태
       articleMatch: /(\/best\/)|\/(\d+)(?:$|[?#])|index\.php\?mid=/i,
-      titleSanitizers: [
-        [/\s*-\s*FM코리아.*/i, ""],
-        [/\|\s*FMKOREA.*/i, ""],
-        [/\s*:\s*네이버\s*뉴스.*/i, ""],
-      ],
-      titleSelectors: [
-        ".read_header h1",
-        ".rd_hd h1",
-        ".read_header .np_18px",
-        ".np_18px",
-      ],
-      contentSelector:
-        ".read_body, .rd_body, .view_content, .article_body, .content, #articleBody",
-      skipClosest: ".mediaelement_video, .document_address",
-      strictArticleRoot: true,
+      // 단순 모드에서도 제외하고 싶은 컨테이너 (가까운 조상) 셀렉터
+      skipClosest: ".mediaelement_video, .document_address"
+      // NOTE: article-only 단순 추출 모드라 나머지 세부 설정은 사용하지 않음.
     },
     // 추가 사이트는 동일 패턴으로 push
   ];

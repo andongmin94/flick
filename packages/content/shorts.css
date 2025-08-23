@@ -92,6 +92,12 @@
   word-break: break-word;
   color: inherit;
 }
+.s2s-block img { /* HTML 블록 안에 남은 이미지 보호 */
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
 .s2s-block pre {
   white-space: pre;
   overflow: auto;
@@ -108,9 +114,11 @@
 }
 .s2s-img {
   width: 100%;
+  height: auto; /* 원본 비율 유지 */
   border-radius: 12px;
-  object-fit: cover;
-  max-height: 80%;
+  object-fit: contain; /* 혹시 height 지정 시 비율 유지 */
+  max-height: none; /* 크롭 제한 제거 */
+  display: block;
 }
 
 .s2s-footer {
