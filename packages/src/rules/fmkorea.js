@@ -8,6 +8,7 @@ export function extractFmkorea(cfg) {
   const blocks = [];
   const seenImg = new Set();
   const seenText = new Set();
+  let lastWasGap = false; // 연속 gap 억제
 
   function normSrc(src) {
     if (!src) return '';
@@ -36,12 +37,28 @@ export function extractFmkorea(cfg) {
   function flushBuffer(buf) {
     const raw = buf.join('');
     const cleaned = cleanText(raw);
-    if (!cleaned) return;
+    if (!cleaned) {
+      if (/\n+/.test(raw) && !lastWasGap) {
+        blocks.push({ type: 'html', html: '<br>' });
+        lastWasGap = true;
+      }
+      return;
+    }
     if (seenText.has(cleaned)) return; // 동일 문단 중복 제거 (짧은 캡션 반복 방지)
     seenText.add(cleaned);
-    // 줄바꿈은 <br> 로 보존
     const html = cleaned.split(/\n+/).map(line => line.trim()).filter(Boolean).join('<br>');
-    if (html) blocks.push({ type: 'html', html });
+    if (html) {
+      blocks.push({ type: 'html', html });
+      lastWasGap = false;
+    }
+  }
+
+  function isGapElement(el) {
+    if (!el || el.nodeType !== 1) return false;
+    if (el.querySelector('img,pre')) return false;
+    const html = el.innerHTML.replace(/\u00A0/g,' ').trim();
+    if (!html) return true;
+    return /^(?:<br\s*\/?>|\s)+$/i.test(html);
   }
 
   function walkInline(node, buf) {
@@ -50,6 +67,22 @@ export function extractFmkorea(cfg) {
       const el = node;
       if (skipSel && el.closest(skipSel)) return;
       const tag = el.tagName;
+      if (tag === 'P') {
+        // 문단 경계로 보고 독립 처리
+        flushBuffer(buf);
+        buf.length = 0;
+        if (isGapElement(el)) {
+          if (!lastWasGap) {
+            blocks.push({ type: 'html', html: '<br>' });
+            lastWasGap = true;
+          }
+          return;
+        }
+        const pBuf = [];
+        for (const child of Array.from(el.childNodes)) walkInline(child, pBuf);
+        flushBuffer(pBuf);
+        return;
+      }
       if (tag === 'IMG') {
         // flush text before image
         flushBuffer(buf);
@@ -68,6 +101,15 @@ export function extractFmkorea(cfg) {
         buf.push('\n');
         return;
       }
+      if (isGapElement(el)) {
+        flushBuffer(buf);
+        buf.length = 0;
+        if (!lastWasGap) {
+          blocks.push({ type: 'html', html: '<br>' });
+          lastWasGap = true;
+        }
+        return;
+      }
       // Anchor: descend (이미지/텍스트 혼재 가능)
       // Generic container: descend.
       for (const child of Array.from(el.childNodes)) {
@@ -83,11 +125,6 @@ export function extractFmkorea(cfg) {
   // 컨테이너: .xe_content 직속 자식 순회 (div, p, etc.)
   const containers = Array.from(content.children);
   containers.forEach(container => {
-    const tag = container.tagName;
-    // 완전 비어있는 / <br> 만 있는 컨테이너 skip
-    const onlyBreaks = !container.querySelector('img,pre') && container.textContent.replace(/\u00A0/g,' ').trim().replace(/br/ig,'') === '' && /^(\s|<br\s*\/?>)*$/i.test(container.innerHTML.replace(/\u00A0/g,' '));
-    if (onlyBreaks) return;
-
     const buf = [];
     walkInline(container, buf);
     flushBuffer(buf);
