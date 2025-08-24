@@ -188,3 +188,40 @@ export function extractFmkorea(cfg) {
 
   return { title, blocks };
 }
+
+// ---------------- fmkorea 전용 비디오 볼륨/재생 훅 ----------------
+let __fmkVideoVolumes = {};
+export function preFmkoreaPrepare() {
+  // 원본 비디오 볼륨 스냅샷 & 자동재생 중지
+  __fmkVideoVolumes = {};
+  document.querySelectorAll("#bd_capture video").forEach((v) => {
+    try {
+      const src =
+        v.getAttribute("src") ||
+        v.querySelector("source[src]")?.getAttribute("src") ||
+        v.getAttribute("data-original") ||
+        "";
+      if (src && !(src in __fmkVideoVolumes)) __fmkVideoVolumes[src] = v.volume;
+      v.pause();
+      v.removeAttribute("autoplay");
+    } catch (_) {}
+  });
+}
+export function postFmkoreaShortsMounted() {
+  // 쇼츠 내 비디오 자동재생 & 볼륨 복원
+  const vids = document.querySelectorAll(".flick-wrap-injected video");
+  vids.forEach((v) => {
+    try {
+      v.autoplay = true;
+      // 원본 볼륨 적용 전 mute 해제 (필요시 재생 실패 대응)
+      v.muted = false;
+      const src = v.getAttribute("src");
+      if (src && __fmkVideoVolumes[src] != null)
+        v.volume = __fmkVideoVolumes[src];
+      else if (!src && Object.keys(__fmkVideoVolumes).length === 1) {
+        v.volume = Object.values(__fmkVideoVolumes)[0];
+      }
+      v.play().catch(() => {});
+    } catch (_) {}
+  });
+}
