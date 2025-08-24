@@ -10,24 +10,27 @@ export function extractFmkorea(cfg) {
   const skipSel = cfg && cfg.skipClosest;
   const blocks = [];
   const addedImg = new Set();
-  article.querySelectorAll("img").forEach((img) => {
-    if (skipSel && img.closest(skipSel)) return;
-    const src =
-      img.getAttribute("data-src") ||
-      img.getAttribute("data-original") ||
-      img.src;
-    if (!src || addedImg.has(src)) return;
-    addedImg.add(src);
-    blocks.push({ type: "image", src, alt: img.alt || "" });
-  });
   const seenText = new Set();
-  const textSelectors = "p, h1, h2, h3, h4, h5, h6, li, blockquote, pre";
-  article.querySelectorAll(textSelectors).forEach((el) => {
+  // 이미지/텍스트를 분리 수집하면 이미지가 먼저 몰리는 문제 → 단일 selector 로 DOM 순서 유지
+  const selector = "img, p, h1, h2, h3, h4, h5, h6, li, blockquote, pre";
+  article.querySelectorAll(selector).forEach((el) => {
     if (skipSel && el.closest(skipSel)) return;
+    if (el.tagName === "IMG") {
+      const img = el;
+      const src =
+        img.getAttribute("data-src") ||
+        img.getAttribute("data-original") ||
+        img.src;
+      if (!src || addedImg.has(src)) return;
+      addedImg.add(src);
+      blocks.push({ type: "image", src, alt: img.alt || "" });
+      return;
+    }
+    // 텍스트 블록 처리
     const txt = (el.textContent || "").replace(/\s+/g, " ").trim();
     if (!txt) return;
-    if (txt.length === 1 && /[\p{P}\p{S}]/u.test(txt)) return;
-    if (seenText.has(txt)) return;
+    if (txt.length === 1 && /[\p{P}\p{S}]/u.test(txt)) return; // 단일 기호 제외
+    if (seenText.has(txt)) return; // 완전 동일 텍스트 중복 제거
     seenText.add(txt);
     if (el.tagName === "PRE") blocks.push({ type: "html", html: el.outerHTML });
     else blocks.push({ type: "html", html: el.innerHTML.trim() });
