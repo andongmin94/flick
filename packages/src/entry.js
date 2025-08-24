@@ -2,6 +2,11 @@
 import { isSupportedArticle, getActiveSiteConfig } from "./sites.js";
 import { extractPost } from "./extract.js";
 import { buildUI, closeShorts } from "./ui.js";
+// fmkorea 전용 비디오 처리 훅
+import {
+  preFmkoreaPrepare,
+  postFmkoreaShortsMounted,
+} from "./rules/fmkorea.js";
 
 // attach minimal API (still provide __FLICK for backward compatibility)
 const API = {
@@ -13,42 +18,24 @@ const API = {
 };
 window.FLICK = API;
 
-let __flickVideoVolumes = {};
-function snapshotOriginalVideoVolumes() {
-  __flickVideoVolumes = {};
-  document.querySelectorAll("#bd_capture video").forEach((v) => {
-    try {
-      const src =
-        v.getAttribute("src") ||
-        v.querySelector("source[src]")?.getAttribute("src") ||
-        v.getAttribute("data-original") ||
-        "";
-      if (src && !(src in __flickVideoVolumes))
-        __flickVideoVolumes[src] = v.volume;
-    } catch (_) {}
-  });
-}
-function applyShortsVideoVolumes() {
-  document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
-    try {
-      const src = v.getAttribute("src");
-      if (src && __flickVideoVolumes[src] != null)
-        v.volume = __flickVideoVolumes[src];
-      else if (!src && Object.keys(__flickVideoVolumes).length === 1) {
-        const val = Object.values(__flickVideoVolumes)[0];
-        v.volume = val;
-      }
-    } catch (_) {}
-  });
-}
-
 function openShorts() {
-  snapshotOriginalVideoVolumes();
-  pauseOriginalVideos();
+  const cfg = getActiveSiteConfig();
+  if (cfg?.ruleId === "fmkorea") {
+    try {
+      preFmkoreaPrepare();
+    } catch (e) {
+      console.warn("[flick] pre fmkorea hook error", e);
+    }
+  }
   const data = extractPost();
   buildUI(data);
-  autoPlayShortsVideos();
-  applyShortsVideoVolumes();
+  if (cfg?.ruleId === "fmkorea") {
+    try {
+      postFmkoreaShortsMounted();
+    } catch (e) {
+      console.warn("[flick] post fmkorea hook error", e);
+    }
+  }
 }
 
 function toggle() {
@@ -73,23 +60,6 @@ function updateBtn() {
   if (main) main.textContent = open ? "쇼츠 닫기" : "쇼츠 보기";
   const cap = document.querySelector(".flick-capture-btn");
   if (cap) cap.disabled = open;
-}
-function pauseOriginalVideos() {
-  document.querySelectorAll("#bd_capture video").forEach((v) => {
-    try {
-      v.pause();
-      v.removeAttribute("autoplay");
-    } catch (_) {}
-  });
-}
-function autoPlayShortsVideos() {
-  document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
-    try {
-      v.autoplay = true;
-      v.muted = false; // 원본 볼륨 적용 전 mute 해제 (브라우저 정책에 따라 재생 실패시 다시 mute 가능)
-      v.play().catch(() => {});
-    } catch (_) {}
-  });
 }
 if (document.readyState === "loading")
   document.addEventListener("DOMContentLoaded", ensureButton);
