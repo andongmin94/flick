@@ -12,51 +12,20 @@ export function buildUI(data) {
   title.textContent = data.title;
   title.contentEditable = "true";
   title.spellcheck = false;
-  title.title = "제목 수정 가능";
-  // 제목 폰트 크기 저장 키
+  title.title = "제목 수정 가능 (엔터=줄바꿈)";
+  title.style.whiteSpace = "pre-wrap"; // 줄바꿈 유지
+  title.style.wordBreak = "break-word";
+  title.style.textAlign = "center";
   const KEY_TITLE_FS = "flick:titleFontSize";
   try {
     const savedFs = parseInt(localStorage.getItem(KEY_TITLE_FS) || "", 10);
-    if (!isNaN(savedFs) && savedFs >= 10 && savedFs <= 120) {
-      title.style.fontSize = savedFs + "px";
-    } else {
-      title.style.fontSize = "20px";
-    }
-  } catch (_) {
-    title.style.fontSize = "20px";
-  }
-  // 폰트크기 슬라이더 컨테이너
-  const sizeBox = document.createElement("div");
-  sizeBox.style.position = "absolute";
-  sizeBox.style.top = "4px";
-  sizeBox.style.right = "6px";
-  sizeBox.style.display = "flex";
-  sizeBox.style.alignItems = "center";
-  sizeBox.style.gap = "4px";
-  sizeBox.style.fontSize = "11px";
-  sizeBox.style.color = "#fff";
-  sizeBox.style.userSelect = "none";
-  const sizeLabel = document.createElement("span");
-  sizeLabel.textContent = "Aa";
-  sizeLabel.style.opacity = "0.7";
-  const sizeInput = document.createElement("input");
-  sizeInput.type = "range";
-  sizeInput.min = "12";
-  sizeInput.max = "72";
-  sizeInput.value = parseInt(title.style.fontSize, 10) || 20;
-  sizeInput.style.width = "90px";
-  sizeInput.addEventListener("input", () => {
-    const val = parseInt(sizeInput.value, 10);
-    if (!isNaN(val)) {
-      title.style.fontSize = val + "px";
-      try { localStorage.setItem(KEY_TITLE_FS, String(val)); } catch(_){}
-    }
-  });
-  sizeBox.appendChild(sizeLabel);
-  sizeBox.appendChild(sizeInput);
+    title.style.fontSize = !isNaN(savedFs) && savedFs >= 10 && savedFs <= 120 ? savedFs + "px" : "20px";
+  } catch(_) { title.style.fontSize = "20px"; }
+  
   const suppress = (e) => {
     if (document.activeElement === title) {
-      if (e.type === "keydown" && e.key === "Enter") e.preventDefault();
+      if (e.key === "Escape") return; // ESC 로는 닫기 허용
+      // Enter 줄바꿈 허용. 다른 키 전파 차단.
       e.stopImmediatePropagation();
     }
   };
@@ -64,7 +33,6 @@ export function buildUI(data) {
     window.addEventListener(t, suppress, true)
   );
   header.appendChild(title);
-  header.appendChild(sizeBox);
   const body = document.createElement("div");
   body.className = "flick-body";
   data.blocks.forEach((b) => {
@@ -173,6 +141,7 @@ export function buildUI(data) {
     } catch (_) {}
   }
   stage.addEventListener("mousedown", onDown);
+  createFontSizePanel(KEY_TITLE_FS, title);
 }
 
 export function closeShorts() {
@@ -180,4 +149,59 @@ export function closeShorts() {
   if (!wrap) return;
   wrap.remove();
   document.body.classList.remove("flick-body-lock");
+  const fpanel = document.querySelector(".flick-fontsize-panel");
+  if (fpanel) fpanel.remove();
+}
+
+function createFontSizePanel(storageKey, titleEl){
+  const old = document.querySelector(".flick-fontsize-panel");
+  if (old) old.remove();
+  const panel = document.createElement("div");
+  panel.className = "flick-fontsize-panel";
+  panel.style.position = "fixed";
+  panel.style.zIndex = 1000003;
+  panel.style.background = "rgba(0,0,0,0.75)";
+  panel.style.backdropFilter = "blur(4px)";
+  panel.style.padding = "6px 10px";
+  panel.style.border = "1px solid #222";
+  panel.style.borderRadius = "8px";
+  panel.style.font = "12px/1.2 'Noto Sans KR', system-ui";
+  panel.style.color = "#eee";
+  panel.style.display = "flex";
+  panel.style.alignItems = "center";
+  panel.style.gap = "8px";
+  panel.style.boxShadow = "0 4px 12px -2px rgba(0,0,0,0.4)";
+  panel.innerHTML = `
+    <span style="letter-spacing:.5px;">제목크기</span>
+    <input type="range" min="12" max="72" step="1" class="flick-fontsize-input" style="width:110px;" />
+    <span class="flick-fontsize-val" style="width:40px;text-align:right;font-variant-numeric:tabular-nums;"></span>
+  `;
+  const input = panel.querySelector(".flick-fontsize-input");
+  const valBox = panel.querySelector(".flick-fontsize-val");
+  const curr = parseInt(titleEl.style.fontSize,10)||20;
+  input.value = String(curr);
+  valBox.textContent = curr + "px";
+  input.addEventListener("input", ()=>{
+    const v = parseInt(input.value,10);
+    if(!isNaN(v)){
+      titleEl.style.fontSize = v + "px";
+      valBox.textContent = v + "px";
+      try{ localStorage.setItem(storageKey, String(v)); }catch(_){ }
+    }
+  });
+  // 위치: 토글 버튼 아래 (없으면 좌측 상단 여백)
+  const toggleBtn = document.querySelector('.flick-toggle-btn');
+  function place(){
+    const r = toggleBtn?.getBoundingClientRect();
+    if(r){
+      panel.style.top = (r.bottom + 8) + 'px';
+      panel.style.left = r.left + 'px';
+    } else {
+      panel.style.top = '80px';
+      panel.style.left = '16px';
+    }
+  }
+  place();
+  window.addEventListener('resize', place, { once:true });
+  document.body.appendChild(panel);
 }
