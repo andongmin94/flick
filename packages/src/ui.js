@@ -13,6 +13,47 @@ export function buildUI(data) {
   title.contentEditable = "true";
   title.spellcheck = false;
   title.title = "제목 수정 가능";
+  // 제목 폰트 크기 저장 키
+  const KEY_TITLE_FS = "flick:titleFontSize";
+  try {
+    const savedFs = parseInt(localStorage.getItem(KEY_TITLE_FS) || "", 10);
+    if (!isNaN(savedFs) && savedFs >= 10 && savedFs <= 120) {
+      title.style.fontSize = savedFs + "px";
+    } else {
+      title.style.fontSize = "20px";
+    }
+  } catch (_) {
+    title.style.fontSize = "20px";
+  }
+  // 폰트크기 슬라이더 컨테이너
+  const sizeBox = document.createElement("div");
+  sizeBox.style.position = "absolute";
+  sizeBox.style.top = "4px";
+  sizeBox.style.right = "6px";
+  sizeBox.style.display = "flex";
+  sizeBox.style.alignItems = "center";
+  sizeBox.style.gap = "4px";
+  sizeBox.style.fontSize = "11px";
+  sizeBox.style.color = "#fff";
+  sizeBox.style.userSelect = "none";
+  const sizeLabel = document.createElement("span");
+  sizeLabel.textContent = "Aa";
+  sizeLabel.style.opacity = "0.7";
+  const sizeInput = document.createElement("input");
+  sizeInput.type = "range";
+  sizeInput.min = "12";
+  sizeInput.max = "72";
+  sizeInput.value = parseInt(title.style.fontSize, 10) || 20;
+  sizeInput.style.width = "90px";
+  sizeInput.addEventListener("input", () => {
+    const val = parseInt(sizeInput.value, 10);
+    if (!isNaN(val)) {
+      title.style.fontSize = val + "px";
+      try { localStorage.setItem(KEY_TITLE_FS, String(val)); } catch(_){}
+    }
+  });
+  sizeBox.appendChild(sizeLabel);
+  sizeBox.appendChild(sizeInput);
   const suppress = (e) => {
     if (document.activeElement === title) {
       if (e.type === "keydown" && e.key === "Enter") e.preventDefault();
@@ -23,6 +64,7 @@ export function buildUI(data) {
     window.addEventListener(t, suppress, true)
   );
   header.appendChild(title);
+  header.appendChild(sizeBox);
   const body = document.createElement("div");
   body.className = "flick-body";
   data.blocks.forEach((b) => {
