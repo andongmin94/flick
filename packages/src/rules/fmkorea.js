@@ -87,6 +87,22 @@ export function extractFmkorea(cfg) {
         pushImage(src, el.getAttribute('alt') || '');
         return;
       }
+      if (tag === 'VIDEO') {
+        flushBuffer(buf);
+        buf.length = 0;
+        // video src 우선순위: source[src] > video[src] > data-original
+        let vSrc = '';
+        const sourceEl = el.querySelector('source[src]');
+        if (sourceEl) vSrc = sourceEl.getAttribute('src');
+        if (!vSrc) vSrc = el.getAttribute('src');
+        if (!vSrc) vSrc = el.getAttribute('data-original');
+        if (vSrc) {
+          if (vSrc.startsWith('//')) vSrc = location.protocol + vSrc;
+          else if (vSrc.startsWith('/')) vSrc = location.origin + vSrc;
+          blocks.push({ type: 'video', src: vSrc, poster: el.getAttribute('poster') || '' });
+        }
+        return;
+      }
       if (tag === 'PRE') {
         flushBuffer(buf);
         buf.length = 0;
@@ -108,6 +124,30 @@ export function extractFmkorea(cfg) {
       const text = node.nodeValue.replace(/\s+/g, ' ');
       if (text.trim()) buf.push(text);
     }
+  }
+
+  // 1) 먼저 비디오 존재 여부 확인: 있으면 비디오만 추출 (잡다한 접근성/컨트롤 텍스트 제거)
+  const videoEls = Array.from(content.querySelectorAll('video'));
+  if (videoEls.length) {
+    const vidBlocks = [];
+    const seenVid = new Set();
+    videoEls.forEach(v => {
+      if (skipSel && v.closest(skipSel)) return;
+      let vSrc = '';
+      const sourceEl = v.querySelector('source[src]');
+      if (sourceEl) vSrc = sourceEl.getAttribute('src');
+      if (!vSrc) vSrc = v.getAttribute('src');
+      if (!vSrc) vSrc = v.getAttribute('data-original');
+      if (vSrc) {
+        if (vSrc.startsWith('//')) vSrc = location.protocol + vSrc;
+        else if (vSrc.startsWith('/')) vSrc = location.origin + vSrc;
+        if (!seenVid.has(vSrc)) {
+          seenVid.add(vSrc);
+          vidBlocks.push({ type: 'video', src: vSrc, poster: v.getAttribute('poster') || '' });
+        }
+      }
+    });
+    if (vidBlocks.length) return { title, blocks: vidBlocks };
   }
 
   // 컨테이너: .xe_content 직속 자식 순회 (div, p, etc.)
