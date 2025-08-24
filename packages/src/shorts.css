@@ -438,3 +438,21 @@ input.flick-hl-picker-main:active {
 .flick-format-toolbar button:active {
   background: rgba(255, 255, 255, 0.32);
 }
+
+/* ==== Slider focus ring hard kill (cross-browser) ==== */
+.flick-fontsize-input:focus,
+.flick-fontsize-input:focus-visible,
+.flick-fontsize-input:active { outline:none !important; box-shadow:none !important; }
+.flick-fontsize-input::-webkit-focus-inner { border:0; outline:0; }
+.flick-fontsize-input::-webkit-slider-thumb:focus { outline:0; }
+.flick-fontsize-input::-webkit-slider-runnable-track:focus { outline:0; }
+.flick-fontsize-input::-moz-focus-inner { border:0; }
+.flick-fontsize-input::-moz-range-track:focus { outline:0; }
+.flick-fontsize-input::-moz-range-thumb:focus { outline:0; }
+/* Legacy / Edge / IE (defensive) */
+.flick-fontsize-input::-ms-track { background:transparent; border-color:transparent; color:transparent; }
+.flick-fontsize-input::-ms-fill-lower,
+.flick-fontsize-input::-ms-fill-upper { background:var(--fs-empty); border:0; }
+.flick-fontsize-input::-ms-thumb { border:0; background:var(--fs-thumb); }
+/* Remove accidental text selection highlight while dragging */
+.flick-fontsize-input::selection { background:transparent; }
