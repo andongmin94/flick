@@ -130,21 +130,36 @@ function createFontSizePanel(storageKey, titleEl){
   let hlColor='#ffeb3b';
   try { const saved=localStorage.getItem(HL_KEY); if(saved && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(saved)) hlColor=saved; } catch(_){}
   panel.innerHTML = `
-    <label style="display:flex;align-items:center;gap:6px;">
-      <span style="letter-spacing:.5px;">제목크기</span>
-      <input type="range" min="12" max="72" step="1" class="flick-fontsize-input" style="width:110px;" />
-      <span class="flick-fontsize-val" style="width:40px;text-align:right;font-variant-numeric:tabular-nums;"></span>
-    </label>
-    <label style="display:flex;align-items:center;gap:6px;">
-      <span style="font-size:12px;">강조색</span>
-      <input type="color" class="flick-hl-picker-main" value="${hlColor}" />
-    </label>`;
+    <div style="display:flex;flex-direction:column;gap:6px;">
+      <label style="display:flex;align-items:center;gap:6px;">
+        <span style="letter-spacing:.5px;">제목크기</span>
+        <input type="range" min="12" max="72" step="1" class="flick-fontsize-input" style="width:120px;" />
+        <span class="flick-fontsize-val" style="width:44px;text-align:right;font-variant-numeric:tabular-nums;"></span>
+      </label>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <label style="display:flex;align-items:center;gap:6px;">
+          <span style="font-size:12px;">강조색</span>
+          <input type="color" class="flick-hl-picker-main" value="${hlColor}" />
+        </label>
+        <button type="button" class="flick-hl-reset-btn" style="all:unset;cursor:pointer;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,0.1);font-size:11px;">강조해제</button>
+      </div>
+    </div>`;
   const input = panel.querySelector('.flick-fontsize-input');
   const valBox = panel.querySelector('.flick-fontsize-val');
   const curr = parseInt(titleEl.style.fontSize,10)||20; input.value=String(curr); valBox.textContent=curr+'px';
   input.addEventListener('input', ()=>{ const v=parseInt(input.value,10); if(!isNaN(v)){ titleEl.style.fontSize=v+'px'; valBox.textContent=v+'px'; try{localStorage.setItem(storageKey,String(v));}catch(_){}}});
   const picker = panel.querySelector('.flick-hl-picker-main');
   picker?.addEventListener('input', ()=>{ const v=picker.value; if(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) { try{ localStorage.setItem(HL_KEY,v);}catch(_){}} });
+  // 전체 강조 해제 버튼
+  panel.querySelector('.flick-hl-reset-btn')?.addEventListener('click', () => {
+    const spans = titleEl.querySelectorAll('[data-flick-hl]');
+    spans.forEach(s => {
+      const parent = s.parentNode;
+      if(!parent) return;
+      while(s.firstChild) parent.insertBefore(s.firstChild, s);
+      s.remove();
+    });
+  });
   const toggleBtn=document.querySelector('.flick-toggle-btn');
   function place(){ const r=toggleBtn?.getBoundingClientRect(); if(r){ panel.style.top=(r.bottom+8)+'px'; panel.style.left=r.left+'px'; } else { panel.style.top='80px'; panel.style.left='16px'; }}
   place(); window.addEventListener('resize', place, { once:true });
@@ -154,12 +169,13 @@ function createFontSizePanel(storageKey, titleEl){
 function enableTitleFormatToolbar(titleEl){
   let toolbar=null; let lastRange=null;
   function getStoredColor(){ try{ const c=localStorage.getItem('flick:highlightColor'); if(c && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c)) return c; }catch(_){} return '#ffeb3b'; }
-  function ensureToolbar(){ if(toolbar) return toolbar; toolbar=document.createElement('div'); toolbar.className='flick-format-toolbar'; toolbar.innerHTML=`<button data-act="apply">강조</button><button data-act="reset">복원</button>`; document.body.appendChild(toolbar); toolbar.addEventListener('mousedown', e=>e.preventDefault()); toolbar.addEventListener('click', onClick); return toolbar; }
-  function onClick(e){ const b=e.target.closest('button[data-act]'); if(!b) return; const act=b.getAttribute('data-act'); if(act==='apply') apply(); else if(act==='reset') reset(); }
+  function ensureToolbar(){ if(toolbar) return toolbar; toolbar=document.createElement('div'); toolbar.className='flick-format-toolbar'; toolbar.innerHTML=`<button data-act="apply">강조</button>`; document.body.appendChild(toolbar); toolbar.addEventListener('mousedown', e=>e.preventDefault()); toolbar.addEventListener('click', onClick); return toolbar; }
+  function onClick(e){ const b=e.target.closest('button[data-act]'); if(!b) return; const act=b.getAttribute('data-act'); if(act==='apply') apply(); }
   function validRange(r){ return r && !r.collapsed && titleEl.contains(r.commonAncestorContainer); }
   function currentRange(){ const sel=window.getSelection(); if(sel && sel.rangeCount){ const r=sel.getRangeAt(0); if(validRange(r)) return r; } return lastRange && validRange(lastRange)? lastRange:null; }
-  function apply(){ const r=currentRange(); if(!r) return; const color=getStoredColor(); const span=document.createElement('span'); span.setAttribute('data-flick-hl',''); span.style.color=color; span.appendChild(r.extractContents()); r.insertNode(span); const sel=window.getSelection(); if(sel){ sel.removeAllRanges(); const nr=document.createRange(); nr.selectNodeContents(span); nr.collapse(false); sel.addRange(nr); lastRange=nr.cloneRange(); } }
-  function reset(){ const r=currentRange(); if(!r) return; const frag=r.cloneContents(); const container=document.createElement('div'); container.appendChild(frag); container.querySelectorAll('[data-flick-hl]').forEach(s=>{ s.replaceWith(...Array.from(s.childNodes)); }); r.deleteContents(); while(container.firstChild) r.insertNode(container.firstChild); const sel=window.getSelection(); if(sel){ sel.removeAllRanges(); const nr=document.createRange(); nr.setStart(r.endContainer, r.endOffset); nr.collapse(true); sel.addRange(nr); lastRange=nr.cloneRange(); } }
+  function apply(){ const r=currentRange(); if(!r) return; const color=getStoredColor(); // normalize overlapping
+    const span=document.createElement('span'); span.setAttribute('data-flick-hl',''); span.style.color=color; span.appendChild(r.extractContents()); r.insertNode(span); const sel=window.getSelection(); if(sel){ sel.removeAllRanges(); const nr=document.createRange(); nr.selectNodeContents(span); nr.collapse(false); sel.addRange(nr); lastRange=nr.cloneRange(); } mergeAdjacent(span.parentNode, color); }
+  function mergeAdjacent(parent, color){ if(!parent) return; const nodes=[...parent.querySelectorAll('[data-flick-hl]')]; for(let i=0;i<nodes.length-1;i++){ const a=nodes[i], b=nodes[i+1]; if(a.nextSibling===b && a.style.color===b.style.color){ while(b.firstChild) a.appendChild(b.firstChild); b.remove(); } } }
   function show(){ const sel=window.getSelection(); if(!sel||!sel.rangeCount){ hide(); return; } const r=sel.getRangeAt(0); if(!validRange(r)){ hide(); return; } const rect=r.getBoundingClientRect(); const tb=ensureToolbar(); tb.style.top=(window.scrollY+rect.top)+'px'; tb.style.left=(window.scrollX+rect.left+rect.width/2)+'px'; lastRange=r.cloneRange(); }
   function hide(){ if(toolbar){ toolbar.remove(); toolbar=null; } }
   document.addEventListener('selectionchange', ()=> setTimeout(show,0));
