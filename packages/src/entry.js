@@ -14,31 +14,67 @@ const API = {
 window.FLICK = API;
 
 function openShorts() {
+  pauseOriginalVideos();
   const data = extractPost();
   buildUI(data);
+  autoPlayShortsVideos();
+}
+async function openCaptureShorts(btn) {
+  pauseOriginalVideos();
 }
 function toggle() {
   const open = !!document.querySelector(".flick-wrap-injected");
   open ? closeShorts() : openShorts();
-  updateBtn();
+  updateBtnStates();
 }
-
 function ensureButton() {
   if (!isSupportedArticle()) return;
   if (document.querySelector(".flick-toggle-btn")) return;
-  const btn = document.createElement("button");
-  btn.className = "flick-toggle-btn flick-toggle-floating";
-  btn.type = "button";
-  btn.textContent = "쇼츠 보기";
-  btn.addEventListener("click", toggle);
-  document.body.appendChild(btn);
-  updateBtn();
+  const box = document.createElement("div");
+  box.style.position = "fixed";
+  box.style.top = "72px";
+  box.style.left = "16px";
+  box.style.display = "flex";
+  box.style.flexDirection = "column";
+  box.style.gap = "6px";
+  box.style.zIndex = 1000002;
+  const main = document.createElement("button");
+  main.className = "flick-toggle-btn";
+  main.type = "button";
+  main.textContent = "쇼츠 보기";
+  main.addEventListener("click", toggle);
+  const cap = document.createElement("button");
+  cap.className = "flick-toggle-btn flick-capture-btn";
+  cap.type = "button";
+  cap.textContent = "캡쳐 쇼츠";
+  cap.addEventListener("click", () => openCaptureShorts(cap));
+  box.appendChild(main);
+  box.appendChild(cap);
+  document.body.appendChild(box);
+  updateBtnStates();
 }
-function updateBtn() {
-  const btn = document.querySelector(".flick-toggle-btn");
-  if (!btn) return;
+function updateBtnStates() {
   const open = !!document.querySelector(".flick-wrap-injected");
-  btn.textContent = open ? "쇼츠 닫기" : "쇼츠 보기";
+  const main = document.querySelector(".flick-toggle-btn");
+  if (main) main.textContent = open ? "쇼츠 닫기" : "쇼츠 보기";
+  const cap = document.querySelector(".flick-capture-btn");
+  if (cap) cap.disabled = open;
+}
+function pauseOriginalVideos() {
+  document.querySelectorAll("#bd_capture video").forEach((v) => {
+    try {
+      v.pause();
+      v.removeAttribute("autoplay");
+    } catch (_) {}
+  });
+}
+function autoPlayShortsVideos() {
+  document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
+    try {
+      v.autoplay = true;
+      v.play().catch(() => {});
+    } catch (_) {}
+  });
 }
 if (document.readyState === "loading")
   document.addEventListener("DOMContentLoaded", ensureButton);
