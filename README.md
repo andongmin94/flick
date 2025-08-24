@@ -45,7 +45,4 @@ content/
 - Lazy load / IntersectionObserver 활용 이미지 최적화
 
 ## 네임스페이스
-전역 객체: `window.__FLICK` (필요 시 다른 스크립트에서 확장 가능)
-
-## 라이선스
-MIT (사이트 TOS 준수 필요)
+전역 객체: `window.FLICK` (필요 시 다른 스크립트에서 확장 가능)
