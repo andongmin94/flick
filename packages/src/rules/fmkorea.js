@@ -8,7 +8,6 @@ export function extractFmkorea(cfg) {
   const blocks = [];
   const seenImg = new Set();
   const seenText = new Set();
-  let lastWasGap = false; // 연속 gap 억제
 
   function normSrc(src) {
     if (!src) return '';
@@ -34,23 +33,26 @@ export function extractFmkorea(cfg) {
       .trim();
   }
 
+  function addGap() {
+    const last = blocks[blocks.length - 1];
+    if (!last || last.type !== 'html') return; // 시작 부분 gap은 무시
+    const m = last.html.match(/(?:<br\s*\/?>)+$/i);
+    const count = m ? (m[0].match(/<br/gi) || []).length : 0;
+    if (count >= 2) return; // 최대 2개까지만
+    last.html += '<br>';
+  }
+
   function flushBuffer(buf) {
     const raw = buf.join('');
     const cleaned = cleanText(raw);
     if (!cleaned) {
-      if (/\n+/.test(raw) && !lastWasGap) {
-        blocks.push({ type: 'html', html: '<br>' });
-        lastWasGap = true;
-      }
+      if (/\n+/.test(raw)) addGap();
       return;
     }
-    if (seenText.has(cleaned)) return; // 동일 문단 중복 제거 (짧은 캡션 반복 방지)
+    if (seenText.has(cleaned)) return; // 동일 문단 중복 제거
     seenText.add(cleaned);
     const html = cleaned.split(/\n+/).map(line => line.trim()).filter(Boolean).join('<br>');
-    if (html) {
-      blocks.push({ type: 'html', html });
-      lastWasGap = false;
-    }
+    if (html) blocks.push({ type: 'html', html });
   }
 
   function isGapElement(el) {
@@ -71,13 +73,7 @@ export function extractFmkorea(cfg) {
         // 문단 경계로 보고 독립 처리
         flushBuffer(buf);
         buf.length = 0;
-        if (isGapElement(el)) {
-          if (!lastWasGap) {
-            blocks.push({ type: 'html', html: '<br>' });
-            lastWasGap = true;
-          }
-          return;
-        }
+  if (isGapElement(el)) { addGap(); return; }
         const pBuf = [];
         for (const child of Array.from(el.childNodes)) walkInline(child, pBuf);
         flushBuffer(pBuf);
@@ -101,15 +97,7 @@ export function extractFmkorea(cfg) {
         buf.push('\n');
         return;
       }
-      if (isGapElement(el)) {
-        flushBuffer(buf);
-        buf.length = 0;
-        if (!lastWasGap) {
-          blocks.push({ type: 'html', html: '<br>' });
-          lastWasGap = true;
-        }
-        return;
-      }
+  if (isGapElement(el)) { flushBuffer(buf); buf.length = 0; addGap(); return; }
       // Anchor: descend (이미지/텍스트 혼재 가능)
       // Generic container: descend.
       for (const child of Array.from(el.childNodes)) {
