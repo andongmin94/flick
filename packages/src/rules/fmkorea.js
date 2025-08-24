@@ -150,35 +150,144 @@ export function extractFmkorea(cfg) {
     }
   }
 
-  // 1) 먼저 비디오 존재 여부 확인: 있으면 비디오만 추출 (잡다한 접근성/컨트롤 텍스트 제거)
+  // 1) 비디오 존재 시: 모든 비디오(중복 src 제거) + 마지막 비디오 이후의 실제 텍스트만 추출
   const videoEls = Array.from(content.querySelectorAll("video"));
   if (videoEls.length) {
-    const vidBlocks = [];
-    const seenVid = new Set();
+    const seenVideoSrc = new Set();
+    const orderedVideos = [];
     videoEls.forEach((v) => {
-      if (skipSel && v.closest(skipSel)) return;
-      let vSrc = "";
-      const sourceEl = v.querySelector("source[src]");
-      if (sourceEl) vSrc = sourceEl.getAttribute("src");
-      if (!vSrc) vSrc = v.getAttribute("src");
-      if (!vSrc) vSrc = v.getAttribute("data-original");
+      // src 우선순위: source[src] > video[src] > data-original
+      let vSrc =
+        v.querySelector("source[src]")?.getAttribute("src") ||
+        v.getAttribute("src") ||
+        v.getAttribute("data-original") ||
+        "";
       if (vSrc) {
         if (vSrc.startsWith("//")) vSrc = location.protocol + vSrc;
         else if (vSrc.startsWith("/")) vSrc = location.origin + vSrc;
-        if (!seenVid.has(vSrc)) {
-          seenVid.add(vSrc);
-          vidBlocks.push({
-            type: "video",
+        if (!seenVideoSrc.has(vSrc)) {
+          seenVideoSrc.add(vSrc);
+          orderedVideos.push({
+            el: v,
             src: vSrc,
             poster: v.getAttribute("poster") || "",
           });
         }
       }
     });
-    if (vidBlocks.length) return { title, blocks: vidBlocks };
+    // 비디오 블록 추가 (순서 유지)
+    orderedVideos.forEach((obj) => {
+      blocks.push({ type: "video", src: obj.src, poster: obj.poster });
+    });
+
+    // 마지막 비디오 이후 텍스트 수집
+    const lastVideo = orderedVideos[orderedVideos.length - 1].el;
+    const forbiddenClassRe =
+      /(mejs-|mejs__|control|player|volume|progress|time|screen|sr-only|blind|tooltip|aria)/i;
+    const textBuf = [];
+
+    // 재생 컨트롤 노이즈 텍스트 패턴 필터
+    function isNoiseText(t) {
+      if (!t) return true; // 빈 공백 성격
+      const s = t.trim();
+      if (!s) return true;
+      // 단독 슬래시
+      if (s === "/") return true;
+      // 단독 속도표시: '1x', '1.00x', '/ 1.00x'
+      if (/^\/?\s*\d+(?:\.\d+)?x$/i.test(s)) return true;
+      // 진행 시간: '00:12', '1:02:33'
+      if (/^(?:\d{1,2}:)?\d{1,2}:\d{2}$/.test(s)) return true;
+      // 전체 시간 형태: '00:12 / 01:34'
+      if (
+        /^(?:\d{1,2}:)?\d{1,2}:\d{2}\s*\/\s*(?:\d{1,2}:)?\d{1,2}:\d{2}$/.test(s)
+      )
+        return true;
+      // 조합된 속도 구문 포함: '/ 1.00x' 같은 잔여
+      if (/\/\s*\d+(?:\.\d+)?x$/i.test(s)) return true;
+      // 접근성 안내 문구 (영문 위주)
+      if (/^Video Player$/i.test(s)) return true;
+      return false;
+    }
+
+    function isForbiddenElement(el) {
+      if (!el || el.nodeType !== 1) return false;
+      if (skipSel && el.closest(skipSel)) return true;
+      const cls = el.className || "";
+      if (typeof cls === "string" && forbiddenClassRe.test(cls)) return true;
+      const tag = el.tagName;
+      if (/^(SCRIPT|STYLE|VIDEO|SOURCE|AUDIO|IFRAME)$/i.test(tag)) return true;
+      return false;
+    }
+
+    function nextNode(node, boundary) {
+      if (!node) return null;
+      if (node.firstChild) return node.firstChild;
+      while (node) {
+        if (node === boundary) return null;
+        if (node.nextSibling) return node.nextSibling;
+        node = node.parentNode;
+      }
+      return null;
+    }
+
+    let cur = nextNode(lastVideo, content); // 마지막 비디오 다음 노드부터 시작
+    while (cur) {
+      // boundary check already in nextNode
+      if (cur.nodeType === 1) {
+        if (!isForbiddenElement(cur)) {
+          // 줄바꿈 의미가 있는 block-level 태그면 개행 삽입
+          if (
+            /^(P|DIV|BR|SECTION|ARTICLE|LI|UL|OL|H1|H2|H3|H4|H5|H6)$/i.test(
+              cur.tagName
+            )
+          ) {
+            if (cur.tagName === "BR") textBuf.push("\n");
+            // 텍스트 노드는 별도 처리, element 자체의 textContent 직접 사용하지 않고 child 순회
+          }
+        }
+      } else if (cur.nodeType === 3) {
+        const parent = cur.parentNode;
+        if (!isForbiddenElement(parent)) {
+          const t = cur.nodeValue.replace(/\s+/g, " ");
+          if (t.trim() && !isNoiseText(t)) textBuf.push(t);
+        }
+      }
+      cur = nextNode(cur, content);
+    }
+
+    const rawTrailing = textBuf.join("").replace(/\n{3,}/g, "\n\n");
+    // 라인 단위로 한 번 더 노이즈 제거
+    const filteredLines = rawTrailing
+      .split(/\n+/)
+      .map((l) => l.trim())
+      .filter((l) => l && !isNoiseText(l));
+    const cleanedTrailing = cleanText(filteredLines.join("\n"));
+    if (cleanedTrailing) {
+      // 기존 flushBuffer 중복 제거 로직 재사용을 위해 직접 검사
+      if (!seenText.has(cleanedTrailing)) {
+        seenText.add(cleanedTrailing);
+        const html = cleanedTrailing
+          .split(/\n+/)
+          .map((l) => l.trim())
+          .filter(Boolean)
+          .join("<br>");
+        if (html) blocks.push({ type: "html", html });
+      }
+    }
+    return { title, blocks };
   }
 
-  // 컨테이너: .xe_content 직속 자식 순회 (div, p, etc.)
+  // 2) 비디오 없을 때: 루트 직속 텍스트 먼저 수집 후 요소 파싱
+  const rootTextBuf = [];
+  for (const node of Array.from(content.childNodes)) {
+    if (node.nodeType === 3) {
+      // TEXT
+      const t = node.nodeValue.replace(/\s+/g, " ");
+      if (t.trim()) rootTextBuf.push(t);
+    }
+  }
+  flushBuffer(rootTextBuf);
+
   const containers = Array.from(content.children);
   containers.forEach((container) => {
     const buf = [];
