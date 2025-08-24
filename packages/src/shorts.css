@@ -61,6 +61,7 @@
   outline: 2px solid var(--shorts-accent);
   background: #fffbe8;
   border-radius: 6px;
+  color: #111;
 }
 .flick-close {
   display: none !important;
