@@ -12,8 +12,7 @@ const API = {
   buildUI,
   closeShorts,
 };
-window.__FLICK = API; // keep same global for now
-window.FLICK = API; // optional alias
+window.FLICK = API;
 
 function openShorts() {
   const data = extractPost();
