@@ -48,7 +48,8 @@ else ensureButton();
 window.addEventListener("keydown", (e) => {
   // 입력 필드 포커스 중에는 방해하지 않음
   const tag = (e.target && e.target.tagName) || "";
-  if (["INPUT", "TEXTAREA"].includes(tag) || e.target?.isContentEditable) return;
+  if (["INPUT", "TEXTAREA"].includes(tag) || e.target?.isContentEditable)
+    return;
   if (e.key === "F4") {
     e.preventDefault();
     toggle();
