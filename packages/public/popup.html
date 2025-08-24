@@ -35,21 +35,5 @@
     <span class="label">쇼츠 모드</span>
     <p><small>페이지 로드 후 자동 표시됨.</small></p>
     <p><small>현재는 fmkorea best/* URL 만 매칭.</small></p>
-    <script>
-      document.getElementById("openBtn").addEventListener("click", () => {
-        // 컨텐츠 스크립트 단축키 이벤트 활용: 다시 삽입 트리거
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          chrome.scripting.executeScript({
-            target: { tabId: tabs[0].id },
-            func: () => {
-              if (!document.querySelector(".s2s-wrap-injected"))
-                document.dispatchEvent(
-                  new KeyboardEvent("keydown", { key: "s", shiftKey: true })
-                );
-            },
-          });
-        });
-      });
-    </script>
   </body>
 </html>

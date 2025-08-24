@@ -5,7 +5,7 @@ export default defineConfig({
   build: {
     outDir: "content",
     emptyOutDir: true, // 재빌드 시 content 정리 (bundle, shorts.css 새로 생성)
-    sourcemap: true,
+    sourcemap: false,
     cssCodeSplit: false, // 하나의 CSS (shorts.css) 출력
     rollupOptions: {
       input: { bundle: resolve(__dirname, "src/entry.js") },
