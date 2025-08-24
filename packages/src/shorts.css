@@ -1,12 +1,12 @@
 :root {
   --shorts-fg: #222;
   --shorts-stage-bg: #fff;
-  --shorts-overlay-bg: #fff;
+  --shorts-overlay-bg: #fff; /* 전체 배경은 다시 라이트 */
   --shorts-accent: #ff0050;
   --shorts-radius: 0;
   --shorts-font: "Noto Sans KR", system-ui, sans-serif;
-  --shorts-header-bg: rgba(255, 255, 255, 0.85);
-  --shorts-footer-bg: rgba(255, 255, 255, 0.92);
+  --shorts-header-bg: #000; /* 헤더만 다크 */
+  --shorts-footer-bg: #000; /* 푸터만 다크 */
   --shorts-border: 2px solid #000;
 }
 
@@ -35,6 +35,7 @@
   height: min(100vh, calc(100vw * 16 / 9));
   width: min(100vw, calc(100vh * 9 / 16));
   background-clip: padding-box;
+  box-shadow: 0 4px 18px -2px rgba(0,0,0,0.25);
 }
 .flick-header {
   padding: 8px 12px;
@@ -43,7 +44,10 @@
   align-items: center;
   justify-content: center;
   background: var(--shorts-header-bg);
-  border-bottom: 1px solid #000;
+  color: #fff;
+  border-bottom: 1px solid #111;
+  flex: 0 0 auto;
+  user-select: none;
 }
 .flick-title {
   font-weight: 600;
@@ -51,7 +55,7 @@
   flex: 1;
   text-align: center;
   cursor: text;
-  color: #111;
+  color: #fff;
 }
 .flick-title[contenteditable="true"]:focus {
   outline: 2px solid var(--shorts-accent);
@@ -72,6 +76,7 @@
   background: transparent;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  color: #222;
 }
 .flick-body::-webkit-scrollbar {
   width: 0;
@@ -128,7 +133,48 @@
   align-items: center;
   font-size: 11px;
   background: var(--shorts-footer-bg);
-  color: #333;
+  color: #ddd;
+  border-top: 1px solid #111;
+  flex: 0 0 auto;
+  user-select: none;
+}
+
+/* 헤더/푸터 높이 조절 핸들 */
+.flick-resize-handle {
+  height: 4px;
+  cursor: ns-resize;
+  position: relative;
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity .15s, height .15s;
+}
+.flick-stage:hover .flick-resize-handle {
+  opacity: 1;
+}
+.flick-resize-handle:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 2px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  transition: background .15s, width .15s;
+}
+.flick-stage:hover .flick-resize-handle:after {
+  background: rgba(0,0,0,0.4);
+}
+.flick-resize-handle:hover {
+  height: 8px;
+}
+.flick-resize-handle:hover:after {
+  width: 48px;
+  background: rgba(0,0,0,0.55);
+}
+.flick-resize-handle.active {
+  background: rgba(0,0,0,0.06);
 }
 .flick-nav-btn {
   cursor: pointer;
