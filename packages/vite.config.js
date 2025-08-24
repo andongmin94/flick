@@ -4,7 +4,7 @@ import { resolve } from "path";
 export default defineConfig({
   build: {
     outDir: "content",
-    emptyOutDir: true, // 재빌드 시 content 정리 (bundle, shorts.css 새로 생성)
+    emptyOutDir: false, // 재빌드 시 content 정리 (bundle, shorts.css 새로 생성)
     sourcemap: false,
     cssCodeSplit: false, // 하나의 CSS (shorts.css) 출력
     rollupOptions: {
