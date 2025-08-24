@@ -266,6 +266,62 @@ body.flick-body-lock {
   align-items: center;
   gap: 6px;
 }
+/* Font size slider (no hover color change; pointer only on actual bar/thumb) */
+.flick-fontsize-input {
+  -webkit-appearance:none;
+  appearance:none;
+  width:140px;
+  height:20px; /* provide enough hit area but cursor default */
+  background:transparent;
+  border:none;
+  padding:0;
+  margin:0;
+  cursor:default; /* default outside bar */
+  position:relative;
+  --fs-fill:#2e6fb8; /* 약간 더 어두운 블루 */
+  --fs-empty:#ffffff;
+  --fs-thumb:#2e6fb8;
+}
+/* WebKit track */
+.flick-fontsize-input::-webkit-slider-runnable-track {
+  height:5px;
+  background:linear-gradient(90deg,var(--fs-fill) var(--_percent,0%), var(--fs-empty) var(--_percent,0%));
+  border-radius:4px;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.08) inset;
+  cursor:pointer; /* pointer only when over bar */
+}
+.flick-fontsize-input::-webkit-slider-runnable-track:hover { /* force no color shift */
+  background:linear-gradient(90deg,var(--fs-fill) var(--_percent,0%), var(--fs-empty) var(--_percent,0%));
+}
+.flick-fontsize-input::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--fs-thumb);
+  border:2px solid #fff;
+  box-shadow:0 2px 5px rgba(0,0,0,0.35);
+  margin-top:-5.5px; /* center */
+  cursor:pointer;
+  transition:none; /* no hover change */
+}
+/* Firefox */
+.flick-fontsize-input::-moz-range-track {
+  height:5px; border-radius:4px; background:var(--fs-empty);
+  box-shadow:0 0 0 1px rgba(0,0,0,0.08) inset;
+  cursor:pointer;
+}
+.flick-fontsize-input::-moz-range-progress {
+  height:5px; border-radius:4px; background:var(--fs-fill);
+  cursor:pointer;
+}
+.flick-fontsize-input::-moz-range-thumb {
+  width:16px; height:16px; border-radius:50%;
+  background:var(--fs-thumb);
+  border:2px solid #fff;
+  box-shadow:0 2px 5px rgba(0,0,0,0.35);
+  cursor:pointer;
+  transition:none;
+}
+.flick-fontsize-input:focus { outline:none; }
 .flick-fontsize-input {
   accent-color:#2e7ed6; /* 고정 색 */
   --fs-fill:#2e7ed6;
