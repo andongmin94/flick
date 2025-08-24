@@ -7,8 +7,6 @@ export function buildUI(data) {
   stage.className = "flick-stage flick-fade-in";
   const header = document.createElement("div");
   header.className = "flick-header";
-  header.style.minHeight = "36px";
-  header.style.maxHeight = "40vh";
   const title = document.createElement("div");
   title.className = "flick-title";
   title.textContent = data.title;
@@ -55,8 +53,6 @@ export function buildUI(data) {
   });
   const footer = document.createElement("div");
   footer.className = "flick-footer";
-  footer.style.minHeight = "28px";
-  footer.style.maxHeight = "30vh";
   footer.innerHTML = "<span>Flick Prototype</span>";
   // 리사이즈 핸들 생성 (헤더 아래, 푸터 위)
   const handleHeader = document.createElement("div");
@@ -81,6 +77,15 @@ export function buildUI(data) {
 
   // 드래그 리사이즈 로직
   const state = { dragging: null, startY: 0, startH: 0 };
+  const KEY_HEADER = "flick:headerHeight";
+  const KEY_FOOTER = "flick:footerHeight";
+  // 저장된 높이 복원
+  try {
+    const hH = parseInt(localStorage.getItem(KEY_HEADER) || "", 10);
+    if (!isNaN(hH) && hH > 0) header.style.height = hH + "px";
+    const fH = parseInt(localStorage.getItem(KEY_FOOTER) || "", 10);
+    if (!isNaN(fH) && fH > 0) footer.style.height = fH + "px";
+  } catch (_) {}
   function onDown(e) {
     const target = e.target;
     if (target.classList.contains("flick-resize-handle")) {
@@ -96,25 +101,16 @@ export function buildUI(data) {
       e.preventDefault();
     }
   }
-  function clamp(val, min, max) {
-    return Math.min(max, Math.max(min, val));
-  }
   function onMove(e) {
     if (!state.dragging) return;
     const dy = e.clientY - state.startY;
     if (state.dragging === "header") {
-      const next = clamp(
-        state.startH + dy,
-        parseInt(header.style.minHeight),
-        parseInt(header.style.maxHeight)
-      );
+      let next = state.startH + dy;
+      if (next < 20) next = 20; // 너무 작아지면 최소 20px
       header.style.height = next + "px";
     } else if (state.dragging === "footer") {
-      const next = clamp(
-        state.startH - dy,
-        parseInt(footer.style.minHeight),
-        parseInt(footer.style.maxHeight)
-      );
+      let next = state.startH - dy;
+      if (next < 16) next = 16;
       footer.style.height = next + "px";
     }
   }
@@ -124,6 +120,15 @@ export function buildUI(data) {
       .forEach((h) => h.classList.remove("active"));
     state.dragging = null;
     document.removeEventListener("mousemove", onMove);
+    // 높이 저장
+    try {
+      if (header.style.height) {
+        localStorage.setItem(KEY_HEADER, parseInt(header.style.height, 10));
+      }
+      if (footer.style.height) {
+        localStorage.setItem(KEY_FOOTER, parseInt(footer.style.height, 10));
+      }
+    } catch (_) {}
   }
   stage.addEventListener("mousedown", onDown);
 }
