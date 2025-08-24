@@ -2,7 +2,6 @@
 import { isSupportedArticle, getActiveSiteConfig } from "./sites.js";
 import { extractPost } from "./extract.js";
 import { buildUI, closeShorts } from "./ui.js";
-import "./shorts.css";
 
 // attach minimal API (still provide __FLICK for backward compatibility)
 const API = {
