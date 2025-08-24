@@ -19,41 +19,24 @@ function openShorts() {
   buildUI(data);
   autoPlayShortsVideos();
 }
-async function openCaptureShorts(btn) {
-  pauseOriginalVideos();
-}
+
 function toggle() {
   const open = !!document.querySelector(".flick-wrap-injected");
   open ? closeShorts() : openShorts();
-  updateBtnStates();
+  updateBtn();
 }
 function ensureButton() {
   if (!isSupportedArticle()) return;
   if (document.querySelector(".flick-toggle-btn")) return;
-  const box = document.createElement("div");
-  box.style.position = "fixed";
-  box.style.top = "72px";
-  box.style.left = "16px";
-  box.style.display = "flex";
-  box.style.flexDirection = "column";
-  box.style.gap = "6px";
-  box.style.zIndex = 1000002;
-  const main = document.createElement("button");
-  main.className = "flick-toggle-btn";
-  main.type = "button";
-  main.textContent = "쇼츠 보기";
-  main.addEventListener("click", toggle);
-  const cap = document.createElement("button");
-  cap.className = "flick-toggle-btn flick-capture-btn";
-  cap.type = "button";
-  cap.textContent = "캡쳐 쇼츠";
-  cap.addEventListener("click", () => openCaptureShorts(cap));
-  box.appendChild(main);
-  box.appendChild(cap);
-  document.body.appendChild(box);
-  updateBtnStates();
+  const btn = document.createElement("button");
+  btn.className = "flick-toggle-btn flick-toggle-floating";
+  btn.type = "button";
+  btn.textContent = "쇼츠 보기";
+  btn.addEventListener("click", toggle);
+  document.body.appendChild(btn);
+  updateBtn();
 }
-function updateBtnStates() {
+function updateBtn() {
   const open = !!document.querySelector(".flick-wrap-injected");
   const main = document.querySelector(".flick-toggle-btn");
   if (main) main.textContent = open ? "쇼츠 닫기" : "쇼츠 보기";
