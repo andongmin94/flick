@@ -1,0 +1,33 @@
+.flick-toggle-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  z-index: 1000002;
+  padding: 6px 10px;
+  background: #fff;
+  color: #222;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font: 13px var(--shorts-font);
+  cursor: pointer;
+  display: inline-flex;
+  gap: 4px;
+  align-items: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: background 0.15s, box-shadow 0.2s;
+}
+.flick-toggle-btn:hover {
+  background: #f2f2f2;
+  box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.18);
+}
+.flick-toggle-floating {
+  position: fixed;
+  top: 72px;
+  left: 16px;
+}
+.flick-toggle-anchor {
+  position: relative;
+}
+.flick-close {
+  display: none !important;
+}

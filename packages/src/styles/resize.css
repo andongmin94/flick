@@ -1,0 +1,46 @@
+.flick-stage {
+  --flick-resize-bar-color: rgba(0, 0, 0, 0.25);
+  --flick-resize-bar-color-hover: rgba(0, 0, 0, 0.4);
+  --flick-resize-bar-color-active: rgba(0, 0, 0, 0.55);
+}
+.flick-resize-hidden .flick-resize-handle {
+  display: none !important;
+}
+.flick-resize-handle {
+  height: 4px;
+  cursor: ns-resize;
+  position: relative;
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity 0.15s, height 0.15s;
+}
+.flick-resize-handle:after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 34px;
+  height: 2px;
+  background: var(--flick-resize-bar-color);
+  border-radius: 2px;
+  transform: translate(-50%, -50%);
+  transition: background 0.15s, width 0.15s;
+}
+.flick-resize-handle:hover,
+.flick-resize-handle.active {
+  opacity: 1;
+}
+.flick-resize-handle:hover:after,
+.flick-resize-handle.active:after {
+  background: var(--flick-resize-bar-color-hover);
+}
+.flick-resize-handle:hover {
+  height: 8px;
+}
+.flick-resize-handle:hover:after {
+  width: 48px;
+  background: var(--flick-resize-bar-color-active);
+}
+.flick-resize-handle.active {
+  background: rgba(0, 0, 0, 0.06);
+}

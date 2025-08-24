@@ -1,0 +1,54 @@
+:root {
+  --shorts-fg: #222;
+  --shorts-stage-bg: #fff;
+  --shorts-overlay-bg: #fff;
+  --shorts-accent: #ff0050;
+  --shorts-radius: 0;
+  --shorts-font: "Noto Sans KR", system-ui, sans-serif;
+  --shorts-header-bg: #000;
+  --shorts-footer-bg: #000;
+}
+
+.flick-wrap-injected {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: var(--shorts-overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999;
+  font-family: var(--shorts-font);
+  box-sizing: border-box;
+}
+.flick-stage {
+  background: var(--shorts-stage-bg);
+  color: var(--shorts-fg);
+  border-radius: var(--shorts-radius);
+  border: var(--shorts-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: min(100vh, calc(100vw * 16 / 9));
+  width: min(100vw, calc(100vh * 9 / 16));
+  background-clip: padding-box;
+}
+.flick-fade-in {
+  animation: flick-fade 0.35s ease;
+}
+@keyframes flick-fade {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+body.flick-body-lock {
+  overflow: hidden !important;
+  touch-action: none;
+}
