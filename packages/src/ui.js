@@ -32,6 +32,18 @@ export function buildUI(data) {
       img.src = b.src;
       img.alt = b.alt || "";
       body.appendChild(img);
+    } else if (b.type === "video") {
+      const wrap = document.createElement("div");
+      wrap.className = "flick-block";
+      const vid = document.createElement("video");
+      vid.className = "flick-video";
+      vid.src = b.src;
+      if (b.poster) vid.poster = b.poster;
+      vid.controls = true;
+      vid.playsInline = true;
+      vid.preload = "metadata";
+      wrap.appendChild(vid);
+      body.appendChild(wrap);
     } else if (b.type === "html") {
       const div = document.createElement("div");
       div.className = "flick-block";
