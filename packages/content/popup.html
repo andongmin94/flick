@@ -2,38 +2,163 @@
 <html lang="ko">
   <head>
     <meta charset="utf-8" />
-    <title>Shorts View</title>
+    <title>FLICK</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
+      :root {
+        --accent1: #facf26;
+        --accent2: #f84b05;
+        --accent: #f84b05;
+        --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
+        --bg: #10141a;
+        --panel: #1f262f;
+        --border: #2a323c;
+        --fg: #f2f5f8;
+        --fg-d: #96a2b0;
+        --radius: 10px;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      html,
       body {
         margin: 0;
-        font: 14px system-ui, sans-serif;
-        width: 260px;
-        padding: 14px;
+        padding: 0;
+        font: 13px/1.45 "Noto Sans KR", system-ui, sans-serif;
+        background: var(--bg);
+        color: var(--fg);
+      }
+      body {
+        width: 300px;
+        padding: 18px 18px 20px;
+      }
+      h1 {
+        margin: 0 0 14px;
+        font-size: 20px;
+        line-height: 1.2;
+        font-weight: 600;
+        letter-spacing: 0.4px;
+        background: linear-gradient(90deg, var(--accent1), var(--accent2) 70%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+      p {
+        margin: 0 0 12px;
+      }
+      small {
+        color: var(--fg-d);
+      }
+      .panel {
+        background: linear-gradient(155deg, #1f262f, #161c22);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: var(--radius);
+        padding: 16px 16px 14px;
+        box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.65),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .kbd {
+        font: 11px ui-monospace, Menlo, Consolas, monospace;
+        background: #11171d;
+        padding: 3px 6px 4px;
+        border-radius: 5px;
+        border: 1px solid #222c34;
+        color: #cdd5dd;
+        margin-left: 4px;
+      }
+      a {
+        color: var(--accent);
+        text-decoration: none;
+        font-weight: 500;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      .actions {
+        display: flex;
+        gap: 10px;
+        margin-top: 4px;
       }
       button {
         cursor: pointer;
-        padding: 6px 10px;
-        border-radius: 6px;
-        background: #111;
-        color: #fff;
-        border: 1px solid #333;
+        position: relative;
+        border: none;
+        font: 600 12px/1 "Noto Sans KR", system-ui, sans-serif;
+        padding: 10px 14px 9px;
+        border-radius: 7px;
+        background: var(--accent-grad);
+        color: #1c232b;
+        letter-spacing: 0.4px;
+        box-shadow: 0 4px 18px -6px rgba(248, 75, 5, 0.75),
+          0 0 0 1px rgba(255, 255, 255, 0.14) inset,
+          0 2px 6px -2px rgba(0, 0, 0, 0.55);
+        transition: box-shadow 0.35s, transform 0.25s, filter 0.35s;
       }
       button:hover {
-        background: #222;
+        box-shadow: 0 5px 22px -8px rgba(248, 75, 5, 0.85),
+          0 0 0 1px rgba(255, 255, 255, 0.18) inset;
       }
-      .label {
-        font-weight: 600;
-        margin-bottom: 6px;
-        display: block;
+      button:active {
+        transform: translateY(1px);
+        filter: brightness(0.92);
       }
-      small {
-        color: #666;
+  .badge-preview {all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:4px 8px 3px;font:600 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.5px;background:linear-gradient(90deg,#facf26 0%,#f84b05 100%);color:#222;border-radius:6px;border:1px solid #dca21a;box-shadow:0 2px 6px rgba(0,0,0,.15);text-shadow:0 1px 0 rgba(255,255,255,.4);position:relative;transition:filter .25s,transform .25s,box-shadow .3s;}
+  .badge-preview:hover{filter:brightness(1.05);box-shadow:0 3px 10px -2px rgba(0,0,0,.28);}
+  .badge-preview:active{transform:translateY(1px);filter:brightness(.92);}
+  .badge-preview:after{content:" beta";font-weight:400;font-size:10px;margin-left:2px;opacity:.75;}
+      footer {
+        margin-top: 14px;
+        font-size: 10px;
+        color: #556170;
+        text-align: center;
+        letter-spacing: 0.6px;
       }
     </style>
   </head>
   <body>
-    <span class="label">쇼츠 모드</span>
-    <p><small>F4로 활성화 가능</small></p>
-    <p><small>현재는 에펨코리아만 지원</small></p>
+    <h1>FLICK</h1>
+    <div class="panel">
+      <p style="margin-top: 0">
+        
+      </p>
+      <div
+        style="
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          flex-wrap: wrap;
+          margin-top: -4px;
+        "
+      >
+        <button
+          id="badgeToggle"
+          type="button"
+          class="badge-preview"
+          title="현재 탭에서 쇼츠 토글"
+        >
+          FLICK
+        </button>
+        <small
+          >또는 <span class="kbd">F4</span> 로 쇼츠
+          뷰를 토글할 수 있습니다.</small
+        >
+      </div>
+      <p><small>현재 대상: 에펨코리아 (확장 예정)</small></p>
+      <div class="actions">
+        <button id="openOptions" type="button">옵션 열기</button>
+        <a
+          href="https://github.com/andongmin94/flick"
+          target="_blank"
+          rel="noopener"
+          style="align-self: center; font-size: 12px"
+          >GitHub</a
+        >
+      </div>
+    </div>
+    <footer>FLICK © 2025</footer>
+  <script src="popup.js"></script>
   </body>
 </html>
