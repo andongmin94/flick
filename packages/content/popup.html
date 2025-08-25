@@ -6,16 +6,35 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
       :root {
+        color-scheme: light dark; /* 브라우저 기본 위젯 색상 힌트 */
         --accent1: #facf26;
         --accent2: #f84b05;
         --accent: #f84b05;
         --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
-        --bg: #10141a;
-        --panel: #1f262f;
-        --border: #2a323c;
-        --fg: #f2f5f8;
-        --fg-d: #96a2b0;
+        /* Light (기본) */
+        --bg: #f8f9fb;
+        --panel-bg: linear-gradient(155deg,#ffffff,#f1f4f8 70%);
+        --border: #d9e1e8;
+        --fg: #1f262f;
+        --fg-d: #657381;
+        --kbd-bg: #e2e8ee;
+        --kbd-border: #c8d1d9;
+        --kbd-fg: #36414b;
+        --footer-fg: #7a8895;
         --radius: 10px;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #10141a;
+          --panel-bg: linear-gradient(155deg,#1f262f,#161c22);
+          --border: #2a323c;
+          --fg: #f2f5f8;
+          --fg-d: #96a2b0;
+          --kbd-bg: #11171d;
+          --kbd-border: #222c34;
+          --kbd-fg: #cdd5dd;
+          --footer-fg: #556170;
+        }
       }
       * {
         box-sizing: border-box;
@@ -50,11 +69,11 @@
         color: var(--fg-d);
       }
       .panel {
-        background: linear-gradient(155deg, #1f262f, #161c22);
-        border: 1px solid rgba(255, 255, 255, 0.05);
+        background: var(--panel-bg);
+        border: 1px solid var(--border);
         border-radius: var(--radius);
         padding: 16px 16px 14px;
-        box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.65),
+        box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.15),
           0 0 0 1px rgba(255, 255, 255, 0.04) inset;
         display: flex;
         flex-direction: column;
@@ -62,11 +81,11 @@
       }
       .kbd {
         font: 11px ui-monospace, Menlo, Consolas, monospace;
-        background: #11171d;
+        background: var(--kbd-bg);
         padding: 3px 6px 4px;
         border-radius: 5px;
-        border: 1px solid #222c34;
-        color: #cdd5dd;
+        border: 1px solid var(--kbd-border);
+        color: var(--kbd-fg);
         margin-left: 4px;
       }
       a {
@@ -109,13 +128,7 @@
   .badge-preview:hover{filter:brightness(1.05);box-shadow:0 3px 10px -2px rgba(0,0,0,.28);}
   .badge-preview:active{transform:translateY(1px);filter:brightness(.92);}
   .badge-preview:after{content:" beta";font-weight:400;font-size:10px;margin-left:2px;opacity:.75;}
-      footer {
-        margin-top: 14px;
-        font-size: 10px;
-        color: #556170;
-        text-align: center;
-        letter-spacing: 0.6px;
-      }
+  footer {margin-top:14px;font-size:10px;color:var(--footer-fg);text-align:center;letter-spacing:.6px;}
     </style>
   </head>
   <body>
