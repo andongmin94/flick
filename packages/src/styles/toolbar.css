@@ -18,7 +18,6 @@
 .flick-format-toolbar button {
   all: unset;
   cursor: pointer;
-  padding: 2px 6px 3px;
   border-radius: 4px;
   font-size: 11px;
   line-height: 1.1;
@@ -26,13 +25,12 @@
   color: #eee;
 }
 .flick-format-toolbar button:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: linear-gradient(135deg, #facf26, #f84b05);
 }
 .flick-format-toolbar button:active {
-  background: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.08);
 }
 .flick-format-toolbar button[data-act="apply"] {
-  background: linear-gradient(135deg, #0f52ba, #1270ff);
   color: #fff;
   border-radius: 6px;
   padding: 4px 10px;
