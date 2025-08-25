@@ -20,8 +20,8 @@
 }
 .flick-title[contenteditable="true"]:focus {
   border: 2px solid transparent; /* border-image 적용 기반 */
-  border-radius: 4px;
-  border-image: linear-gradient(90deg, #facf26 0%, #f84b05 100%) 1; /* 실제 그라디언트 테두리 */
+  border-radius: var(--flick-radius-sm);
+  border-image: var(--flick-grad-warm) 1;
   background: #ffffff;
   color: #000;
 }

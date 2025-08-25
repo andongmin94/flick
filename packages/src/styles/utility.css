@@ -14,32 +14,22 @@
 .flick-nav-btn:hover {
   background: rgba(255, 255, 255, 0.25);
 }
-/* Slider focus ring kill + legacy bits */
+/* Slider focus ring reset (condensed) */
+/* Uses shared vars from :root (see base.css) */
 .flick-fontsize-input:focus,
 .flick-fontsize-input:focus-visible,
 .flick-fontsize-input:active {
   outline: none !important;
   box-shadow: none !important;
 }
-.flick-fontsize-input::-webkit-focus-inner {
-  border: 0;
-  outline: 0;
+/* When the input is focused, also suppress native outline on track/thumb (WebKit + Firefox) */
+.flick-fontsize-input:focus::-webkit-slider-thumb,
+.flick-fontsize-input:focus::-webkit-slider-runnable-track,
+.flick-fontsize-input:focus::-moz-range-thumb,
+.flick-fontsize-input:focus::-moz-range-track {
+  outline: none;
 }
-.flick-fontsize-input::-webkit-slider-thumb:focus {
-  outline: 0;
-}
-.flick-fontsize-input::-webkit-slider-runnable-track:focus {
-  outline: 0;
-}
-.flick-fontsize-input::-moz-focus-inner {
-  border: 0;
-}
-.flick-fontsize-input::-moz-range-track:focus {
-  outline: 0;
-}
-.flick-fontsize-input::-moz-range-thumb:focus {
-  outline: 0;
-}
+/* Removed legacy ::-webkit-focus-inner / ::-moz-focus-inner as they don't affect modern range inputs */
 .flick-fontsize-input::-ms-track {
   background: transparent;
   border-color: transparent;
