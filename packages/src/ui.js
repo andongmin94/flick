@@ -146,7 +146,7 @@ export function buildUI(data) {
   stage.addEventListener("mousedown", onDown);
 
   createFontSizePanel(KEY_TITLE_FS, title);
-  enableTitleFormatToolbar(title);
+  enableAutoHighlight(title);
 }
 
 export function closeShorts() {
@@ -267,9 +267,7 @@ function createFontSizePanel(storageKey, titleEl) {
   document.body.appendChild(panel);
 }
 
-function enableTitleFormatToolbar(titleEl) {
-  let toolbar = null;
-  let lastRange = null;
+function enableAutoHighlight(titleEl) {
   function getStoredColor() {
     try {
       const c = localStorage.getItem("flick:highlightColor");
@@ -277,93 +275,40 @@ function enableTitleFormatToolbar(titleEl) {
     } catch (_) {}
     return "#ffff00";
   }
-  function ensureToolbar() {
-    if (toolbar) return toolbar;
-    toolbar = document.createElement("div");
-    toolbar.className = "flick-format-toolbar";
-    toolbar.innerHTML = `<button data-act="apply">강조</button>`;
-    document.body.appendChild(toolbar);
-    toolbar.addEventListener("mousedown", (e) => e.preventDefault());
-    toolbar.addEventListener("click", onClick);
-    return toolbar;
-  }
-  function onClick(e) {
-    const b = e.target.closest("button[data-act]");
-    if (!b) return;
-    const act = b.getAttribute("data-act");
-    if (act === "apply") apply();
-  }
   function validRange(r) {
     return r && !r.collapsed && titleEl.contains(r.commonAncestorContainer);
   }
-  function currentRange() {
-    const sel = window.getSelection();
-    if (sel && sel.rangeCount) {
-      const r = sel.getRangeAt(0);
-      if (validRange(r)) return r;
-    }
-    return lastRange && validRange(lastRange) ? lastRange : null;
-  }
-  function apply() {
-    const r = currentRange();
-    if (!r) return;
-    const color = getStoredColor(); // normalize overlapping
-    const span = document.createElement("span");
-    span.setAttribute("data-flick-hl", "");
-    span.style.color = color;
-    span.appendChild(r.extractContents());
-    r.insertNode(span);
-    const sel = window.getSelection();
-    if (sel) {
-      sel.removeAllRanges();
-      const nr = document.createRange();
-      nr.selectNodeContents(span);
-      nr.collapse(false);
-      sel.addRange(nr);
-      lastRange = nr.cloneRange();
-    }
-    mergeAdjacent(span.parentNode, color);
-  }
   function mergeAdjacent(parent, color) {
     if (!parent) return;
-    const nodes = [...parent.querySelectorAll("[data-flick-hl]")];
+    const nodes = [...parent.querySelectorAll('[data-flick-hl]')];
     for (let i = 0; i < nodes.length - 1; i++) {
-      const a = nodes[i],
-        b = nodes[i + 1];
+      const a = nodes[i], b = nodes[i+1];
       if (a.nextSibling === b && a.style.color === b.style.color) {
         while (b.firstChild) a.appendChild(b.firstChild);
         b.remove();
       }
     }
   }
-  function show() {
+  function applySelection() {
     const sel = window.getSelection();
-    if (!sel || !sel.rangeCount) {
-      hide();
-      return;
-    }
+    if (!sel || !sel.rangeCount) return;
     const r = sel.getRangeAt(0);
-    if (!validRange(r)) {
-      hide();
-      return;
-    }
-    const rect = r.getBoundingClientRect();
-    const tb = ensureToolbar();
-    tb.style.top = window.scrollY + rect.top + "px";
-    tb.style.left = window.scrollX + rect.left + rect.width / 2 + "px";
-    lastRange = r.cloneRange();
+    if (!validRange(r)) return;
+    const span = document.createElement('span');
+    span.setAttribute('data-flick-hl','');
+    span.style.color = getStoredColor();
+    span.appendChild(r.extractContents());
+    r.insertNode(span);
+    // 새 선택을 span 뒤로 이동
+    sel.removeAllRanges();
+    const nr = document.createRange();
+    nr.selectNodeContents(span);
+    nr.collapse(false);
+    sel.addRange(nr);
+    mergeAdjacent(span.parentNode, span.style.color);
   }
-  function hide() {
-    if (toolbar) {
-      toolbar.remove();
-      toolbar = null;
-    }
-  }
-  document.addEventListener("selectionchange", () => setTimeout(show, 0));
-  titleEl.addEventListener("blur", () =>
-    setTimeout(() => {
-      const sel = window.getSelection();
-      if (!sel || !sel.rangeCount) hide();
-    }, 120)
-  );
+  document.addEventListener('mouseup', () => setTimeout(applySelection, 0));
+  document.addEventListener('keyup', (e) => {
+    if (e.key === 'Shift') setTimeout(applySelection,0);
+  });
 }
