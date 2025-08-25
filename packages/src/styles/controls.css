@@ -14,11 +14,11 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  border-radius: 6px;
-  background: linear-gradient(90deg,#facf26,#f84b05);
+  border-radius: var(--flick-radius-md);
+  background: var(--flick-grad-warm);
   color: #222;
   border: 1px solid #dca21a;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: var(--flick-shadow-soft);
   user-select: none;
   cursor: pointer;
   text-shadow: 0 1px 0 rgba(255,255,255,0.4);
