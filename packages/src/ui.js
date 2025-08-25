@@ -251,7 +251,7 @@ function createFontSizePanel(storageKey, titleEl) {
       s.remove();
     });
   });
-  const toggleBtn = document.querySelector(".flick-toggle-btn");
+  const toggleBtn = document.querySelector(".flick-logo-badge");
   function place() {
     const r = toggleBtn?.getBoundingClientRect();
     if (r) {
