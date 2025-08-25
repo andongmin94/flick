@@ -129,49 +129,30 @@
   .badge-preview:active{transform:translateY(1px);filter:brightness(.92);}
   .badge-preview:after{content:" beta";font-weight:400;font-size:10px;margin-left:2px;opacity:.75;}
   footer {margin-top:14px;font-size:10px;color:var(--footer-fg);text-align:center;letter-spacing:.6px;}
+  .badge-line{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:12px;line-height:1.1;color:var(--fg-d);}
+  .badge-line .prefix{margin-right:2px;}
+  .badge-line .suffix{white-space:nowrap;font-size:11px;}
     </style>
   </head>
   <body>
     <h1>FLICK</h1>
     <div class="panel">
-      <p style="margin-top: 0">
-        
-      </p>
-      <div
-        style="
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          flex-wrap: wrap;
-          margin-top: -4px;
-        "
-      >
-        <button
-          id="badgeToggle"
-          type="button"
-          class="badge-preview"
-          title="현재 탭에서 쇼츠 토글"
-        >
-          FLICK
-        </button>
-        <small
-          >또는 <span class="kbd">F4</span> 로 쇼츠
-          뷰를 토글할 수 있습니다.</small
-        >
+      <div class="badge-line">
+        <button id="badgeToggle" type="button" class="badge-preview" title="쇼츠 토글">FLICK</button>
+        <span class="suffix">버튼 또는 <span class="kbd">F4</span> 로 토글</span>
       </div>
-      <p><small>현재 대상: 에펨코리아 (확장 예정)</small></p>
       <div class="actions">
         <button id="openOptions" type="button">옵션 열기</button>
         <a
-          href="https://github.com/andongmin94/flick"
+          href="https://flick.andongmin.com/"
           target="_blank"
           rel="noopener"
           style="align-self: center; font-size: 12px"
-          >GitHub</a
+          >웹사이트</a
         >
       </div>
     </div>
-    <footer>FLICK © 2025</footer>
+    <footer>FLICK © 2025 안동민</footer>
   <script src="popup.js"></script>
   </body>
 </html>
