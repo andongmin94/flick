@@ -334,3 +334,14 @@ export function postFmkoreaShortsMounted() {
     } catch (_) {}
   });
 }
+
+// rule 객체 (sites.js 대체용). id는 기존 ruleId 대응.
+export const fmkoreaRule = {
+  id: "fmkorea",
+  match: /https?:\/\/(www\.)?fmkorea\.com\//i,
+  articleMatch: /(\/best\/)|\/(\d+)(?:$|[?#])|document_srl=\d+/i,
+  skipClosest: ".document_address",
+  extract: extractFmkorea,
+  prePrepare: preFmkoreaPrepare,
+  postShortsMounted: postFmkoreaShortsMounted,
+};
