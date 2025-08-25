@@ -1,43 +1,32 @@
 // src/entry.js (bundle entry)
-import { isSupportedArticle, getActiveSiteConfig } from "./sites.js";
-import { extractPost } from "./extract.js";
+import {
+  isSupportedArticle,
+  getActiveSiteConfig,
+  extractActive,
+  runPreHook,
+  runPostMountedHook,
+} from "./rules/index.js";
 import { buildUI, closeShorts } from "./ui.js";
 import "./styles/styles.css"; // aggregate all CSS for single bundle
 
 // fmkorea 전용 비디오 처리 훅
-import {
-  preFmkoreaPrepare,
-  postFmkoreaShortsMounted,
-} from "./rules/fmkorea.js";
+// 개별 훅은 registry 통해 실행
 
 // attach minimal API (still provide __FLICK for backward compatibility)
 const API = {
   isSupportedArticle,
   getActiveSiteConfig,
-  extractPost,
+  extractPost: extractActive,
   buildUI,
   closeShorts,
 };
 window.FLICK = API;
 
 function openShorts() {
-  const cfg = getActiveSiteConfig();
-  if (cfg?.ruleId === "fmkorea") {
-    try {
-      preFmkoreaPrepare();
-    } catch (e) {
-      console.warn("[flick] pre fmkorea hook error", e);
-    }
-  }
-  const data = extractPost();
+  runPreHook();
+  const data = extractActive();
   buildUI(data);
-  if (cfg?.ruleId === "fmkorea") {
-    try {
-      postFmkoreaShortsMounted();
-    } catch (e) {
-      console.warn("[flick] post fmkorea hook error", e);
-    }
-  }
+  runPostMountedHook();
 }
 
 function toggle() {
