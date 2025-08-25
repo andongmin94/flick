@@ -211,7 +211,7 @@ function createFontSizePanel(storageKey, titleEl) {
     const v = parseFloat(input.value) || min;
     const p = ((v - min) / (max - min)) * 100;
     input.style.setProperty("--_percent", p + "%");
-    // Thumb 색상 보간 (start: #FACF26, end: #F84B05)
+    // Thumb 색상 보간 (start: #f9d423, end: #f83600)
     const t = Math.max(0, Math.min(1, p / 100));
     const s = { r: 0xfa, g: 0xcf, b: 0x26 }; // start color
     const eC = { r: 0xf8, g: 0x4b, b: 0x05 }; // end color
