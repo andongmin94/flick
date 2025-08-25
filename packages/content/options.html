@@ -5,39 +5,12 @@
     <title>FLICK 옵션</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
-      :root {
-        --accent1: #facf26; /* warm yellow */
-        --accent2: #f84b05; /* warm orange */
-        --accent: var(--accent2);
-        --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
-        --accent-grad-h: linear-gradient(
-          90deg,
-          var(--accent1),
-          var(--accent2) 70%
-        );
-        --bg-deep: #0f1216;
-        --bg-panel: #1b2027;
-        --bg-panel-alt: #222a33;
-        --border: #2b333d;
-        --fg: #e8edf3;
-        --fg-dim: #9aa4b1;
-        --radius-s: 6px;
-        --radius: 12px;
-        --focus: 0 0 0 2px rgba(248, 75, 5, 0.55),
-          0 0 0 6px rgba(248, 75, 5, 0.18);
-        font-family: "Noto Sans KR", system-ui, sans-serif;
-      }
+  :root {color-scheme:light dark;--accent1:#facf26;--accent2:#f84b05;--accent:var(--accent2);--accent-grad:linear-gradient(135deg,var(--accent1),var(--accent2));--accent-grad-h:linear-gradient(90deg,var(--accent1),var(--accent2) 70%);--bg-deep:#f5f7fa;--bg-panel:#ffffff;--bg-panel-alt:#f1f4f8;--border:#d8e1e8;--fg:#1d242c;--fg-dim:#607080;--radius-s:6px;--radius:12px;--focus:0 0 0 2px rgba(248,75,5,.5),0 0 0 6px rgba(248,75,5,.15);font-family:"Noto Sans KR",system-ui,sans-serif}
+  @media (prefers-color-scheme: dark){:root{--bg-deep:#0f1216;--bg-panel:#1b2027;--bg-panel-alt:#222a33;--border:#2b333d;--fg:#e8edf3;--fg-dim:#9aa4b1}}
       * {
         box-sizing: border-box;
       }
-      html,
-      body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(135deg, #0d0f12, #141a21 55%, #10151b);
-        color: var(--fg);
-        -webkit-font-smoothing: antialiased;
-      }
+  html,body{margin:0;padding:0;background:var(--bg-deep);color:var(--fg);-webkit-font-smoothing:antialiased}
       body {
         padding: 38px 30px 60px;
         max-width: 860px;
@@ -64,31 +37,8 @@
         gap: 22px;
         grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       }
-      .card {
-        position: relative;
-        background: linear-gradient(160deg, #1d242c, #171d24);
-        border: 1px solid rgba(255, 255, 255, 0.04);
-        border-radius: var(--radius);
-        padding: 22px 22px 24px;
-        box-shadow: 0 8px 28px -8px rgba(0, 0, 0, 0.6),
-          0 2px 6px -2px rgba(0, 0, 0, 0.4),
-          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
-        display: flex;
-        flex-direction: column;
-        gap: 18px;
-      }
-      .card:before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: radial-gradient(
-          circle at 14% 18%,
-          rgba(250, 207, 38, 0.18),
-          transparent 65%
-        );
-        pointer-events: none;
-      }
+  .card{position:relative;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px 22px 24px;box-shadow:0 8px 24px -10px rgba(0,0,0,.15),0 0 0 1px rgba(255,255,255,.04) inset;display:flex;flex-direction:column;gap:18px;transition:background .4s,border-color .4s,box-shadow .4s}
+  .card:before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 14% 18%,rgba(248,75,5,.07),transparent 65%);pointer-events:none;mix-blend-mode:multiply}@media (prefers-color-scheme: dark){.card:before{background:radial-gradient(circle at 14% 18%,rgba(250,207,38,.18),transparent 65%)}}
       .card h2 {
         margin: 0;
         font-size: 18px;
@@ -116,32 +66,12 @@
       .input-wrap {
         position: relative;
       }
-      .input-wrap input[type="text"] {
-        width: 100%;
-        padding: 14px 15px 12px;
-        border-radius: var(--radius-s);
-        background: var(--bg-panel-alt);
-        border: 1px solid var(--border);
-        color: var(--fg);
-        font: 13px/1.4 "Noto Sans KR", system-ui, sans-serif;
-        letter-spacing: 0.2px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5) inset,
-          0 0 0 0 rgba(255, 0, 80, 0);
-        transition: border-color 0.25s, background 0.3s, box-shadow 0.35s;
-      }
+  .input-wrap input[type="text"]{width:100%;padding:14px 15px 12px;border-radius:var(--radius-s);background:var(--bg-panel-alt);border:1px solid var(--border);color:var(--fg);font:13px/1.4 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.2px;box-shadow:0 1px 2px rgba(0,0,0,.15) inset;transition:border-color .25s,background .3s,box-shadow .35s}
       .input-wrap input[type="text"]::placeholder {
         color: #5b6774;
       }
-      .input-wrap input[type="text"]:hover {
-        border-color: #3b4956;
-        background: #262f39;
-      }
-      .input-wrap input[type="text"]:focus {
-        outline: none;
-        border-color: var(--accent);
-        background: #262f39;
-        box-shadow: var(--focus);
-      }
+  .input-wrap input[type="text"]:hover{border-color:var(--accent2);background:var(--bg-panel)}
+  .input-wrap input[type="text"]:focus{outline:none;border-color:var(--accent);background:var(--bg-panel);box-shadow:var(--focus)}
       .hint {
         font-size: 11px;
         color: #6d7885;
@@ -155,23 +85,7 @@
         margin-top: 12px;
         min-height: 28px;
       }
-      .tag {
-        --c: var(--accent);
-        position: relative;
-        background: var(--accent-grad);
-        color: #1b2027;
-        font-size: 12px;
-        padding: 5px 9px 5px 8px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-weight: 600;
-        letter-spacing: 0.3px;
-        box-shadow: 0 4px 14px -6px rgba(248, 75, 5, 0.55),
-          0 0 0 1px rgba(255, 255, 255, 0.07) inset;
-        animation: fadeIn 0.35s ease;
-      }
+  .tag{--c:var(--accent);position:relative;background:var(--accent-grad);color:#1b2027;font-size:12px;padding:5px 9px 5px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;font-weight:600;letter-spacing:.3px;box-shadow:0 4px 14px -6px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.07) inset;animation:fadeIn .35s ease}
       .tag button {
         all: unset;
         cursor: pointer;
@@ -250,26 +164,8 @@
         transform: translateY(1px);
         filter: brightness(0.92);
       }
-      button.secondary {
-        cursor: pointer;
-        background: #262f39;
-        color: var(--fg-dim);
-        border: 1px solid #3b4652;
-        font: 500 12px/1 "Noto Sans KR", system-ui, sans-serif;
-        padding: 10px 16px 9px;
-        border-radius: var(--radius-s);
-        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.6),
-          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
-        transition: border-color 0.25s, color 0.25s, background 0.3s,
-          box-shadow 0.35s;
-      }
-      button.secondary:hover {
-        color: #e9eef3;
-        border-color: var(--accent2);
-        background: #313c47;
-        box-shadow: 0 3px 12px -4px rgba(248, 75, 5, 0.55),
-          0 0 0 1px rgba(255, 255, 255, 0.07) inset;
-      }
+  button.secondary{cursor:pointer;background:var(--bg-panel-alt);color:var(--fg-dim);border:1px solid var(--border);font:500 12px/1 "Noto Sans KR",system-ui,sans-serif;padding:10px 16px 9px;border-radius:var(--radius-s);box-shadow:0 2px 6px -2px rgba(0,0,0,.15),0 0 0 1px rgba(255,255,255,.05) inset;transition:border-color .25s,color .25s,background .3s,box-shadow .35s}
+  button.secondary:hover{color:var(--fg);border-color:var(--accent2);background:var(--bg-panel);box-shadow:0 3px 12px -4px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.07) inset}
       button.secondary:active {
         transform: translateY(1px);
       }
@@ -279,25 +175,7 @@
         color: var(--accent2);
         min-width: 70px;
       }
-      .toast {
-        position: fixed;
-        left: 50%;
-        bottom: 30px;
-        transform: translateX(-50%) translateY(20px);
-        background: #141a21;
-        color: #fff;
-        padding: 14px 20px;
-        font: 600 13px/1 "Noto Sans KR", system-ui, sans-serif;
-        border-radius: 14px;
-        box-shadow: 0 10px 34px -12px rgba(248, 75, 5, 0.55),
-          0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-          0 0 0 4px rgba(250, 207, 38, 0.18);
-        border: 1px solid #2d343d;
-        opacity: 0;
-        pointer-events: none;
-        letter-spacing: 0.4px;
-        transition: opacity 0.45s, transform 0.45s;
-      }
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--bg-panel);color:var(--fg);padding:14px 20px;font:600 13px/1 "Noto Sans KR",system-ui,sans-serif;border-radius:14px;box-shadow:0 10px 34px -12px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.08) inset,0 0 0 4px rgba(250,207,38,.18);border:1px solid var(--border);opacity:0;pointer-events:none;letter-spacing:.4px;transition:opacity .45s,transform .45s}
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
