@@ -36,13 +36,23 @@ function toggle() {
 }
 function ensureButton() {
   if (!isSupportedArticle()) return;
-  if (document.querySelector(".flick-toggle-btn")) return;
+  // 로고 + 버튼 컨테이너 이미 있으면 스킵
+  if (document.querySelector(".flick-toggle-wrapper")) return;
+  const wrap = document.createElement("div");
+  wrap.className = "flick-toggle-wrapper";
+
+  const logo = document.createElement("div");
+  logo.className = "flick-logo-badge";
+  logo.textContent = "FLICK"; // 필요시 SVG나 이미지로 교체
+  wrap.appendChild(logo);
+
   const btn = document.createElement("button");
   btn.className = "flick-toggle-btn flick-toggle-floating";
   btn.type = "button";
   btn.textContent = "쇼츠 보기";
   btn.addEventListener("click", toggle);
-  document.body.appendChild(btn);
+  wrap.appendChild(btn);
+  document.body.appendChild(wrap);
   updateBtn();
 }
 function updateBtn() {
@@ -64,6 +74,16 @@ window.addEventListener("keydown", (e) => {
     return;
   if (e.key === "F4") {
     e.preventDefault();
-    toggle();
+    const open = !!document.querySelector(".flick-wrap-injected");
+    if (open) {
+      // 열려있으면 어디서든 닫기 허용
+      closeShorts();
+      updateBtn();
+      return;
+    }
+    // 열려있지 않다면 기사 페이지에서만 열기
+    if (!isSupportedArticle()) return;
+    openShorts();
+    updateBtn();
   }
 });
