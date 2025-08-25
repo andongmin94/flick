@@ -5,16 +5,65 @@
     <title>FLICK 옵션</title>
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <style>
-  :root {color-scheme:light dark;--accent1:#facf26;--accent2:#f84b05;--accent:var(--accent2);--accent-grad:linear-gradient(135deg,var(--accent1),var(--accent2));--accent-grad-h:linear-gradient(90deg,var(--accent1),var(--accent2) 70%);--bg-deep:#f5f7fa;--bg-panel:#ffffff;--bg-panel-alt:#f1f4f8;--border:#d8e1e8;--fg:#1d242c;--fg-dim:#607080;--radius-s:6px;--radius:12px;--focus:0 0 0 2px rgba(248,75,5,.5),0 0 0 6px rgba(248,75,5,.15);font-family:"Noto Sans KR",system-ui,sans-serif}
-  @media (prefers-color-scheme: dark){:root{--bg-deep:#0f1216;--bg-panel:#1b2027;--bg-panel-alt:#222a33;--border:#2b333d;--fg:#e8edf3;--fg-dim:#9aa4b1}}
+      :root {
+        color-scheme: light dark;
+        --accent1: #facf26;
+        --accent2: #f84b05;
+        --accent: var(--accent2);
+        --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
+        --accent-grad-h: linear-gradient(
+          90deg,
+          var(--accent1),
+          var(--accent2) 70%
+        );
+        --bg-deep: #f5f7fa;
+        --bg-panel: #ffffff;
+        --bg-panel-alt: #f1f4f8;
+        --border: #d8e1e8;
+        --fg: #1d242c;
+        --fg-dim: #607080;
+        --radius-s: 6px;
+        --radius: 12px;
+        --focus: 0 0 0 2px rgba(248, 75, 5, 0.5),
+          0 0 0 6px rgba(248, 75, 5, 0.15);
+        font-family: "Noto Sans KR", system-ui, sans-serif;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg-deep: #0f1216;
+          --bg-panel: #1b2027;
+          --bg-panel-alt: #222a33;
+          --border: #2b333d;
+          --fg: #e8edf3;
+          --fg-dim: #9aa4b1;
+        }
+      }
       * {
         box-sizing: border-box;
       }
-  html,body{margin:0;padding:0;background:var(--bg-deep);color:var(--fg);-webkit-font-smoothing:antialiased}
+      html,
       body {
-        padding: 38px 30px 60px;
-        max-width: 860px;
-        margin: auto;
+        margin: 0;
+        padding: 0;
+        background: var(--bg-deep);
+        color: var(--fg);
+        -webkit-font-smoothing: antialiased;
+      }
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      .main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 40px;
+        padding: 40px clamp(18px, 4vw, 54px) 70px;
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        box-sizing: border-box;
       }
       h1 {
         margin: 0 0 22px;
@@ -32,15 +81,69 @@
         color: var(--fg-dim);
         line-height: 1.6;
       }
-  /* letter-spacing 통일 (카드 내부 요소) */
-  .card h2, .sub, .hint, .domain-pill, button.primary, button.secondary, .tag { letter-spacing: .4px; }
+      /* letter-spacing 통일 (카드 내부 요소) */
+      .card h2,
+      .sub,
+      .hint,
+      .domain-pill,
+      button.primary,
+      button.secondary,
+      .tag {
+        letter-spacing: 0.4px;
+      }
       .grid {
         display: grid;
-        gap: 22px;
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 28px;
+        grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+        align-items: start;
       }
-  .card{position:relative;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);padding:22px 22px 24px;box-shadow:0 8px 24px -10px rgba(0,0,0,.15),0 0 0 1px rgba(255,255,255,.04) inset;display:flex;flex-direction:column;gap:18px;transition:background .4s,border-color .4s,box-shadow .4s}
-  .card:before{content:"";position:absolute;inset:0;border-radius:inherit;background:radial-gradient(circle at 14% 18%,rgba(248,75,5,.07),transparent 65%);pointer-events:none;mix-blend-mode:multiply}@media (prefers-color-scheme: dark){.card:before{background:radial-gradient(circle at 14% 18%,rgba(250,207,38,.18),transparent 65%)}}
+      @media (max-width: 900px) {
+        .grid {
+          gap: 22px;
+          grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+      }
+      @media (min-width: 1500px) {
+        .grid {
+          grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+          gap: 34px;
+        }
+      }
+      .card {
+        position: relative;
+        background: var(--bg-panel);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 22px 22px 24px;
+        box-shadow: 0 8px 24px -10px rgba(0, 0, 0, 0.15),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+      }
+      .card:before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        background: radial-gradient(
+          circle at 14% 18%,
+          rgba(248, 75, 5, 0.07),
+          transparent 65%
+        );
+        pointer-events: none;
+        mix-blend-mode: multiply;
+      }
+      @media (prefers-color-scheme: dark) {
+        .card:before {
+          background: radial-gradient(
+            circle at 14% 18%,
+            rgba(250, 207, 38, 0.18),
+            transparent 65%
+          );
+        }
+      }
       .card h2 {
         margin: 0;
         font-size: 18px;
@@ -68,12 +171,31 @@
       .input-wrap {
         position: relative;
       }
-  .input-wrap input[type="text"]{width:100%;padding:14px 15px 12px;border-radius:var(--radius-s);background:var(--bg-panel-alt);border:1px solid var(--border);color:var(--fg);font:13px/1.4 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.2px;box-shadow:0 1px 2px rgba(0,0,0,.15) inset;transition:border-color .25s,background .3s,box-shadow .35s}
+      .input-wrap input[type="text"] {
+        width: 100%;
+        padding: 14px 15px 12px;
+        border-radius: var(--radius-s);
+        background: var(--bg-panel-alt);
+        border: 1px solid var(--border);
+        color: var(--fg);
+        font: 13px/1.4 "Noto Sans KR", system-ui, sans-serif;
+        letter-spacing: 0.2px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) inset;
+        transition: border-color 0.25s, background 0.3s, box-shadow 0.35s;
+      }
       .input-wrap input[type="text"]::placeholder {
         color: #5b6774;
       }
-  .input-wrap input[type="text"]:hover{border-color:var(--accent2);background:var(--bg-panel)}
-  .input-wrap input[type="text"]:focus{outline:none;border-color:var(--accent);background:var(--bg-panel);box-shadow:var(--focus)}
+      .input-wrap input[type="text"]:hover {
+        border-color: var(--accent2);
+        background: var(--bg-panel);
+      }
+      .input-wrap input[type="text"]:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: var(--bg-panel);
+        box-shadow: var(--focus);
+      }
       .hint {
         font-size: 11px;
         color: #6d7885;
@@ -87,12 +209,66 @@
         margin-top: 12px;
         min-height: 28px;
       }
-  .domain-pill {text-decoration:none;display:inline-flex;align-items:center;gap:6px;padding:6px 12px 6px 10px;border:1px solid var(--border);background:var(--bg-panel-alt);border-radius:999px;font:500 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.4px;color:var(--fg);box-shadow:0 2px 6px -2px rgba(0,0,0,.08),0 0 0 1px rgba(255,255,255,.04) inset;transition:background .3s,border-color .3s,box-shadow .3s,color .3s}
-  .domain-pill:hover {background:var(--bg-panel);border-color:var(--accent2);box-shadow:0 3px 10px -4px rgba(0,0,0,.2),0 0 0 1px rgba(255,255,255,.05) inset;color:var(--fg)}
-  .domain-pill:focus-visible {outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(248,75,5,.35)}
-  .domain-pill .dot{width:8px;height:8px;border-radius:50%;background:var(--accent-grad);box-shadow:0 0 0 1px rgba(0,0,0,.25) inset,0 0 0 1px rgba(255,255,255,.25)}
-  @media (prefers-color-scheme: dark){.domain-pill{box-shadow:0 2px 6px -2px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.04) inset}}
-  .tag{--c:var(--accent);position:relative;background:var(--accent-grad);color:#1b2027;font-size:12px;padding:5px 9px 5px 8px;border-radius:999px;display:inline-flex;align-items:center;gap:4px;font-weight:600;letter-spacing:.3px;box-shadow:0 4px 14px -6px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.07) inset;animation:fadeIn .35s ease}
+      .domain-pill {
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 12px 6px 10px;
+        border: 1px solid var(--border);
+        background: var(--bg-panel-alt);
+        border-radius: 999px;
+        font: 500 12px/1 "Noto Sans KR", system-ui, sans-serif;
+        letter-spacing: 0.4px;
+        color: var(--fg);
+        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.08),
+          0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        transition: background 0.3s, border-color 0.3s, box-shadow 0.3s,
+          color 0.3s;
+      }
+      .domain-pill:hover {
+        background: var(--bg-panel);
+        border-color: var(--accent2);
+        box-shadow: 0 3px 10px -4px rgba(0, 0, 0, 0.2),
+          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        color: var(--fg);
+      }
+      .domain-pill:focus-visible {
+        outline: none;
+        border-color: var(--accent2);
+        box-shadow: 0 0 0 3px rgba(248, 75, 5, 0.35);
+      }
+      .domain-pill .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent-grad);
+        box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.25) inset,
+          0 0 0 1px rgba(255, 255, 255, 0.25);
+      }
+      @media (prefers-color-scheme: dark) {
+        .domain-pill {
+          box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.5),
+            0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+        }
+      }
+      .tag {
+        --c: var(--accent);
+        position: relative;
+        background: var(--accent-grad);
+        color: #1b2027;
+        font-size: 12px;
+        padding: 5px 9px 5px 8px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+        letter-spacing: 0.3px;
+        box-shadow: 0 4px 14px -6px rgba(248, 75, 5, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+        animation: fadeIn 0.35s ease;
+      }
       .tag button {
         all: unset;
         cursor: pointer;
@@ -171,8 +347,26 @@
         transform: translateY(1px);
         filter: brightness(0.92);
       }
-  button.secondary{cursor:pointer;background:var(--bg-panel-alt);color:var(--fg-dim);border:1px solid var(--border);font:500 12px/1 "Noto Sans KR",system-ui,sans-serif;padding:10px 16px 9px;border-radius:var(--radius-s);box-shadow:0 2px 6px -2px rgba(0,0,0,.15),0 0 0 1px rgba(255,255,255,.05) inset;transition:border-color .25s,color .25s,background .3s,box-shadow .35s}
-  button.secondary:hover{color:var(--fg);border-color:var(--accent2);background:var(--bg-panel);box-shadow:0 3px 12px -4px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.07) inset}
+      button.secondary {
+        cursor: pointer;
+        background: var(--bg-panel-alt);
+        color: var(--fg-dim);
+        border: 1px solid var(--border);
+        font: 500 12px/1 "Noto Sans KR", system-ui, sans-serif;
+        padding: 10px 16px 9px;
+        border-radius: var(--radius-s);
+        box-shadow: 0 2px 6px -2px rgba(0, 0, 0, 0.15),
+          0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        transition: border-color 0.25s, color 0.25s, background 0.3s,
+          box-shadow 0.35s;
+      }
+      button.secondary:hover {
+        color: var(--fg);
+        border-color: var(--accent2);
+        background: var(--bg-panel);
+        box-shadow: 0 3px 12px -4px rgba(248, 75, 5, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.07) inset;
+      }
       button.secondary:active {
         transform: translateY(1px);
       }
@@ -182,17 +376,57 @@
         color: var(--accent2);
         min-width: 70px;
       }
-  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);background:var(--bg-panel);color:var(--fg);padding:14px 20px;font:600 13px/1 "Noto Sans KR",system-ui,sans-serif;border-radius:14px;box-shadow:0 10px 34px -12px rgba(248,75,5,.45),0 0 0 1px rgba(255,255,255,.08) inset,0 0 0 4px rgba(250,207,38,.18);border:1px solid var(--border);opacity:0;pointer-events:none;letter-spacing:.4px;transition:opacity .45s,transform .45s}
+      .toast {
+        position: fixed;
+        left: 50%;
+        bottom: 30px;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--bg-panel);
+        color: var(--fg);
+        padding: 14px 20px;
+        font: 600 13px/1 "Noto Sans KR", system-ui, sans-serif;
+        border-radius: 14px;
+        box-shadow: 0 10px 34px -12px rgba(248, 75, 5, 0.45),
+          0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+          0 0 0 4px rgba(250, 207, 38, 0.18);
+        border: 1px solid var(--border);
+        opacity: 0;
+        pointer-events: none;
+        letter-spacing: 0.4px;
+        transition: opacity 0.45s, transform 0.45s;
+      }
       .toast.show {
         opacity: 1;
         transform: translateX(-50%) translateY(0);
       }
       footer {
-        margin-top: 50px;
+        margin-top: auto;
+        padding: 30px 0 34px;
         font-size: 11px;
         color: #5d6875;
         text-align: center;
         letter-spacing: 0.5px;
+      }
+      @media (max-width: 700px) {
+        .main {
+          padding: 32px 22px 60px;
+          gap: 32px;
+        }
+        h1 {
+          font-size: 24px;
+          margin-bottom: 18px;
+        }
+        .card {
+          padding: 20px 18px 22px;
+        }
+      }
+      @media (max-width: 480px) {
+        .grid {
+          grid-template-columns: 1fr;
+        }
+        .card {
+          gap: 14px;
+        }
       }
       a {
         color: var(--accent);
@@ -215,13 +449,45 @@
     </style>
   </head>
   <body>
-    <h1>FLICK 설정</h1>
-    <p class="lead">
-      현재 확장이 활성화되는 지원 도메인 목록과 향후 제공될 실험적 옵션 안내.
-    </p>
-    <section class="grid">
-      <div class="card" id="card-domains">
-        <div>
+    <div class="main">
+      <h1>FLICK 설정</h1>
+      <p class="lead">
+        현재 확장이 활성화되는 지원 도메인 목록과 향후 제공될 실험적 옵션 안내.
+      </p>
+      <section class="grid">
+        <div class="card" id="card-domains">
+          <div>
+            <h2
+              style="
+                background: var(--accent-grad);
+                -webkit-background-clip: text;
+                background-clip: text;
+                color: transparent;
+              "
+            >
+              현재 적용 대상 사이트 목록
+            </h2>
+          </div>
+          <div>
+            <ul
+              id="domainList"
+              style="
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+              "
+            >
+              <!-- populated by script -->
+            </ul>
+            <div class="hint">
+              추가 도메인 지원은 향후 버전에서 UI로 제공 예정입니다.
+            </div>
+          </div>
+        </div>
+        <div class="card">
           <h2
             style="
               background: var(--accent-grad);
@@ -230,54 +496,24 @@
               color: transparent;
             "
           >
-            현재 적용 대상 사이트 목록
+            향후 옵션
           </h2>
-        </div>
-        <div>
-          <ul
-            id="domainList"
-            style="
-              list-style: none;
-              padding: 0;
-              margin: 0;
-              display: flex;
-              flex-wrap: wrap;
-              gap: 10px;
-            "
-          >
-            <!-- populated by script -->
-          </ul>
+          <p class="sub">
+            폰트 프리셋, 자동 열기, 키보드 매핑 등 단계적으로 추가될 예정입니다.
+          </p>
           <div class="hint">
-            추가 도메인 지원은 향후 버전에서 UI로 제공 예정입니다.
+            필요한 기능이나 아이디어가 있으면
+            <a
+              href="mailto:andongmin94@gmail.com"
+              target="_blank"
+              rel="noopener"
+              >andongmin94@gmail.com</a
+            >
+            로 연락주세요.
           </div>
         </div>
-      </div>
-      <div class="card">
-        <h2
-          style="
-            background: var(--accent-grad);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-          "
-        >
-          향후 옵션
-        </h2>
-        <p class="sub">
-          폰트 프리셋, 자동 열기, 키보드 매핑 등 단계적으로 추가될 예정입니다.
-        </p>
-        <div class="hint">
-          필요한 기능 아이디어가 있으면
-          <a
-            href="https://github.com/andongmin94/flick/issues"
-            target="_blank"
-            rel="noopener"
-            >이슈</a
-          >
-          로 남겨주세요.
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
     <footer>FLICK © 2025 • Experimental UI</footer>
     <div
       class="toast"
@@ -286,6 +522,6 @@
       aria-live="polite"
       style="display: none"
     ></div>
-  <script src="options.js"></script>
+    <script src="options.js"></script>
   </body>
 </html>
