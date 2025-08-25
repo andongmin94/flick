@@ -43,7 +43,8 @@
 .flick-fontsize-input::-webkit-slider-runnable-track {
   height: 6px;
   /* 두 겹 배경: 1) 채워진 구간 그라디언트 (width: --_percent) 2) 빈 구간 배경 */
-  background: var(--flick-grad-warm) 0 0 / calc(var(--_percent, 0%)) 100% no-repeat,
+  background: var(--flick-grad-warm) 0 0 / calc(var(--_percent, 0%)) 100%
+      no-repeat,
     var(--fs-empty);
   border-radius: 999px;
   cursor: pointer;
@@ -68,7 +69,8 @@
     0 0 0 1px rgba(255, 255, 255, 0.04);
   cursor: pointer;
 }
-.flick-fontsize-input::-moz-range-progress { /* fallback simpler gradient */
+.flick-fontsize-input::-moz-range-progress {
+  /* fallback simpler gradient */
   height: 6px;
   border-radius: 999px;
   background: var(--flick-grad-warm);

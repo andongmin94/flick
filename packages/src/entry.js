@@ -29,11 +29,6 @@ function openShorts() {
   runPostMountedHook();
 }
 
-function toggle() {
-  const open = !!document.querySelector(".flick-wrap-injected");
-  open ? closeShorts() : openShorts();
-  updateBtn();
-}
 function ensureButton() {
   if (!isSupportedArticle()) return;
   // 로고 + 버튼 컨테이너 이미 있으면 스킵
