@@ -11,6 +11,9 @@
         --accent2: #f84b05;
         --accent: #f84b05;
         --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
+  --flick-grad-warm: linear-gradient(90deg,#facf26 0%,#f84b05 100%);
+  --flick-shadow-soft: 0 2px 6px rgba(0,0,0,.15);
+  --flick-radius-md: 6px;
         /* Light (기본) */
         --bg: #f8f9fb;
         --panel-bg: linear-gradient(155deg,#ffffff,#f1f4f8 70%);
@@ -101,33 +104,14 @@
         gap: 10px;
         margin-top: 4px;
       }
-      button {
-        cursor: pointer;
-        position: relative;
-        border: none;
-        font: 600 12px/1 "Noto Sans KR", system-ui, sans-serif;
-        padding: 10px 14px 9px;
-        border-radius: 7px;
-        background: var(--accent-grad);
-        color: #1c232b;
-        letter-spacing: 0.4px;
-        box-shadow: 0 4px 18px -6px rgba(248, 75, 5, 0.75),
-          0 0 0 1px rgba(255, 255, 255, 0.14) inset,
-          0 2px 6px -2px rgba(0, 0, 0, 0.55);
-        transition: box-shadow 0.35s, transform 0.25s, filter 0.35s;
-      }
-      button:hover {
-        box-shadow: 0 5px 22px -8px rgba(248, 75, 5, 0.85),
-          0 0 0 1px rgba(255, 255, 255, 0.18) inset;
-      }
-      button:active {
-        transform: translateY(1px);
-        filter: brightness(0.92);
-      }
-  .badge-preview {all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:4px;padding:4px 8px 3px;font:600 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.5px;background:linear-gradient(90deg,#facf26 0%,#f84b05 100%);color:#222;border-radius:6px;border:1px solid #dca21a;box-shadow:0 2px 6px rgba(0,0,0,.15);text-shadow:0 1px 0 rgba(255,255,255,.4);position:relative;transition:filter .25s,transform .25s,box-shadow .3s;}
-  .badge-preview:hover{filter:brightness(1.05);box-shadow:0 3px 10px -2px rgba(0,0,0,.28);}
-  .badge-preview:active{transform:translateY(1px);filter:brightness(.92);}
-  .badge-preview:after{content:" beta";font-weight:400;font-size:10px;margin-left:2px;opacity:.75;}
+  button {font:600 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.5px;cursor:pointer}
+  .accent-badge {all:unset;display:inline-flex;align-items:center;gap:4px;padding:4px 8px 3px;border-radius:var(--flick-radius-md);background:var(--flick-grad-warm);color:#222;font:600 12px/1 "Noto Sans KR",system-ui,sans-serif;letter-spacing:.5px;border:1px solid #dca21a;box-shadow:var(--flick-shadow-soft);text-shadow:0 1px 0 rgba(255,255,255,.4);-webkit-user-select:none;user-select:none;position:relative;transition:box-shadow .3s,transform .2s,filter .25s}
+  .accent-badge:hover{filter:brightness(1.05);box-shadow:0 3px 10px -2px rgba(0,0,0,.28),var(--flick-shadow-soft)}
+  .accent-badge:active{transform:translateY(1px);filter:brightness(.92)}
+  .accent-badge.beta:after{content:" beta";font-weight:400;font-size:10px;margin-left:2px;opacity:.75}
+  .accent-options{padding:4px 10px 3px}
+  /* legacy badge-preview kept for backward compatibility */
+  .badge-preview{all:unset}
   footer {margin-top:14px;font-size:10px;color:var(--footer-fg);text-align:center;letter-spacing:.6px;}
   .badge-line{display:flex;align-items:center;gap:8px;white-space:nowrap;font-size:12px;line-height:1.1;color:var(--fg-d);}
   .badge-line .prefix{margin-right:2px;}
@@ -138,11 +122,11 @@
     <h1>FLICK</h1>
     <div class="panel">
       <div class="badge-line">
-        <button id="badgeToggle" type="button" class="badge-preview" title="쇼츠 토글">FLICK</button>
+  <button id="badgeToggle" type="button" class="accent-badge beta" title="쇼츠 토글">FLICK</button>
         <span class="suffix">버튼 또는 <span class="kbd">F4</span> 로 토글</span>
       </div>
       <div class="actions">
-        <button id="openOptions" type="button">옵션 열기</button>
+  <button id="openOptions" type="button" class="accent-badge accent-options">옵션 열기</button>
         <a
           href="https://flick.andongmin.com/"
           target="_blank"
