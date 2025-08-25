@@ -12,17 +12,17 @@
     "512": "flick.png"
   },
   "permissions": ["storage", "scripting"],
-  "host_permissions": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
+  "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
-      "matches": ["https://www.fmkorea.com/*", "http://www.fmkorea.com/*"],
+      "matches": ["<all_urls>"],
       "js": ["bundle.js"],
       "css": ["bundle.css"],
       "run_at": "document_idle"
     }
   ],
   "action": {
-    "default_title": "Shorts View",
+    "default_title": "FLICK",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "flick.png",
