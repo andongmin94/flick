@@ -19,11 +19,11 @@
   color: #fff;
 }
 .flick-title[contenteditable="true"]:focus {
-  border: 2px solid transparent; /* border-image 적용 기반 */
-  border-radius: var(--flick-radius-sm);
-  border-image: var(--flick-grad-warm) 1;
-  background: #ffffff;
-  color: #000;
+  /* 색/배경 전환 제거: 편집 시에도 기존 스타일 유지 */
+  outline: none;
+  border: none;
+  background: transparent;
+  color: inherit;
 }
 .flick-body {
   flex: 1;
