@@ -211,6 +211,14 @@ function createFontSizePanel(storageKey, titleEl) {
     const v = parseFloat(input.value) || min;
     const p = ((v - min) / (max - min)) * 100;
     input.style.setProperty("--_percent", p + "%");
+  // Thumb 색상 보간 (start: #FACF26, end: #F84B05)
+  const t = Math.max(0, Math.min(1, p / 100));
+  const s = { r: 0xFA, g: 0xCF, b: 0x26 }; // start color
+  const eC = { r: 0xF8, g: 0x4B, b: 0x05 }; // end color
+  const lerp = (a,b)=>Math.round(a + (b-a)*t);
+  const r = lerp(s.r, eC.r), g = lerp(s.g, eC.g), b = lerp(s.b, eC.b);
+  const hex = '#'+[r,g,b].map(n=>n.toString(16).padStart(2,'0')).join('');
+  input.style.setProperty('--fs-thumb', hex);
   };
   setPercent();
   input.addEventListener("input", () => {

@@ -134,7 +134,7 @@ const config = async (): Promise<UserConfig> => {
       logo: "/flick.png",
 
       editLink: {
-        pattern: "mailto:andongmin94@gmail.com",
+        pattern: "https://github.com/andongmin94/flick/issues",
         text: "가이드 수정 제안하기",
       },
 
