@@ -179,7 +179,7 @@ function createFontSizePanel(storageKey, titleEl) {
     flexWrap: "wrap",
   });
   const HL_KEY = "flick:highlightColor";
-  let hlColor = "#ffeb3b";
+  let hlColor = "#facf26";
   try {
     const saved = localStorage.getItem(HL_KEY);
     if (saved && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(saved)) hlColor = saved;
@@ -275,7 +275,7 @@ function enableTitleFormatToolbar(titleEl) {
       const c = localStorage.getItem("flick:highlightColor");
       if (c && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(c)) return c;
     } catch (_) {}
-    return "#ffeb3b";
+    return "#facf26";
   }
   function ensureToolbar() {
     if (toolbar) return toolbar;
