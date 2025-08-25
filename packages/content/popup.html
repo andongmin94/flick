@@ -10,7 +10,6 @@
         --accent1: #facf26;
         --accent2: #f84b05;
         --accent: #f84b05;
-        --accent-grad: linear-gradient(135deg, var(--accent1), var(--accent2));
         --flick-grad-warm: linear-gradient(90deg, #facf26 0%, #f84b05 100%);
         --flick-shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.15);
         --flick-radius-md: 6px;
@@ -65,12 +64,8 @@
         background-clip: text;
         color: transparent;
       }
-      p {
-        margin: 0 0 12px;
-      }
-      small {
-        color: var(--fg-d);
-      }
+  /* (p, small 태그 현재 구조에서 미사용) */
+      
       .panel {
         background: var(--panel-bg);
         border: 1px solid var(--border);
@@ -126,16 +121,6 @@
         -webkit-user-select: none;
         user-select: none;
         position: relative;
-        transition: box-shadow 0.3s, transform 0.2s, filter 0.25s;
-      }
-      .accent-badge:hover {
-        filter: brightness(1.05);
-        box-shadow: 0 3px 10px -2px rgba(0, 0, 0, 0.28),
-          var(--flick-shadow-soft);
-      }
-      .accent-badge:active {
-        transform: translateY(1px);
-        filter: brightness(0.92);
       }
       .accent-badge.beta:after {
         content: " beta";
@@ -144,13 +129,7 @@
         margin-left: 2px;
         opacity: 0.75;
       }
-      .accent-options {
-        padding: 4px 10px 3px;
-      }
-      /* legacy badge-preview kept for backward compatibility */
-      .badge-preview {
-        all: unset;
-      }
+  /* (.accent-options, .badge-preview 미사용) */
       footer {
         margin-top: 14px;
         font-size: 10px;
@@ -167,9 +146,7 @@
         line-height: 1.1;
         color: var(--fg-d);
       }
-      .badge-line .prefix {
-        margin-right: 2px;
-      }
+  /* (.badge-line .prefix 미사용) */
       .badge-line .suffix {
         white-space: nowrap;
         font-size: 11px;
@@ -180,12 +157,7 @@
     <h1>FLICK</h1>
     <div class="panel">
       <div class="badge-line">
-        <button
-          id="badgeToggle"
-          type="button"
-          class="accent-badge beta"
-          title="쇼츠 토글"
-        >
+        <button type="button" class="accent-badge beta" title="쇼츠 토글">
           FLICK
         </button>
         <span class="suffix"
@@ -193,13 +165,6 @@
         >
       </div>
       <div class="actions">
-        <button
-          id="openOptions"
-          type="button"
-          class="accent-badge accent-options"
-        >
-          옵션 열기
-        </button>
         <a
           href="https://flick.andongmin.com/"
           target="_blank"
@@ -207,9 +172,15 @@
           style="align-self: center; font-size: 12px"
           >웹사이트</a
         >
+        <a
+          href="options.html"
+          target="_blank"
+          rel="noopener"
+          style="align-self: center; font-size: 12px"
+          >옵션</a
+        >
       </div>
     </div>
     <footer>FLICK © 2025 안동민</footer>
-    <script src="popup.js"></script>
   </body>
 </html>
