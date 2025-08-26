@@ -1,11 +1,14 @@
-<img src="packages/content/flick.png" alt="FLICK" width="120" />
+<div align="center">
+
+<img src="https://flick.andongmin.com/typo.png" alt="FLICK" width="120" />
+
+</div>
 
 # FLICK
 
 유머 / 커뮤니티 게시글을 한 번에 **YouTube Shorts 스타일(세로 스크롤 미디어 뷰어)** 로 재구성해 주는 브라우저 확장(Chrome Manifest v3)입니다.
 
 지원 게시글 페이지에서 자동으로 작은 토글 배지가 나타나며, 클릭 또는 단축키(F4)로 "쇼츠" 패널을 열고 닫을 수 있습니다.
-
 
 ## 주요 특징
 
