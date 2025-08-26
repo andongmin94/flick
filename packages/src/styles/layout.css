@@ -83,3 +83,15 @@
   border-radius: 6px;
   font-size: 13px;
 }
+
+/* 빈 상태 placeholder */
+.flick-empty-placeholder {
+  padding: 24px 18px;
+  text-align: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #888;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px dashed #444;
+  border-radius: 10px;
+}

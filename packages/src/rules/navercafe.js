@@ -46,6 +46,38 @@ export function extractNavercafe() {
   const seenText = new Set(); // 너무 aggressive 중복만 차단
   const seenImg = new Set();
 
+  // 의미있는 본문이 없는 경우 메뉴/잡다한 UI 텍스트만 모인 상황인지 판단
+  function isMenuNoise(text) {
+    if (!text) return true;
+    const raw = text.replace(/\s+/g, " ").trim();
+    if (!raw) return true;
+    // 너무 짧으면 (ex: 메뉴 모음)
+    if (raw.length < 60) return true;
+    const lines = text
+      .split(/\n+/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+    if (!lines.length) return true;
+    const shortLines = lines.filter((l) => l.length <= 8).length;
+    if (lines.length >= 5 && shortLines / lines.length > 0.6) return true;
+    const noiseWords = [
+      "카페",
+      "글쓰기",
+      "메뉴",
+      "로그인",
+      "회원",
+      "가입",
+      "검색",
+      "전체글",
+      "출석",
+    ];
+    const hit = noiseWords.filter((w) => raw.includes(w)).length;
+    // 노이즈 키워드가 많고 구두점 적으면 노이즈로 간주
+    const punctuation = (raw.match(/[\.\?\!]/g) || []).length;
+    if (hit >= 3 && punctuation === 0) return true;
+    return false;
+  }
+
   // 링크 노이즈 여부 판정 (순수 URL 이거나 유튜브/짧은 공유 링크 등)
   function isLinkNoise(line) {
     if (!line) return false;
@@ -234,20 +266,18 @@ export function extractNavercafe() {
         .join("\n")
         .replace(/\n{3,}/g, "\n\n")
         .trim();
-      if (filtered) pushText(filtered);
+      if (filtered && !isMenuNoise(filtered)) {
+        pushText(filtered);
+      }
     }
   }
 
-  // 최종: 그래도 아무 것도 없으면 body 텍스트 한번 더
+  // 최종: 의미있는 콘텐츠 없으면 placeholder (또는 완전 빈 결과를 원하면 아래 push 주석 처리)
   if (blocks.length === 0) {
-    const bodyTxt = (document.body.innerText || "").trim();
-    if (bodyTxt)
-      pushText(
-        bodyTxt
-          .split(/\n{3,}/)
-          .slice(0, 200)
-          .join("\n\n")
-      );
+    blocks.push({
+      type: "html",
+      html: '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>',
+    });
   }
 
   return { title, blocks };
