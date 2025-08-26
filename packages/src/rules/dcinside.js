@@ -53,7 +53,7 @@ export function extractDcinside(ruleCfg) {
     ".con_banner",
     ".sch_alliance_box",
     ".positionr", // 랭킹/광고 wrapper
-  ".btn_imgcmtopen", // 이미지 댓글 열기 버튼
+    ".btn_imgcmtopen", // 이미지 댓글 열기 버튼
   ].join(",");
 
   function pushImage(raw, alt) {
@@ -61,12 +61,13 @@ export function extractDcinside(ruleCfg) {
     if (!src || seenImg.has(src)) return;
     // 광고/통계 gif 필터
     if (/pixel|ads|banner/i.test(src)) return;
-  // dcinside viewimage.php 외부 크기/썸네일 변형 파라미터 그대로 사용 (필요시 리사이즈 파라미터 정규화 가능)
-  let cleanAlt = (alt || "").trim();
-  // 의미 없는 긴 해시 alt 제거
-  if (/^[a-f0-9]{24,}$/i.test(cleanAlt) || cleanAlt.length > 120) cleanAlt = "";
+    // dcinside viewimage.php 외부 크기/썸네일 변형 파라미터 그대로 사용 (필요시 리사이즈 파라미터 정규화 가능)
+    let cleanAlt = (alt || "").trim();
+    // 의미 없는 긴 해시 alt 제거
+    if (/^[a-f0-9]{24,}$/i.test(cleanAlt) || cleanAlt.length > 120)
+      cleanAlt = "";
     seenImg.add(src);
-  blocks.push({ type: "image", src, alt: cleanAlt });
+    blocks.push({ type: "image", src, alt: cleanAlt });
   }
 
   function cleanText(t) {
@@ -83,15 +84,15 @@ export function extractDcinside(ruleCfg) {
     if (node.nodeType === 1) {
       const el = node;
       // 스킵 영역 (댓글, 추천박스, 광고 등)
-  if (el.matches(SKIP_SELECTOR)) return;
-  // style="clear:both" 같은 정리용 div 스킵
-  const inlineStyle = el.getAttribute("style") || "";
-  if (/clear\s*:\s*both/i.test(inlineStyle)) return;
-  const tagName = el.tagName;
-  // 태그 레벨 스킵
-  if (/^(SCRIPT|STYLE|IFRAME|TEMPLATE|NOSCRIPT)$/i.test(tagName)) return;
-  // 번호 표시 span.num & 버튼류 제거
-  if (el.classList.contains("num") || el.classList.contains("btn")) return;
+      if (el.matches(SKIP_SELECTOR)) return;
+      // style="clear:both" 같은 정리용 div 스킵
+      const inlineStyle = el.getAttribute("style") || "";
+      if (/clear\s*:\s*both/i.test(inlineStyle)) return;
+      const tagName = el.tagName;
+      // 태그 레벨 스킵
+      if (/^(SCRIPT|STYLE|IFRAME|TEMPLATE|NOSCRIPT)$/i.test(tagName)) return;
+      // 번호 표시 span.num & 버튼류 제거
+      if (el.classList.contains("num") || el.classList.contains("btn")) return;
       const tag = el.tagName;
       if (tag === "IMG") {
         flush(buf);
@@ -152,10 +153,29 @@ export function extractDcinside(ruleCfg) {
   return { title, blocks };
 }
 
+// DCInside 전용 쇼츠 마운트 후 영상 자동재생 (GIF 유사 경험)
+function postDcinsideShortsMounted() {
+  document.querySelectorAll(".flick-wrap-injected video").forEach((v) => {
+    try {
+      v.autoplay = true;
+      v.loop = true; // GIF 처럼 반복
+      v.muted = true; // 자동재생 정책 대응
+      v.playsInline = true;
+      // GIF 느낌: 컨트롤 숨김
+      v.removeAttribute("controls");
+      if (!v.dataset._flickTried) {
+        v.dataset._flickTried = "1";
+        v.play().catch(() => {});
+      }
+    } catch (_) {}
+  });
+}
+
 export const dcinsideRule = {
   id: "dcinside",
   match: /https?:\/\/gall\.dcinside\.com\//i,
   // board/view/?id=...&no=숫자 (mgallery 경로 포함) 인지 확인
   articleMatch: /board\/view\/\?[^#]*?(?:&|^)no=\d+/i,
   extract: extractDcinside,
+  postShortsMounted: postDcinsideShortsMounted,
 };
