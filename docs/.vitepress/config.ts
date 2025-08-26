@@ -173,16 +173,20 @@ const config = async (): Promise<UserConfig> => {
                 link: "/guide/",
               },
               {
-                text: "위플랩 설정",
-                link: "/guide/weflab",
+                text: "에펨코리아",
+                link: "/guide/fmkorea",
               },
               {
-                text: "치지직 설정",
-                link: "/guide/chzzk",
+                text: "디시인사이드",
+                link: "/guide/dcinside",
               },
               {
-                text: "숲 설정",
-                link: "/guide/soop",
+                text: "개드립",
+                link: "/guide/dogdrip",
+              },
+              {
+                text: "네이버 카페",
+                link: "/guide/naverCafe",
               },
             ],
           },

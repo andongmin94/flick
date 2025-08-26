@@ -23,13 +23,8 @@ features:
      dark: /windows-white.svg
      light: /windows-black.svg
      width: 100px
-    title: Windows 다운로드
+    title: FLICK Extension 추가하기
     linkText: ChatView.exe (0 MB)
     link: https://github.com/andongmin94/flick/releases/download/v0.0.0/ChatView.exe
-  - icon:
-     dark: /apple-white.svg
-     light: /apple-black.svg
-     width: 100px
-    title: (준비 중) Mac 다운로드
-    linkText: ChatView.dmg
+
 ---
