@@ -1,5 +1,3 @@
-<div align="center">
-
 <img src="packages/content/flick.png" alt="FLICK" width="120" />
 
 # FLICK
@@ -8,7 +6,6 @@
 
 지원 게시글 페이지에서 자동으로 작은 토글 배지가 나타나며, 클릭 또는 단축키(F4)로 "쇼츠" 패널을 열고 닫을 수 있습니다.
 
-</div>
 
 ## 주요 특징
 
