@@ -20,11 +20,11 @@ hero:
 
 features:
   - icon:
-     dark: /windows-white.svg
-     light: /windows-black.svg
+     dark: /chrome-logo.svg
+     light: /chrome-logo.svg
      width: 100px
     title: FLICK Extension 추가하기
-    linkText: ChatView.exe (0 MB)
+    linkText: ChatView.exe (408 MB)
     link: https://github.com/andongmin94/flick/releases/download/v0.0.0/ChatView.exe
 
 ---
