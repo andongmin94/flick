@@ -8,7 +8,7 @@ import path from "node:path";
 const ogTitle = "FLICK";
 const ogDescription = "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션";
 const ogUrl = "https://flick.andongmin.com";
-const ogImage = "https://flick.andongmin.com/flick.png";
+const ogImage = "https://flick.andongmin.com/flick.svg";
 
 async function generateReleaseNotes(releases: any) {
   const releaseDir = path.resolve(__dirname, "../guide/release");
@@ -107,7 +107,7 @@ const config = async (): Promise<UserConfig> => {
     description: "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션",
 
     head: [
-      ["link", { rel: "icon", type: "image/svg+xml", href: "/flick.png" }],
+      ["link", { rel: "icon", type: "image/svg+xml", href: "/flick.svg" }],
       [
         "link",
         { rel: "alternate", type: "application/rss+xml", href: "/blog.rss" },
@@ -131,7 +131,7 @@ const config = async (): Promise<UserConfig> => {
     ],
 
     themeConfig: {
-      logo: "/flick.png",
+      logo: "/flick.svg",
 
       editLink: {
         pattern: "https://mail.google.com/mail/?view=cm&fs=1&to=andongmin94@gmail.com&su=FLICK%20문의&body=",

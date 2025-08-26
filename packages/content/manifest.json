@@ -4,12 +4,12 @@
   "description": "youtube short formatting extension",
   "version": "0.0.1",
   "icons": {
-    "16": "flick.png",
-    "32": "flick.png",
-    "48": "flick.png",
-    "128": "flick.png",
-    "256": "flick.png",
-    "512": "flick.png"
+    "16": "flick.svg",
+    "32": "flick.svg",
+    "48": "flick.svg",
+    "128": "flick.svg",
+    "256": "flick.svg",
+    "512": "flick.svg"
   },
   "permissions": ["storage", "scripting"],
   "host_permissions": ["<all_urls>"],
@@ -25,9 +25,9 @@
     "default_title": "FLICK",
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "flick.png",
-      "24": "flick.png",
-      "32": "flick.png"
+      "16": "flick.svg",
+      "24": "flick.svg",
+      "32": "flick.svg"
     }
   },
   "options_page": "options.html"
