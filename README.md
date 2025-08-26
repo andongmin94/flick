@@ -1,6 +1,8 @@
 <div align="center">
 
-<img src="https://flick.andongmin.com/flick.svg" alt="FLICK" height="200" />
+<a href="https://flick.andongmin.com">
+<img src="https://flick.andongmin.com/flick.svg" alt="logo" height="200" />
+</a>
 
 </div>
 
