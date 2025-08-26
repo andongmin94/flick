@@ -18,17 +18,19 @@ export function extractNavercafe() {
 
   // 루트 탐색 (직접 + iframe)
   function findRoot() {
-    let r = document.querySelector('.se-main-container');
+    let r = document.querySelector(".se-main-container");
     if (r) return r;
-    r = document.querySelector('#app .se-main-container');
+    r = document.querySelector("#app .se-main-container");
     if (r) return r;
     // iframe (구조상 #cafe_main) 내부 탐색
-    const iframe = document.querySelector('#cafe_main');
+    const iframe = document.querySelector("#cafe_main");
     if (iframe) {
       try {
         const idoc = iframe.contentDocument || iframe.contentWindow?.document;
         if (idoc) {
-          let ir = idoc.querySelector('.se-main-container') || idoc.querySelector('#app .se-main-container');
+          let ir =
+            idoc.querySelector(".se-main-container") ||
+            idoc.querySelector("#app .se-main-container");
           if (ir) return ir;
           return idoc.body;
         }
@@ -53,17 +55,6 @@ export function extractNavercafe() {
     if (/\s/.test(t)) return false;
     if (/^(https?:\/\/|www\.)\S+$/i.test(t)) return true;
     return false;
-  }
-
-  // 간단 JSON 모듈 데이터 (script.__se_module_data) 에서 썸네일/iframe 정보 읽기 (필요시)
-  function parseModuleData(scriptEl) {
-    try {
-      const attr = scriptEl.getAttribute("data-module-v2") || scriptEl.getAttribute("data-module");
-      if (!attr) return null;
-      return JSON.parse(attr);
-    } catch (_) {
-      return null;
-    }
   }
 
   function pushText(raw) {
@@ -112,85 +103,107 @@ export function extractNavercafe() {
   }
 
   // 컴포넌트 단위 순회 (있다면 우선 사용)
-  const components = root.querySelectorAll('.se-component');
+  const components = root.querySelectorAll(".se-component");
   components.forEach((comp) => {
-    if (comp.matches('.se-oembed')) {
-  // 요청: 모든 영상(oembed) 스킵 (렌더하지 않음)
+    if (comp.matches(".se-oembed")) {
+      // 요청: 모든 영상(oembed) 스킵 (렌더하지 않음)
       return;
     }
-    if (comp.matches('.se-text')) {
+    if (comp.matches(".se-text")) {
       // 여러 p 수집. 빈 p 는 gap
-      const paragraphs = comp.querySelectorAll('p.se-text-paragraph');
+      const paragraphs = comp.querySelectorAll("p.se-text-paragraph");
       const buf = [];
-      paragraphs.forEach(p => {
-        const txt = p.innerText.replace(/\u200B/g, '').trim();
-  if (!txt) {
+      paragraphs.forEach((p) => {
+        const txt = p.innerText.replace(/\u200B/g, "").trim();
+        if (!txt) {
           // gap → buf 에 개행 하나 추가 (최대 2연속 유지)
-          if (buf.length && buf[buf.length - 1] !== '\n') buf.push('\n');
-          buf.push('\n');
-  } else if (!isLinkNoise(txt)) {
-          buf.push(txt + '\n');
+          if (buf.length && buf[buf.length - 1] !== "\n") buf.push("\n");
+          buf.push("\n");
+        } else if (!isLinkNoise(txt)) {
+          buf.push(txt + "\n");
         }
       });
-      pushText(buf.join('').replace(/\n{3,}/g, '\n\n'));
+      pushText(buf.join("").replace(/\n{3,}/g, "\n\n"));
       return;
     }
     // OG Link (뉴스/외부 링크 카드)
-    if (comp.querySelector('.se-section-oglink') || comp.querySelector('.se-module-oglink')) {
-      const thumbImg = comp.querySelector('img.se-oglink-thumbnail-resource[src]');
-      const titleEl = comp.querySelector('.se-oglink-title');
-      const summaryEl = comp.querySelector('.se-oglink-summary');
-      const urlEl = comp.querySelector('.se-oglink-url');
-      const linkEl = comp.querySelector('a.se-oglink-info, a.se-oglink-thumbnail');
-      const href = linkEl?.getAttribute('href') || '';
-      const titleTxt = titleEl?.textContent?.trim() || '';
-      const summaryTxt = summaryEl?.textContent?.trim() || '';
-      const urlTxt = urlEl?.textContent?.trim() || '';
-      let inner = '';
+    if (
+      comp.querySelector(".se-section-oglink") ||
+      comp.querySelector(".se-module-oglink")
+    ) {
+      const thumbImg = comp.querySelector(
+        "img.se-oglink-thumbnail-resource[src]"
+      );
+      const titleEl = comp.querySelector(".se-oglink-title");
+      const summaryEl = comp.querySelector(".se-oglink-summary");
+      const urlEl = comp.querySelector(".se-oglink-url");
+      const linkEl = comp.querySelector(
+        "a.se-oglink-info, a.se-oglink-thumbnail"
+      );
+      const href = linkEl?.getAttribute("href") || "";
+      const titleTxt = titleEl?.textContent?.trim() || "";
+      const summaryTxt = summaryEl?.textContent?.trim() || "";
+      const urlTxt = urlEl?.textContent?.trim() || "";
+      let inner = "";
       if (thumbImg) {
-        inner += `<div class="og-thumb"><img src="${esc(norm(thumbImg.getAttribute('src')))}" alt=""></div>`;
+        inner += `<div class="og-thumb"><img src="${esc(
+          norm(thumbImg.getAttribute("src"))
+        )}" alt=""></div>`;
       }
       inner += '<div class="og-meta">';
-      if (titleTxt) inner += `<div class="og-title"><strong>${esc(titleTxt)}</strong></div>`;
-      if (summaryTxt) inner += `<div class="og-summary">${esc(summaryTxt)}</div>`;
+      if (titleTxt)
+        inner += `<div class="og-title"><strong>${esc(
+          titleTxt
+        )}</strong></div>`;
+      if (summaryTxt)
+        inner += `<div class="og-summary">${esc(summaryTxt)}</div>`;
       if (urlTxt) inner += `<div class="og-url">${esc(urlTxt)}</div>`;
-      inner += '</div>';
+      inner += "</div>";
       let card = `<div class="flick-oglink">${inner}</div>`;
       if (href) {
-        card = `<a class="flick-oglink-wrap" href="${esc(href)}" target="_blank" rel="noopener noreferrer">${card}</a>`;
+        card = `<a class="flick-oglink-wrap" href="${esc(
+          href
+        )}" target="_blank" rel="noopener noreferrer">${card}</a>`;
       }
-      blocks.push({ type: 'html', html: card });
+      blocks.push({ type: "html", html: card });
       return;
     }
     // 이미지 컴포넌트 (본문 에디터가 se-image 로 제공)
-    if (comp.matches('.se-image')) {
-      const imgs = comp.querySelectorAll('img[src]');
-      imgs.forEach(img => pushImage(img.getAttribute('src'), img.getAttribute('alt') || ''));
+    if (comp.matches(".se-image")) {
+      const imgs = comp.querySelectorAll("img[src]");
+      imgs.forEach((img) =>
+        pushImage(img.getAttribute("src"), img.getAttribute("alt") || "")
+      );
       return;
     }
     // 스티커 컴포넌트 (se-section-sticker / se-module-sticker)
-    if (comp.querySelector('.se-sticker-image')) {
-      const stickers = comp.querySelectorAll('img.se-sticker-image[src]');
-      stickers.forEach(img => {
-        pushImage(img.getAttribute('src'), img.getAttribute('alt') || 'sticker');
+    if (comp.querySelector(".se-sticker-image")) {
+      const stickers = comp.querySelectorAll("img.se-sticker-image[src]");
+      stickers.forEach((img) => {
+        pushImage(
+          img.getAttribute("src"),
+          img.getAttribute("alt") || "sticker"
+        );
       });
       return;
     }
   });
 
   // fallback 1: se-component 외부 이미지
-  root.querySelectorAll('img[src]').forEach(img => {
-    if (img.closest('.se-component')) return;
-    pushImage(img.getAttribute('src'), img.getAttribute('alt') || '');
+  root.querySelectorAll("img[src]").forEach((img) => {
+    if (img.closest(".se-component")) return;
+    pushImage(img.getAttribute("src"), img.getAttribute("alt") || "");
   });
 
   // fallback 2: 컴포넌트가 거의 없거나 blocks 비어있으면 광역 텍스트 스캔
   if (blocks.length === 0) {
     // script/style/nav 제거
     const clone = root.cloneNode(true);
-    clone.querySelectorAll('script,style,noscript').forEach(n => n.remove());
+    clone.querySelectorAll("script,style,noscript").forEach((n) => n.remove());
     // se 구조라면 에디터 툴바/불필요 패널 제거(있을 경우)
-    clone.querySelectorAll('[class*="toolbar"], .se-comment-box, .se-tooltip').forEach(n => n.remove());
+    clone
+      .querySelectorAll('[class*="toolbar"], .se-comment-box, .se-tooltip')
+      .forEach((n) => n.remove());
     const textParts = [];
     function walk(node) {
       if (node.nodeType === 3) {
@@ -200,25 +213,26 @@ export function extractNavercafe() {
       }
       if (node.nodeType !== 1) return;
       const el = node;
-      if (el.tagName === 'IMG') {
-        pushImage(el.getAttribute('src'), el.getAttribute('alt') || '');
+      if (el.tagName === "IMG") {
+        pushImage(el.getAttribute("src"), el.getAttribute("alt") || "");
       }
       if (/^(BR|P|DIV|SECTION|H[1-6])$/.test(el.tagName)) {
         // 블록 경계로 개행 삽입
-        textParts.push('\n');
+        textParts.push("\n");
       }
       el.childNodes.forEach(walk);
     }
     walk(clone);
-    const wide = textParts.join('')
-      .replace(/\n{3,}/g, '\n\n')
+    const wide = textParts
+      .join("")
+      .replace(/\n{3,}/g, "\n\n")
       .trim();
     if (wide) {
       const filtered = wide
         .split(/\n+/)
-        .filter(l => !isLinkNoise(l))
-        .join('\n')
-        .replace(/\n{3,}/g, '\n\n')
+        .filter((l) => !isLinkNoise(l))
+        .join("\n")
+        .replace(/\n{3,}/g, "\n\n")
         .trim();
       if (filtered) pushText(filtered);
     }
@@ -226,15 +240,21 @@ export function extractNavercafe() {
 
   // 최종: 그래도 아무 것도 없으면 body 텍스트 한번 더
   if (blocks.length === 0) {
-    const bodyTxt = (document.body.innerText || '').trim();
-    if (bodyTxt) pushText(bodyTxt.split(/\n{3,}/).slice(0, 200).join('\n\n'));
+    const bodyTxt = (document.body.innerText || "").trim();
+    if (bodyTxt)
+      pushText(
+        bodyTxt
+          .split(/\n{3,}/)
+          .slice(0, 200)
+          .join("\n\n")
+      );
   }
 
   return { title, blocks };
 }
 
 export const navercafeRule = {
-  id: 'navercafe',
+  id: "navercafe",
   match: /https?:\/\/cafe\.naver\.com\//i,
   // /cafes/<숫자>/articles/ 경로에 도달하면 지원 (게시글 번호 뒤에 붙어있을 수도 있음)
   articleMatch: /\/cafes\/\d+\/articles\//i,
