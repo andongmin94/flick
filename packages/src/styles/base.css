@@ -3,7 +3,7 @@
   --shorts-stage-bg: #fff;
   --shorts-overlay-bg: #fff;
   --shorts-radius: 0;
-  --shorts-font: "Noto Sans KR", system-ui, sans-serif;
+  --shorts-font: "Noto Sans KR", system-ui;
   --shorts-header-bg: #000;
   --shorts-footer-bg: #000;
   /* shared gradients & colors */
