@@ -42,6 +42,30 @@ export function extractNavercafe() {
 
   const root = findRoot();
 
+  // 화면에 표시되는 실제 게시글 제목(h3.title_text)이 있으면 그것을 우선 사용
+  (function pickVisibleTitle() {
+    let h3 = document.querySelector(
+      ".article_header h3.title_text, h3.title_text"
+    );
+    if (!h3) {
+      const iframe = document.querySelector("#cafe_main");
+      if (iframe) {
+        try {
+          const idoc = iframe.contentDocument || iframe.contentWindow?.document;
+          if (idoc) {
+            h3 = idoc.querySelector(
+              ".article_header h3.title_text, h3.title_text"
+            );
+          }
+        } catch (_) {}
+      }
+    }
+    if (h3) {
+      const t = h3.textContent.replace(/\s+/g, " ").trim();
+      if (t) title = t;
+    }
+  })();
+
   const blocks = [];
   const seenText = new Set(); // 너무 aggressive 중복만 차단
   const seenImg = new Set();
