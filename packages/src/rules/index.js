@@ -1,8 +1,9 @@
 // rules/index.js - 중앙 rule registry (확장 용이)
 import { fmkoreaRule } from "./fmkorea.js";
 import { dcinsideRule } from "./dcinside.js";
+import { navercafeRule } from "./navercafe.js";
 
-const rules = [fmkoreaRule, dcinsideRule];
+const rules = [fmkoreaRule, dcinsideRule, navercafeRule];
 
 export function getActiveRule() {
   return rules.find((r) => r.match.test(location.href)) || null;
