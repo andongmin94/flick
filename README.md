@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://flick.andongmin.com/typo.png" alt="FLICK" width="120" />
+<img src="https://flick.andongmin.com/flick.svg" alt="FLICK" height="200" />
 
 </div>
 
