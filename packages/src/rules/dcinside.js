@@ -136,11 +136,12 @@ export function extractDcinside(ruleCfg) {
     if (!cleaned) return;
     if (seenText.has(cleaned)) return;
     seenText.add(cleaned);
+    // 연속 개행 2개까지만 유지 → 시각적 빈 줄(= 추가 줄간) 표현
+    // 1개 개행 -> <br>, 2개 개행 -> <br><br>
     const html = cleaned
-      .split(/\n+/)
-      .map((l) => l.trim())
-      .filter(Boolean)
-      .join("<br>");
+      .replace(/\n{3,}/g, "\n\n") // 3+ → 2로 축소
+      .replace(/\n\n/g, "<br><br>")
+      .replace(/\n/g, "<br>");
     if (html) blocks.push({ type: "html", html });
   }
 
