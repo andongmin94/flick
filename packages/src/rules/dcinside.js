@@ -94,6 +94,7 @@ export function extractDcinside(ruleCfg) {
       // 번호 표시 span.num & 버튼류 제거
       if (el.classList.contains("num") || el.classList.contains("btn")) return;
       const tag = el.tagName;
+      const isBlock = /^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6])$/.test(tag);
       if (tag === "IMG") {
         flush(buf);
         const src =
@@ -117,11 +118,27 @@ export function extractDcinside(ruleCfg) {
         buf.push("\n");
         return;
       }
-      if (/^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6])$/.test(tag)) {
-        // Block 경계 전환 처리: 기존 버퍼에 개행 삽입
+      // 블록 시작 시: 앞에 내용 있으면 경계 개행 삽입
+      if (isBlock) {
         if (buf.length && !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       }
-      for (const child of el.childNodes) walk(child, buf);
+      const startLen = buf.length;
+      // 자식 순회
+      let hasChildContent = false;
+      for (const child of el.childNodes) {
+        const before = buf.length;
+        walk(child, buf);
+        if (buf.length > before) hasChildContent = true;
+      }
+      // 빈 블록(P/DIV)에 아무 것도 없고 원문이 비어있으면 여백 1줄 처리
+      if (isBlock && !hasChildContent) {
+        // 이미 직전이 개행 아니면 추가
+        if (!buf.length || !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
+      }
+      // 블록 종료 시 텍스트가 추가되었고 마지막이 개행 아니면 개행 추가
+      if (isBlock && startLen !== buf.length && !/\n$/.test(buf[buf.length - 1])) {
+        buf.push("\n");
+      }
       return;
     } else if (node.nodeType === 3) {
       const text = node.nodeValue.replace(/\s+/g, " ");
@@ -134,7 +151,23 @@ export function extractDcinside(ruleCfg) {
     const raw = buf.join("");
     buf.length = 0;
     const cleaned = cleanText(raw);
-    if (!cleaned) return;
+    if (!cleaned) {
+      // 순수 개행(= <br>) 만 있는 구간: 이전 html 블록 끝에 gap 추가
+      const nlCount = (raw.match(/\n/g) || []).length;
+      if (nlCount) {
+        const last = blocks[blocks.length - 1];
+        if (last && last.type === "html") {
+          // 마지막 html 끝에 <br> 최대 2개까지 추가
+            const existingTrail = (last.html.match(/(<br>)+$/i) || [""])[0];
+            const existingCnt = (existingTrail.match(/<br>/gi) || []).length;
+            const need = Math.min(2 - existingCnt, nlCount); // 최대 2개 유지
+            if (need > 0) last.html += "<br>".repeat(need);
+        } else {
+          // 앞에 블록이 없으면 의미 없음 → 무시
+        }
+      }
+      return;
+    }
     if (seenText.has(cleaned)) return;
     seenText.add(cleaned);
     // 연속 개행 2개까지만 유지 → 시각적 빈 줄(= 추가 줄간) 표현
