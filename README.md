@@ -14,7 +14,7 @@
 
 ## 주요 특징
 
-- 지원 사이트 감지: fmkorea, dcinside, Naver Cafe(새 에디터), DogDrip 의 게시글 페이지를 URL 패턴 + 추가 필터로 식별
+- 지원 사이트 감지: fmkorea, dcinside, Naver Cafe, DogDrip 의 게시글 페이지를 URL 패턴 + 추가 필터로 식별
 - 규칙 기반 추출: 사이트별 `rules/*.js` 모듈이 제목과 본문을 표준 블록 구조(`image | video | html`)로 변환
 - 단일 번들: Vite 빌드로 `bundle.js / bundle.css` (content script + 스타일) 생성 → 로딩/충돌 최소화
 - 즉시 토글: 화면 우측(또는 body 내) `FLICK` 배지 클릭 혹은 `F4` 키로 열기/닫기
