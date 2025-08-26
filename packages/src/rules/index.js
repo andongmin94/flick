@@ -2,8 +2,9 @@
 import { fmkoreaRule } from "./fmkorea.js";
 import { dcinsideRule } from "./dcinside.js";
 import { navercafeRule } from "./navercafe.js";
+import { dogdripRule } from "./dogdrip.js";
 
-const rules = [fmkoreaRule, dcinsideRule, navercafeRule];
+const rules = [fmkoreaRule, dcinsideRule, navercafeRule, dogdripRule];
 
 export function getActiveRule() {
   return rules.find((r) => r.match.test(location.href)) || null;
