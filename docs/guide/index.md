@@ -96,7 +96,7 @@ interface ExtractResult {
 - [에펨코리아 규칙](./fmkorea.md)
 - [디시인사이드 규칙](./dcinside.md)
 - [개드립 규칙](./dogdrip.md)
-- [네이버 카페 규칙](./navercafe.md)
+- [네이버 카페 규칙](./naverCafe.md)
 
 ## 단축키
 
