@@ -6,7 +6,6 @@
   justify-content: center;
   background: var(--shorts-header-bg);
   color: #fff;
-  border-bottom: 1px solid #111;
   flex: 0 0 auto;
   user-select: none;
 }

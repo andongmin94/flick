@@ -1,7 +1,7 @@
 .flick-stage {
-  --flick-resize-bar-color: rgba(0, 0, 0, 0.25);
-  --flick-resize-bar-color-hover: rgba(0, 0, 0, 0.4);
-  --flick-resize-bar-color-active: rgba(0, 0, 0, 0.55);
+  --flick-resize-bar-color: rgb(0, 0, 0);
+  --flick-resize-bar-color-hover: rgba(0, 0, 0);
+  --flick-resize-bar-color-active: rgba(255, 255, 255, 1);
 }
 .flick-resize-hidden .flick-resize-handle {
   display: none !important;
@@ -11,7 +11,8 @@
   cursor: ns-resize;
   position: relative;
   flex: 0 0 auto;
-  opacity: 0;
+  opacity: 1;
+  background: #000; /* (배경면도 칠하고 싶다면) */
   transition: opacity 0.15s, height 0.15s;
 }
 .flick-resize-handle:after {
@@ -29,6 +30,7 @@
 .flick-resize-handle:hover,
 .flick-resize-handle.active {
   opacity: 1;
+  background: #000; /* (배경면도 칠하고 싶다면) */
 }
 .flick-resize-handle:hover:after,
 .flick-resize-handle.active:after {
@@ -40,7 +42,4 @@
 .flick-resize-handle:hover:after {
   width: 48px;
   background: var(--flick-resize-bar-color-active);
-}
-.flick-resize-handle.active {
-  background: rgba(0, 0, 0, 0.06);
 }
