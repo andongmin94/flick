@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_2" data-name="레이어 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 194.21 194.21">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: url(#_무제_그라디언트_823);
+      }
+
+      .cls-2 {
+        fill: url(#_무제_그라디언트_154);
+      }
+
+      .cls-3 {
+        fill: url(#_무제_그라디언트_186);
+      }
+    </style>
+    <radialGradient id="_무제_그라디언트_823" data-name="무제 그라디언트 823" cx="97.11" cy="97.11" fx="97.11" fy="97.11" r="87.95" gradientUnits="userSpaceOnUse">
+      <stop offset=".5" stop-color="#500"/>
+      <stop offset="1" stop-color="#000"/>
+    </radialGradient>
+    <linearGradient id="_무제_그라디언트_186" data-name="무제 그라디언트 186" x1="99.11" y1="39.22" x2="99.11" y2="166.4" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f9d423"/>
+      <stop offset="1" stop-color="#f83600"/>
+    </linearGradient>
+    <linearGradient id="_무제_그라디언트_154" data-name="무제 그라디언트 154" x1="97.11" y1="-11.08" x2="97.11" y2="185.9" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#f9d423"/>
+      <stop offset="1" stop-color="#f83600"/>
+    </linearGradient>
+  </defs>
+  <g id="_레이어_1-2" data-name="레이어 1">
+    <g>
+      <rect class="cls-1" x="9.16" y="9.16" width="175.9" height="175.9"/>
+      <polyline class="cls-3" points="147.48 44.33 105.67 57.54 96.06 79.05 137.06 80.17 91.53 92.92 50.74 166.4 69.7 39.22"/>
+      <path class="cls-2" d="M0,10.51v173.2c0,5.8,4.7,10.51,10.51,10.51h173.2c5.8,0,10.51-4.7,10.51-10.51V10.51c0-5.8-4.7-10.51-10.51-10.51H10.51C4.7,0,0,4.7,0,10.51ZM164.57,175.08H29.64c-5.8,0-10.51-4.7-10.51-10.51V29.64c0-5.8,4.7-10.51,10.51-10.51h134.93c5.8,0,10.51,4.7,10.51,10.51v134.93c0,5.8-4.7,10.51-10.51,10.51Z"/>
+    </g>
+  </g>
+</svg>
