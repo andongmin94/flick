@@ -94,6 +94,14 @@ export default defineConfig({
               },
             ],
           },
+          {
+            items: [
+              {
+                text: "개인정보처리방침",
+                link: "/guide/policy",
+              }
+            ],
+          },
         ],
       },
 
