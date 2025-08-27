@@ -11,8 +11,8 @@
     "256": "flick.png",
     "512": "flick.png"
   },
-  "permissions": ["storage", "scripting"],
-  "host_permissions": ["<all_urls>"],
+  "permissions": [],
+  "host_permissions": [],
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
