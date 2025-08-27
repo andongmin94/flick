@@ -70,7 +70,7 @@ export function buildUI(data) {
 
   const footer = document.createElement("div");
   footer.className = "flick-footer";
-  footer.innerHTML = "<span>Flick Prototype</span>";
+  // footer.innerHTML = "<span>Flick Prototype</span>";
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
