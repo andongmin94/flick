@@ -24,7 +24,7 @@ features:
      light: /chrome-logo.svg
      width: 100px
     title: FLICK Extension 추가하기
-    linkText: ChatView.exe (408 MB)
-    link: https://github.com/andongmin94/flick/releases/download/v0.0.0/ChatView.exe
+    linkText: Chrome 웹 스토어로 이동
+    link: https://chromewebstore.google.com/detail/edagcmnnbbiaephgddimelfbcdmhfjcl?utm_source=item-share-cb
 
 ---
