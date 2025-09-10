@@ -1,26 +1,26 @@
-// rules/index.js - 중앙 rule registry (확장 용이)
-import { fmkoreaRule } from "./fmkorea.js";
-import { dcinsideRule } from "./dcinside.js";
-import { navercafeRule } from "./navercafe.js";
-import { dogdripRule } from "./dogdrip.js";
+import type { Rule, ExtractResult } from "../types/global";
+import { fmkoreaRule } from "./fmkorea";
+import { dcinsideRule } from "./dcinside";
+import { navercafeRule } from "./navercafe";
+import { dogdripRule } from "./dogdrip";
 
-const rules = [fmkoreaRule, dcinsideRule, navercafeRule, dogdripRule];
+const rules: Rule[] = [fmkoreaRule, dcinsideRule, navercafeRule, dogdripRule];
 
-export function getActiveRule() {
+export function getActiveRule(): Rule | null {
   return rules.find((r) => r.match.test(location.href)) || null;
 }
-export function getActiveSiteConfig() {
+export function getActiveSiteConfig(): Rule | null {
   return getActiveRule();
 }
 
-export function isSupportedArticle() {
+export function isSupportedArticle(): boolean {
   const r = getActiveRule();
   if (!r) return false;
   if (r.articleMatch && !r.articleMatch.test(location.href)) return false;
   return true;
 }
 
-export function extractActive() {
+export function extractActive(): ExtractResult {
   const r = getActiveRule();
   if (!r) return { title: "지원되지 않는 사이트", blocks: [] };
   try {
