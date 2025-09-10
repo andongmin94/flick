@@ -1,16 +1,14 @@
-// src/entry.js (bundle entry)
+// src/entry.ts (bundle entry)
 import {
   isSupportedArticle,
   getActiveSiteConfig,
   extractActive,
   runPreHook,
   runPostMountedHook,
-} from "./rules/index.js";
-import { buildUI, closeShorts } from "./ui.js";
+} from "./rules/index";
+import { buildUI, closeShorts } from "./ui";
 import "./styles/styles.css"; // aggregate all CSS for single bundle
-
-// fmkorea 전용 비디오 처리 훅
-// 개별 훅은 registry 통해 실행
+import type { ExtractResult } from "./types/global";
 
 // attach minimal API (still provide __FLICK for backward compatibility)
 const API = {
@@ -24,14 +22,13 @@ window.FLICK = API;
 
 function openShorts() {
   runPreHook();
-  const data = extractActive();
+  const data: ExtractResult = extractActive();
   buildUI(data);
   runPostMountedHook();
 }
 
 function ensureButton() {
   if (!isSupportedArticle()) return;
-  // 로고 + 버튼 컨테이너 이미 있으면 스킵
   if (document.querySelector(".flick-toggle-wrapper")) return;
   const wrap = document.createElement("div");
   wrap.className = "flick-toggle-wrapper";
@@ -53,7 +50,9 @@ function updateBtn() {
   const open = !!document.querySelector(".flick-wrap-injected");
   const logo = document.querySelector(".flick-logo-badge");
   if (logo) logo.setAttribute("data-open", open ? "true" : "false");
-  const cap = document.querySelector(".flick-capture-btn");
+  const cap = document.querySelector(
+    ".flick-capture-btn"
+  ) as HTMLButtonElement | null;
   if (cap) cap.disabled = open;
 }
 if (document.readyState === "loading") {
@@ -66,15 +65,13 @@ if (document.readyState === "loading") {
   setupRouteWatcher();
 }
 
-// SPA / 동적 내비게이션(네이버 카페 등) 대응: URL 변경 및 버튼 소실 감지
+// SPA / 동적 내비게이션 대응: URL 변경 및 버튼 소실 감지
 function setupRouteWatcher() {
   let lastHref = location.href;
   function check() {
     if (location.href !== lastHref) {
       lastHref = location.href;
-      // 약간 지연 후 DOM 안정화 뒤 재확인
       setTimeout(() => {
-        // 지원 안 되는 페이지면 버튼/쇼츠 제거
         if (!isSupportedArticle()) {
           removeButtonAndClose();
         } else {
@@ -82,31 +79,27 @@ function setupRouteWatcher() {
         }
       }, 60);
     } else {
-      // URL 그대로지만 버튼이 지워졌고 기사 페이지면 복구
       if (isSupportedArticle()) {
         if (!document.querySelector(".flick-toggle-wrapper")) ensureButton();
       } else {
-        // 기사 페이지가 아니면 잔존 버튼/쇼츠 정리
         removeButtonAndClose();
       }
     }
   }
-  // history API 패치
-  ["pushState", "replaceState"].forEach((m) => {
-    const orig = history[m];
+  // history API patch
+  (["pushState", "replaceState"] as const).forEach((m) => {
+    const orig = (history as any)[m] as (...args: any[]) => any;
     if (typeof orig === "function") {
-      history[m] = function () {
-        const ret = orig.apply(this, arguments);
+      (history as any)[m] = function (this: unknown, ...args: any[]) {
+        const ret = orig.apply(this as any, args);
         window.dispatchEvent(new Event("flick:locationchange"));
         return ret;
-      };
+      } as any;
     }
   });
   window.addEventListener("popstate", check, true);
   window.addEventListener("flick:locationchange", check, true);
-  // 네이버 카페는 iframe/동적 교체가 잦으므로 MutationObserver 로 body 구조 변화 감시
   const mo = new MutationObserver((mut) => {
-    // 자식 리스트 크게 변하면 체크
     for (const m of mut) {
       if (m.type === "childList") {
         check();
@@ -117,7 +110,6 @@ function setupRouteWatcher() {
   try {
     mo.observe(document.body, { childList: true, subtree: true });
   } catch (_) {}
-  // 안전망: 낮은 빈도의 interval (저부하) 로 더블 체크
   setInterval(check, 3000);
 }
 
@@ -132,22 +124,19 @@ function removeButtonAndClose() {
   }
 }
 
-// keyboard shortcut: F4 로 쇼츠 열기/닫기 토글
+// keyboard shortcut: F4 toggle
 window.addEventListener("keydown", (e) => {
-  // 입력 필드 포커스 중에는 방해하지 않음
-  const tag = (e.target && e.target.tagName) || "";
-  if (["INPUT", "TEXTAREA"].includes(tag) || e.target?.isContentEditable)
+  const tag = ((e.target as Element | null)?.tagName) || "";
+  if (["INPUT", "TEXTAREA"].includes(tag) || (e.target as any)?.isContentEditable)
     return;
   if (e.key === "F4") {
     e.preventDefault();
     const open = !!document.querySelector(".flick-wrap-injected");
     if (open) {
-      // 열려있으면 어디서든 닫기 허용
       closeShorts();
       updateBtn();
       return;
     }
-    // 열려있지 않다면 기사 페이지에서만 열기
     if (!isSupportedArticle()) return;
     openShorts();
     updateBtn();
