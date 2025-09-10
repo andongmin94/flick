@@ -1,5 +1,6 @@
-// Clean rebuild of UI module with working highlight logic
-export function buildUI(data) {
+import type { ExtractResult } from "./types/global";
+
+export function buildUI(data: ExtractResult) {
   if (document.querySelector(".flick-wrap-injected")) return;
   const wrap = document.createElement("div");
   wrap.className = "flick-wrap-injected";
@@ -13,29 +14,29 @@ export function buildUI(data) {
   title.contentEditable = "true";
   title.spellcheck = false;
   title.title = "제목 수정 가능 (엔터=줄바꿈)";
-  title.style.whiteSpace = "pre-wrap";
-  title.style.wordBreak = "break-word";
-  title.style.textAlign = "center";
+  (title.style as any).whiteSpace = "pre-wrap";
+  (title.style as any).wordBreak = "break-word";
+  (title.style as any).textAlign = "center";
 
   const KEY_TITLE_FS = "flick:titleFontSize";
   try {
     const savedFs = parseInt(localStorage.getItem(KEY_TITLE_FS) || "", 10);
-    title.style.fontSize =
+    (title.style as any).fontSize =
       !isNaN(savedFs) && savedFs >= 10 && savedFs <= 120
         ? savedFs + "px"
         : "20px";
   } catch (_) {
-    title.style.fontSize = "20px";
+    (title.style as any).fontSize = "20px";
   }
 
-  const suppress = (e) => {
+  const suppress = (e: KeyboardEvent) => {
     if (document.activeElement === title) {
       if (e.key === "Escape") return; // allow close
       e.stopImmediatePropagation();
     }
   };
   ["keydown", "keypress", "keyup"].forEach((t) =>
-    window.addEventListener(t, suppress, true)
+    window.addEventListener(t, suppress as any, true)
   );
   header.appendChild(title);
 
@@ -56,7 +57,7 @@ export function buildUI(data) {
       vid.src = b.src;
       if (b.poster) vid.poster = b.poster;
       vid.controls = true;
-      vid.playsInline = true;
+      (vid as any).playsInline = true;
       vid.preload = "metadata";
       c.appendChild(vid);
       body.appendChild(c);
@@ -70,7 +71,6 @@ export function buildUI(data) {
 
   const footer = document.createElement("div");
   footer.className = "flick-footer";
-  // footer.innerHTML = "<span>Flick Prototype</span>";
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
@@ -86,24 +86,28 @@ export function buildUI(data) {
   document.body.classList.add("flick-body-lock");
   document.addEventListener(
     "keydown",
-    function onKey(e) {
+    function onKey(e: KeyboardEvent) {
       if (e.key === "Escape") closeShorts();
     },
     { once: true }
   );
 
   // Resize logic
-  const state = { dragging: null, startY: 0, startH: 0 };
+  const state: { dragging: "header" | "footer" | null; startY: number; startH: number } = {
+    dragging: null,
+    startY: 0,
+    startH: 0,
+  };
   const KEY_HEADER = "flick:headerHeight";
   const KEY_FOOTER = "flick:footerHeight";
   try {
     const hH = parseInt(localStorage.getItem(KEY_HEADER) || "", 10);
-    if (!isNaN(hH) && hH > 0) header.style.height = hH + "px";
+    if (!isNaN(hH) && hH > 0) (header.style as any).height = hH + "px";
     const fH = parseInt(localStorage.getItem(KEY_FOOTER) || "", 10);
-    if (!isNaN(fH) && fH > 0) footer.style.height = fH + "px";
+    if (!isNaN(fH) && fH > 0) (footer.style as any).height = fH + "px";
   } catch (_) {}
-  function onDown(e) {
-    const t = e.target;
+  function onDown(e: MouseEvent) {
+    const t = e.target as HTMLElement;
     if (t.classList.contains("flick-resize-handle")) {
       state.dragging = t.classList.contains("flick-resize-header")
         ? "header"
@@ -112,38 +116,38 @@ export function buildUI(data) {
       state.startH =
         state.dragging === "header" ? header.offsetHeight : footer.offsetHeight;
       t.classList.add("active");
-      document.addEventListener("mousemove", onMove);
-      document.addEventListener("mouseup", onUp, { once: true });
+      document.addEventListener("mousemove", onMove as any);
+      document.addEventListener("mouseup", onUp as any, { once: true } as any);
       e.preventDefault();
     }
   }
-  function onMove(e) {
+  function onMove(e: MouseEvent) {
     if (!state.dragging) return;
     const dy = e.clientY - state.startY;
     if (state.dragging === "header") {
       let next = state.startH + dy;
       if (next < 20) next = 20;
-      header.style.height = next + "px";
+      (header.style as any).height = next + "px";
     } else {
       let next = state.startH - dy;
       if (next < 16) next = 16;
-      footer.style.height = next + "px";
+      (footer.style as any).height = next + "px";
     }
   }
   function onUp() {
     document
       .querySelectorAll(".flick-resize-handle.active")
-      .forEach((h) => h.classList.remove("active"));
+      .forEach((h) => (h as HTMLElement).classList.remove("active"));
     state.dragging = null;
-    document.removeEventListener("mousemove", onMove);
+    document.removeEventListener("mousemove", onMove as any);
     try {
-      if (header.style.height)
-        localStorage.setItem(KEY_HEADER, parseInt(header.style.height, 10));
-      if (footer.style.height)
-        localStorage.setItem(KEY_FOOTER, parseInt(footer.style.height, 10));
+      if ((header.style as any).height)
+        localStorage.setItem(KEY_HEADER, parseInt((header.style as any).height, 10) as any);
+      if ((footer.style as any).height)
+        localStorage.setItem(KEY_FOOTER, parseInt((footer.style as any).height, 10) as any);
     } catch (_) {}
   }
-  stage.addEventListener("mousedown", onDown);
+  stage.addEventListener("mousedown", onDown as any);
 
   createFontSizePanel(KEY_TITLE_FS, title);
   enableAutoHighlight(title);
@@ -158,7 +162,7 @@ export function closeShorts() {
   document.querySelector(".flick-format-toolbar")?.remove();
 }
 
-function createFontSizePanel(storageKey, titleEl) {
+function createFontSizePanel(storageKey: string, titleEl: HTMLElement) {
   document.querySelector(".flick-fontsize-panel")?.remove();
   const panel = document.createElement("div");
   panel.className = "flick-fontsize-panel";
@@ -177,7 +181,7 @@ function createFontSizePanel(storageKey, titleEl) {
     gap: "8px",
     boxShadow: "0 4px 12px -2px rgba(0,0,0,0.4)",
     flexWrap: "wrap",
-  });
+  } as any);
   const HL_KEY = "flick:highlightColor";
   let hlColor = "#ffff00";
   try {
@@ -199,35 +203,33 @@ function createFontSizePanel(storageKey, titleEl) {
         <button type="button" class="flick-hl-reset-btn" style="all:unset;cursor:pointer;padding:4px 10px;border-radius:6px;background:rgba(255,255,255,0.1);font-size:11px;">강조해제</button>
       </div>
     </div>`;
-  const input = panel.querySelector(".flick-fontsize-input");
-  const valBox = panel.querySelector(".flick-fontsize-val");
-  const curr = parseInt(titleEl.style.fontSize, 10) || 20;
+  const input = panel.querySelector<HTMLInputElement>(".flick-fontsize-input")!;
+  const valBox = panel.querySelector<HTMLElement>(".flick-fontsize-val")!;
+  const curr = parseInt((titleEl.style as any).fontSize, 10) || 20;
   input.value = String(curr);
   valBox.textContent = curr + "px";
-  // initialize percent variable for track fill (0~100%)
   const min = parseFloat(input.min) || 0;
   const max = parseFloat(input.max) || 100;
   const setPercent = () => {
     const v = parseFloat(input.value) || min;
     const p = ((v - min) / (max - min)) * 100;
-    input.style.setProperty("--_percent", p + "%");
-    // Thumb 색상 보간 (start: #f9d423, end: #f83600)
+    (input.style as any).setProperty("--_percent", p + "%");
     const t = Math.max(0, Math.min(1, p / 100));
-    const s = { r: 0xfa, g: 0xcf, b: 0x26 }; // start color
-    const eC = { r: 0xf8, g: 0x4b, b: 0x05 }; // end color
-    const lerp = (a, b) => Math.round(a + (b - a) * t);
+    const s = { r: 0xfa, g: 0xcf, b: 0x26 };
+    const eC = { r: 0xf8, g: 0x4b, b: 0x05 };
+    const lerp = (a: number, b: number) => Math.round(a + (b - a) * t);
     const r = lerp(s.r, eC.r),
       g = lerp(s.g, eC.g),
       b = lerp(s.b, eC.b);
     const hex =
       "#" + [r, g, b].map((n) => n.toString(16).padStart(2, "0")).join("");
-    input.style.setProperty("--fs-thumb", hex);
+    (input.style as any).setProperty("--fs-thumb", hex);
   };
   setPercent();
   input.addEventListener("input", () => {
     const v = parseInt(input.value, 10);
     if (!isNaN(v)) {
-      titleEl.style.fontSize = v + "px";
+      (titleEl.style as any).fontSize = v + "px";
       valBox.textContent = v + "px";
       try {
         localStorage.setItem(storageKey, String(v));
@@ -235,7 +237,7 @@ function createFontSizePanel(storageKey, titleEl) {
       setPercent();
     }
   });
-  const picker = panel.querySelector(".flick-hl-picker-main");
+  const picker = panel.querySelector<HTMLInputElement>(".flick-hl-picker-main");
   picker?.addEventListener("input", () => {
     const v = picker.value;
     if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v)) {
@@ -244,33 +246,32 @@ function createFontSizePanel(storageKey, titleEl) {
       } catch (_) {}
     }
   });
-  // 전체 강조 해제 버튼
   panel.querySelector(".flick-hl-reset-btn")?.addEventListener("click", () => {
     const spans = titleEl.querySelectorAll("[data-flick-hl]");
     spans.forEach((s) => {
-      const parent = s.parentNode;
+      const parent = s.parentNode as HTMLElement | null;
       if (!parent) return;
       while (s.firstChild) parent.insertBefore(s.firstChild, s);
-      s.remove();
+      (s as HTMLElement).remove();
     });
   });
   const toggleBtn = document.querySelector(".flick-logo-badge");
   function place() {
     const r = toggleBtn?.getBoundingClientRect();
     if (r) {
-      panel.style.top = r.bottom + 8 + "px";
-      panel.style.left = r.left + "px";
+      (panel.style as any).top = r.bottom + 8 + "px";
+      (panel.style as any).left = r.left + "px";
     } else {
-      panel.style.top = "80px";
-      panel.style.left = "16px";
+      (panel.style as any).top = "80px";
+      (panel.style as any).left = "16px";
     }
   }
   place();
-  window.addEventListener("resize", place, { once: true });
+  window.addEventListener("resize", place, { once: true } as any);
   document.body.appendChild(panel);
 }
 
-function enableAutoHighlight(titleEl) {
+function enableAutoHighlight(titleEl: HTMLElement) {
   function getStoredColor() {
     try {
       const c = localStorage.getItem("flick:highlightColor");
@@ -278,16 +279,16 @@ function enableAutoHighlight(titleEl) {
     } catch (_) {}
     return "#ffff00";
   }
-  function validRange(r) {
+  function validRange(r: Range) {
     return r && !r.collapsed && titleEl.contains(r.commonAncestorContainer);
   }
-  function mergeAdjacent(parent, color) {
+  function mergeAdjacent(parent: Element | null, color: string) {
     if (!parent) return;
-    const nodes = [...parent.querySelectorAll("[data-flick-hl]")];
+  const nodes = Array.from(parent.querySelectorAll("[data-flick-hl]"));
     for (let i = 0; i < nodes.length - 1; i++) {
-      const a = nodes[i],
-        b = nodes[i + 1];
-      if (a.nextSibling === b && a.style.color === b.style.color) {
+      const a = nodes[i] as HTMLElement,
+        b = nodes[i + 1] as HTMLElement;
+      if (a.nextSibling === b && (a.style as any).color === (b.style as any).color) {
         while (b.firstChild) a.appendChild(b.firstChild);
         b.remove();
       }
@@ -300,19 +301,18 @@ function enableAutoHighlight(titleEl) {
     if (!validRange(r)) return;
     const span = document.createElement("span");
     span.setAttribute("data-flick-hl", "");
-    span.style.color = getStoredColor();
+    (span.style as any).color = getStoredColor();
     span.appendChild(r.extractContents());
     r.insertNode(span);
-    // 새 선택을 span 뒤로 이동
     sel.removeAllRanges();
     const nr = document.createRange();
     nr.selectNodeContents(span);
     nr.collapse(false);
     sel.addRange(nr);
-    mergeAdjacent(span.parentNode, span.style.color);
+    mergeAdjacent(span.parentNode as Element | null, (span.style as any).color);
   }
   document.addEventListener("mouseup", () => setTimeout(applySelection, 0));
   document.addEventListener("keyup", (e) => {
-    if (e.key === "Shift") setTimeout(applySelection, 0);
+    if ((e as KeyboardEvent).key === "Shift") setTimeout(applySelection, 0);
   });
 }

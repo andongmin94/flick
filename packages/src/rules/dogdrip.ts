@@ -1,50 +1,40 @@
-// src/rules/dogdrip.js - Dogdrip 게시글 추출
-// 지원 예시 URL:
-//  https://www.dogdrip.net/654508279
-//  https://www.dogdrip.net/dogdrip/654486667?sort_index=popular&page=1
-//  https://www.dogdrip.net/doc/654052024?category=18567755&sort_index=popular&page=1
+import type { ExtractResult, Rule } from "../types/global";
 
-function norm(src) {
+function norm(src: string | null): string {
   if (!src) return "";
   if (src.startsWith("//")) return location.protocol + src;
   if (src.startsWith("/")) return location.origin + src;
   return src;
 }
 
-export function extractDogdrip() {
-  // 제목 우선순위: meta og:title > 페이지 내 제목 요소 > document.title
+export function extractDogdrip(): ExtractResult {
   let title =
-    document
-      .querySelector('meta[property="og:title"]')
-      ?.getAttribute("content")
-      ?.trim() ||
-    document
+    (document.querySelector('meta[property="og:title"]') as HTMLMetaElement | null)?.getAttribute("content")?.trim() ||
+    (document
       .querySelector(
         ".title h1, h1.title, h1.tit, h2.title, .document_title, .ed h4, .ed h3"
-      )
+      ) as HTMLElement | null)
       ?.textContent?.trim() ||
     document.title ||
     "제목 없음";
 
-  // 우선 실제 문서 컨테이너 (예: <div class="document_654486667_0 rhymix_content xe_content ...">)
   let primary = document.querySelector(
     "div.rhymix_content.xe_content[class*='document_']"
-  );
-  // fallback 이전 방식 (과다 수집 가능)
+  ) as Element | null;
   const content =
     primary ||
-    document.querySelector(".ed") ||
-    document.querySelector(".document_view") ||
-    document.querySelector(".view_content") ||
-    document.querySelector(".read_body") ||
-    document.querySelector(".content_body") ||
-    document.querySelector("article") ||
-    document.querySelector("#content") ||
+    (document.querySelector(".ed") as Element | null) ||
+    (document.querySelector(".document_view") as Element | null) ||
+    (document.querySelector(".view_content") as Element | null) ||
+    (document.querySelector(".read_body") as Element | null) ||
+    (document.querySelector(".content_body") as Element | null) ||
+    (document.querySelector("article") as Element | null) ||
+    (document.querySelector("#content") as Element | null) ||
     document.body;
 
-  const blocks = [];
-  const seenImg = new Set();
-  const seenText = new Set();
+  const blocks: ExtractResult["blocks"] = [];
+  const seenImg = new Set<string>();
+  const seenText = new Set<string>();
 
   const SKIP_SELECTOR = [
     ".comment",
@@ -72,20 +62,17 @@ export function extractDogdrip() {
     "noscript",
   ].join(",");
 
-  function pushImage(raw, alt) {
-    let src = raw;
+  function pushImage(raw: string | null, alt?: string) {
+    let src = raw || "";
     if (!src) return;
-    // data-* 속성 우선
-    // (원본이 data-original / data-src 사용하지면 caller 가 이미 선택)
     src = norm(src);
     if (!src || seenImg.has(src)) return;
-    // 광고/트래킹 필터 (간단)
     if (/pixel|ads|banner|doubleclick/i.test(src)) return;
     seenImg.add(src);
     blocks.push({ type: "image", src, alt: (alt || "").trim() });
   }
 
-  function cleanText(t) {
+  function cleanText(t: string) {
     return t
       .replace(/\u00A0/g, " ")
       .replace(/[ \t]+/g, " ")
@@ -93,7 +80,7 @@ export function extractDogdrip() {
       .trim();
   }
 
-  function flush(buf) {
+  function flush(buf: string[]) {
     if (!buf.length) return;
     const raw = buf.join("");
     buf.length = 0;
@@ -108,12 +95,11 @@ export function extractDogdrip() {
     if (html) blocks.push({ type: "html", html });
   }
 
-  function walk(node, buf) {
+  function walk(node: Node | null, buf: string[]) {
     if (!node) return;
     if (node.nodeType === 1) {
-      const el = node;
+      const el = node as HTMLElement;
       const tag = el.tagName;
-      // 스킵 (광고/댓글/리스트/메뉴 등)
       if (el.matches(SKIP_SELECTOR)) return;
       if (/^(SCRIPT|STYLE|IFRAME|TEMPLATE|NOSCRIPT)$/i.test(tag)) return;
       if (tag === "IMG") {
@@ -128,7 +114,7 @@ export function extractDogdrip() {
       if (tag === "VIDEO") {
         flush(buf);
         let vSrc =
-          el.querySelector("source[src]")?.getAttribute("src") ||
+          (el.querySelector("source[src]") as HTMLSourceElement | null)?.getAttribute("src") ||
           el.getAttribute("src") ||
           el.getAttribute("data-src") ||
           "";
@@ -144,46 +130,31 @@ export function extractDogdrip() {
         buf.push("\n");
         return;
       }
-      const isBlock =
-        /^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6]|BLOCKQUOTE)$/i.test(tag);
+      const isBlock = /^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6]|BLOCKQUOTE)$/i.test(tag);
       if (isBlock) {
-        // 경계 개행 (중복 방지)
         if (buf.length && !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       }
       const startLen = buf.length;
-      for (const child of el.childNodes) walk(child, buf);
-      if (
-        isBlock &&
-        startLen !== buf.length &&
-        !/\n$/.test(buf[buf.length - 1])
-      )
-        buf.push("\n");
+      for (const child of Array.from(el.childNodes)) walk(child, buf);
+      if (isBlock && startLen !== buf.length && !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       return;
     } else if (node.nodeType === 3) {
-      const text = node.nodeValue.replace(/\s+/g, " ");
+      const text = (node.nodeValue || "").replace(/\s+/g, " ");
       const trimmed = text.trim();
       if (!trimmed) return;
-      // 댓글 레벨표시, 추천수 등 패턴 일부 필터 (간단)
       if (/^\[?레벨:?\d+]?$/i.test(trimmed)) return;
       buf.push(text);
     }
   }
 
-  // 특화 파서: primary 컨테이너가 있으면 그 내부의 1차 <p> 들만 사용 (이미지 + 텍스트), 위젯/투표/광고 div 제거
   if (primary) {
-    // 불필요 위젯 제거 (투표, 추천 버튼 등)
     primary
       .querySelectorAll(".addon_addvote, .wgtRv, .tag_list, .related_list")
       .forEach((n) => n.remove());
-    // 순서 보존: 이미지/텍스트를 순회 중 즉시 flush
-    const pending = [];
+    const pending: string[] = [];
     function flushPending() {
       if (!pending.length) return;
-      // collapse 연속 빈 줄 2개까지
-      let raw = pending
-        .join("\n")
-        .replace(/\n{3,}/g, "\n\n")
-        .trim();
+      let raw = pending.join("\n").replace(/\n{3,}/g, "\n\n").trim();
       if (!raw) {
         pending.length = 0;
         return;
@@ -201,7 +172,7 @@ export function extractDogdrip() {
       if (html) blocks.push({ type: "html", html });
       pending.length = 0;
     }
-    function isBlankPara(text) {
+    function isBlankPara(text: string) {
       if (!text) return true;
       const t = text
         .replace(/[\u200B\u200C\u200D\uFEFF]/g, "")
@@ -210,19 +181,17 @@ export function extractDogdrip() {
         .trim();
       return !t;
     }
-    function isLinkNoiseLine(line) {
+    function isLinkNoiseLine(line: string) {
       if (!line) return false;
       const t = line.trim();
-      if (!t) return true; // effectively blank
-      if (/\s/.test(t)) return false; // multi-word keep
+      if (!t) return true;
+      if (/\s/.test(t)) return false;
       if (/^(https?:\/\/|www\.)\S+$/i.test(t)) return true;
       return false;
     }
-    // 중첩 구조에서 이미지 문단 누락 방지를 위해 primary 내부 모든 p (최대 400개) 순서대로 수집
     const pNodes = Array.from(primary.querySelectorAll("p")).slice(0, 400);
 
     pNodes.forEach((p) => {
-      // 이미지 우선 처리
       const imgs = p.querySelectorAll("img[src]");
       if (imgs.length) {
         flushPending();
@@ -232,7 +201,7 @@ export function extractDogdrip() {
             img.getAttribute("data-src") ||
             img.getAttribute("src");
           let alt = img.getAttribute("alt") || "";
-          if (/^\?scode=/i.test(alt) || alt.length > 80) alt = ""; // 의미없는 alt 정리
+          if (/^\?scode=/i.test(alt) || alt.length > 80) alt = "";
           pushImage(src, alt);
         });
         return;
@@ -242,8 +211,8 @@ export function extractDogdrip() {
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ");
       if (isBlankPara(raw)) {
-        if (pending.length && pending[pending.length - 1] !== "")
-          pending.push("");
+        if (pending.length && pending[pending.length - 1] !== "") pending.push("");
+        pending.push("");
         return;
       }
       const trimmed = raw.trim();
@@ -252,13 +221,11 @@ export function extractDogdrip() {
     });
     flushPending();
   } else {
-    // 기존 범용 파서 (fallback)
-    const buf = [];
-    for (const node of content.childNodes) walk(node, buf);
+    const buf: string[] = [];
+    for (const node of Array.from(content.childNodes)) walk(node, buf);
     flush(buf);
   }
 
-  // 의미있는 블록 없으면 placeholder (Naver placeholder 스타일과 통일)
   if (!blocks.length) {
     blocks.push({
       type: "html",
@@ -269,10 +236,9 @@ export function extractDogdrip() {
   return { title, blocks };
 }
 
-export const dogdripRule = {
+export const dogdripRule: Rule = {
   id: "dogdrip",
   match: /https?:\/\/(?:www\.)?dogdrip\.net\//i,
-  // 경로: /숫자  또는 /dogdrip/숫자  또는 /doc/숫자
   articleMatch: /\/(?:((dogdrip|doc)\/)?\d+)(?:$|[?#])/,
   extract: extractDogdrip,
 };
