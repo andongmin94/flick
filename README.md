@@ -15,7 +15,7 @@
 ## 주요 특징
 
 - 지원 사이트 감지: fmkorea, dcinside, Naver Cafe, DogDrip 의 게시글 페이지를 URL 패턴 + 추가 필터로 식별
-- 규칙 기반 추출: 사이트별 `rules/*.js` 모듈이 제목과 본문을 표준 블록 구조(`image | video | html`)로 변환
+- 규칙 기반 추출: 사이트별 `rules/*.ts` 모듈이 제목과 본문을 표준 블록 구조(`image | video | html`)로 변환
 - 단일 번들: Vite 빌드로 `bundle.js / bundle.css` (content script + 스타일) 생성 → 로딩/충돌 최소화
 - 즉시 토글: 화면 우측(또는 body 내) `FLICK` 배지 클릭 혹은 `F4` 키로 열기/닫기
 - 제목 인라인 편집 및 크기 조절 (로컬 저장)
@@ -31,8 +31,8 @@ flick/
  ├─ docs/                 # VitePress 기반 문서 (사이트 hero 등)
  └─ packages/           
      ├─ src/
-     │   ├─ entry.js/     # content script 진입, 버튼 & 라우트 감시, API publish
-     │   ├─ ui.js/        # 쇼츠 패널 생성 / 닫기 / 편집 / 강조 / 리사이즈 로직
+     │   ├─ entry.ts/     # content script 진입, 버튼 & 라우트 감시, API publish
+     │   ├─ ui.ts/        # 쇼츠 패널 생성 / 닫기 / 편집 / 강조 / 리사이즈 로직
      │   ├─ rules/        # 사이트별 추출 규칙 (fmkorea, dcinside, navercafe, dogdrip)
      │   └─ styles/       # 세분화된 CSS -> styles.css 로 집약
      └─ content/
@@ -44,7 +44,7 @@ flick/
 ## 동작 방식 (아키텍처 개요)
 
 1. Chrome 이 `manifest.json` 의 content_scripts 규칙에 따라 모든 페이지에 `bundle.js` 삽입
-2. `entry.js` → 활성 URL 이 지원 사이트 규칙(`rules/index.js`)에 매칭되는지 검사 (`match`, `articleMatch`)
+2. `entry.ts` → 활성 URL 이 지원 사이트 규칙(`rules/index.ts`)에 매칭되는지 검사 (`match`, `articleMatch`)
 3. 지원 페이지라면 배지(`.flick-toggle-wrapper`) 삽입
 4. 배지 클릭 또는 `F4` →
 	 - (사전 훅) `runPreHook()` 실행 (사이트별 비디오 상태 스냅 등)
@@ -78,11 +78,11 @@ interface ExtractResult {
 
 ## 지원 사이트 규칙 추가 가이드
 
-1. `packages/src/rules/` 에 `{site}.js` 생성
+1. `packages/src/rules/` 에 `{site}.ts` 생성
 2. 필수 export:
 	 - `const {site}Rule = { id, match: /.../, articleMatch: /.../, extract, prePrepare?, postShortsMounted? }`
 	 - `extract(ruleCfg)` 는 `ExtractResult` 반환 (예외 내부 처리 및 fallback 권장)
-3. `index.js` 의 `rules` 배열에 새 규칙 import & 추가
+3. `index.ts` 의 `rules` 배열에 새 규칙 import & 추가
 4. 필요 시 노이즈 필터(댓글/광고), 이미지/비디오 정규화, 중복 제거 로직 포함
 5. 빌드 후 실제 페이지에서 DevTools 콘솔에서 `FLICK.extractPost()` 수동 호출로 추출 결과 확인 가능
 
