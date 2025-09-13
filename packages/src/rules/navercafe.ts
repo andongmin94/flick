@@ -17,7 +17,9 @@ export function extractNavercafe(): ExtractResult {
     if (r) return r;
     r = document.querySelector("#app .se-main-container") as Element | null;
     if (r) return r;
-    const iframe = document.querySelector("#cafe_main") as HTMLIFrameElement | null;
+    const iframe = document.querySelector(
+      "#cafe_main"
+    ) as HTMLIFrameElement | null;
     if (iframe) {
       try {
         const idoc = iframe.contentDocument || iframe.contentWindow?.document;
@@ -40,7 +42,9 @@ export function extractNavercafe(): ExtractResult {
       ".article_header h3.title_text, h3.title_text"
     ) as HTMLElement | null;
     if (!h3) {
-      const iframe = document.querySelector("#cafe_main") as HTMLIFrameElement | null;
+      const iframe = document.querySelector(
+        "#cafe_main"
+      ) as HTMLIFrameElement | null;
       if (iframe) {
         try {
           const idoc = iframe.contentDocument || iframe.contentWindow?.document;
@@ -172,8 +176,12 @@ export function extractNavercafe(): ExtractResult {
       const thumbImg = el.querySelector(
         "img.se-oglink-thumbnail-resource[src]"
       ) as HTMLImageElement | null;
-      const titleEl = el.querySelector(".se-oglink-title") as HTMLElement | null;
-      const summaryEl = el.querySelector(".se-oglink-summary") as HTMLElement | null;
+      const titleEl = el.querySelector(
+        ".se-oglink-title"
+      ) as HTMLElement | null;
+      const summaryEl = el.querySelector(
+        ".se-oglink-summary"
+      ) as HTMLElement | null;
       const urlEl = el.querySelector(".se-oglink-url") as HTMLElement | null;
       const linkEl = el.querySelector(
         "a.se-oglink-info, a.se-oglink-thumbnail"
@@ -189,8 +197,12 @@ export function extractNavercafe(): ExtractResult {
         )}" alt=""></div>`;
       }
       inner += '<div class="og-meta">';
-      if (titleTxt) inner += `<div class="og-title"><strong>${esc(titleTxt)}</strong></div>`;
-      if (summaryTxt) inner += `<div class="og-summary">${esc(summaryTxt)}</div>`;
+      if (titleTxt)
+        inner += `<div class="og-title"><strong>${esc(
+          titleTxt
+        )}</strong></div>`;
+      if (summaryTxt)
+        inner += `<div class="og-summary">${esc(summaryTxt)}</div>`;
       if (urlTxt) inner += `<div class="og-url">${esc(urlTxt)}</div>`;
       inner += "</div>";
       let card = `<div class="flick-oglink">${inner}</div>`;
