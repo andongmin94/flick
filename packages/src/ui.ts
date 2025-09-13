@@ -93,7 +93,11 @@ export function buildUI(data: ExtractResult) {
   );
 
   // Resize logic
-  const state: { dragging: "header" | "footer" | null; startY: number; startH: number } = {
+  const state: {
+    dragging: "header" | "footer" | null;
+    startY: number;
+    startH: number;
+  } = {
     dragging: null,
     startY: 0,
     startH: 0,
@@ -142,9 +146,15 @@ export function buildUI(data: ExtractResult) {
     document.removeEventListener("mousemove", onMove as any);
     try {
       if ((header.style as any).height)
-        localStorage.setItem(KEY_HEADER, parseInt((header.style as any).height, 10) as any);
+        localStorage.setItem(
+          KEY_HEADER,
+          parseInt((header.style as any).height, 10) as any
+        );
       if ((footer.style as any).height)
-        localStorage.setItem(KEY_FOOTER, parseInt((footer.style as any).height, 10) as any);
+        localStorage.setItem(
+          KEY_FOOTER,
+          parseInt((footer.style as any).height, 10) as any
+        );
     } catch (_) {}
   }
   stage.addEventListener("mousedown", onDown as any);
@@ -284,11 +294,14 @@ function enableAutoHighlight(titleEl: HTMLElement) {
   }
   function mergeAdjacent(parent: Element | null, color: string) {
     if (!parent) return;
-  const nodes = Array.from(parent.querySelectorAll("[data-flick-hl]"));
+    const nodes = Array.from(parent.querySelectorAll("[data-flick-hl]"));
     for (let i = 0; i < nodes.length - 1; i++) {
       const a = nodes[i] as HTMLElement,
         b = nodes[i + 1] as HTMLElement;
-      if (a.nextSibling === b && (a.style as any).color === (b.style as any).color) {
+      if (
+        a.nextSibling === b &&
+        (a.style as any).color === (b.style as any).color
+      ) {
         while (b.firstChild) a.appendChild(b.firstChild);
         b.remove();
       }
