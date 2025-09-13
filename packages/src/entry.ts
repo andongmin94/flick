@@ -126,8 +126,11 @@ function removeButtonAndClose() {
 
 // keyboard shortcut: F4 toggle
 window.addEventListener("keydown", (e) => {
-  const tag = ((e.target as Element | null)?.tagName) || "";
-  if (["INPUT", "TEXTAREA"].includes(tag) || (e.target as any)?.isContentEditable)
+  const tag = (e.target as Element | null)?.tagName || "";
+  if (
+    ["INPUT", "TEXTAREA"].includes(tag) ||
+    (e.target as any)?.isContentEditable
+  )
     return;
   if (e.key === "F4") {
     e.preventDefault();
