@@ -54,6 +54,7 @@ export function extractDcinside(ruleCfg) {
     ".sch_alliance_box",
     ".positionr", // 랭킹/광고 wrapper
     ".btn_imgcmtopen", // 이미지 댓글 열기 버튼
+    "#dcappfooter", // dc official App footer
   ].join(",");
 
   function pushImage(raw, alt) {
@@ -136,13 +137,20 @@ export function extractDcinside(ruleCfg) {
         if (!buf.length || !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       }
       // 블록 종료 시 텍스트가 추가되었고 마지막이 개행 아니면 개행 추가
-      if (isBlock && startLen !== buf.length && !/\n$/.test(buf[buf.length - 1])) {
+      if (
+        isBlock &&
+        startLen !== buf.length &&
+        !/\n$/.test(buf[buf.length - 1])
+      ) {
         buf.push("\n");
       }
       return;
     } else if (node.nodeType === 3) {
       const text = node.nodeValue.replace(/\s+/g, " ");
-      if (text.trim()) buf.push(text);
+      const trimmed = text.trim();
+      // dc official App 푸터 문구 스킵
+      if (/^-\s*dc\s+official\s+app$/i.test(trimmed)) return;
+      if (trimmed) buf.push(text);
     }
   }
 
@@ -158,10 +166,10 @@ export function extractDcinside(ruleCfg) {
         const last = blocks[blocks.length - 1];
         if (last && last.type === "html") {
           // 마지막 html 끝에 <br> 최대 2개까지 추가
-            const existingTrail = (last.html.match(/(<br>)+$/i) || [""])[0];
-            const existingCnt = (existingTrail.match(/<br>/gi) || []).length;
-            const need = Math.min(2 - existingCnt, nlCount); // 최대 2개 유지
-            if (need > 0) last.html += "<br>".repeat(need);
+          const existingTrail = (last.html.match(/(<br>)+$/i) || [""])[0];
+          const existingCnt = (existingTrail.match(/<br>/gi) || []).length;
+          const need = Math.min(2 - existingCnt, nlCount); // 최대 2개 유지
+          if (need > 0) last.html += "<br>".repeat(need);
         } else {
           // 앞에 블록이 없으면 의미 없음 → 무시
         }
