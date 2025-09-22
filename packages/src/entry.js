@@ -56,9 +56,81 @@ function updateBtn() {
   const cap = document.querySelector(".flick-capture-btn");
   if (cap) cap.disabled = open;
 }
-if (document.readyState === "loading")
-  document.addEventListener("DOMContentLoaded", ensureButton);
-else ensureButton();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", () => {
+    ensureButton();
+    setupRouteWatcher();
+  });
+} else {
+  ensureButton();
+  setupRouteWatcher();
+}
+
+// SPA / 동적 내비게이션(네이버 카페 등) 대응: URL 변경 및 버튼 소실 감지
+function setupRouteWatcher() {
+  let lastHref = location.href;
+  function check() {
+    if (location.href !== lastHref) {
+      lastHref = location.href;
+      // 약간 지연 후 DOM 안정화 뒤 재확인
+      setTimeout(() => {
+        // 지원 안 되는 페이지면 버튼/쇼츠 제거
+        if (!isSupportedArticle()) {
+          removeButtonAndClose();
+        } else {
+          ensureButton();
+        }
+      }, 60);
+    } else {
+      // URL 그대로지만 버튼이 지워졌고 기사 페이지면 복구
+      if (isSupportedArticle()) {
+        if (!document.querySelector(".flick-toggle-wrapper")) ensureButton();
+      } else {
+        // 기사 페이지가 아니면 잔존 버튼/쇼츠 정리
+        removeButtonAndClose();
+      }
+    }
+  }
+  // history API 패치
+  ["pushState", "replaceState"].forEach((m) => {
+    const orig = history[m];
+    if (typeof orig === "function") {
+      history[m] = function () {
+        const ret = orig.apply(this, arguments);
+        window.dispatchEvent(new Event("flick:locationchange"));
+        return ret;
+      };
+    }
+  });
+  window.addEventListener("popstate", check, true);
+  window.addEventListener("flick:locationchange", check, true);
+  // 네이버 카페는 iframe/동적 교체가 잦으므로 MutationObserver 로 body 구조 변화 감시
+  const mo = new MutationObserver((mut) => {
+    // 자식 리스트 크게 변하면 체크
+    for (const m of mut) {
+      if (m.type === "childList") {
+        check();
+        break;
+      }
+    }
+  });
+  try {
+    mo.observe(document.body, { childList: true, subtree: true });
+  } catch (_) {}
+  // 안전망: 낮은 빈도의 interval (저부하) 로 더블 체크
+  setInterval(check, 3000);
+}
+
+function removeButtonAndClose() {
+  const wrap = document.querySelector(".flick-toggle-wrapper");
+  if (wrap) wrap.remove();
+  const open = document.querySelector(".flick-wrap-injected");
+  if (open) {
+    try {
+      closeShorts();
+    } catch (_) {}
+  }
+}
 
 // keyboard shortcut: F4 로 쇼츠 열기/닫기 토글
 window.addEventListener("keydown", (e) => {
