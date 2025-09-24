@@ -44,6 +44,17 @@ export function extractNavercafe() {
   const seenText = new Set(); // 너무 aggressive 중복만 차단
   const seenImg = new Set();
 
+  // 링크 노이즈 여부 판정 (순수 URL 이거나 유튜브/짧은 공유 링크 등)
+  function isLinkNoise(line) {
+    if (!line) return false;
+    const t = line.trim();
+    if (!t) return false;
+    // 공백 포함이면 (단일 토큰이 아닐 때) 대부분 유지
+    if (/\s/.test(t)) return false;
+    if (/^(https?:\/\/|www\.)\S+$/i.test(t)) return true;
+    return false;
+  }
+
   // 간단 JSON 모듈 데이터 (script.__se_module_data) 에서 썸네일/iframe 정보 읽기 (필요시)
   function parseModuleData(scriptEl) {
     try {
@@ -104,24 +115,7 @@ export function extractNavercafe() {
   const components = root.querySelectorAll('.se-component');
   components.forEach((comp) => {
     if (comp.matches('.se-oembed')) {
-      // iframe (예: youtube) → video 블록
-      const iframe = comp.querySelector('iframe[src]');
-      let src = iframe?.getAttribute('src') || '';
-      // youtube shorts/embed 정규화 (이미 embed 형태면 그대로)
-      if (/youtube\.com\/(shorts|watch)/.test(src)) {
-        try {
-          const url = new URL(src, location.href);
-          if (url.searchParams.get('v')) {
-            src = 'https://www.youtube.com/embed/' + url.searchParams.get('v');
-          }
-        } catch (_) {}
-      }
-      // module data 에 썸네일 존재 시 poster 사용
-      let poster = '';
-      const script = comp.querySelector('script.__se_module_data');
-      const mod = script && parseModuleData(script);
-      if (mod?.data?.thumbnailUrl) poster = norm(mod.data.thumbnailUrl);
-      if (src) pushVideo(src, poster);
+  // 요청: 모든 영상(oembed) 스킵 (렌더하지 않음)
       return;
     }
     if (comp.matches('.se-text')) {
@@ -130,11 +124,11 @@ export function extractNavercafe() {
       const buf = [];
       paragraphs.forEach(p => {
         const txt = p.innerText.replace(/\u200B/g, '').trim();
-        if (!txt) {
+  if (!txt) {
           // gap → buf 에 개행 하나 추가 (최대 2연속 유지)
           if (buf.length && buf[buf.length - 1] !== '\n') buf.push('\n');
           buf.push('\n');
-        } else {
+  } else if (!isLinkNoise(txt)) {
           buf.push(txt + '\n');
         }
       });
@@ -219,7 +213,15 @@ export function extractNavercafe() {
     const wide = textParts.join('')
       .replace(/\n{3,}/g, '\n\n')
       .trim();
-    if (wide) pushText(wide);
+    if (wide) {
+      const filtered = wide
+        .split(/\n+/)
+        .filter(l => !isLinkNoise(l))
+        .join('\n')
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+      if (filtered) pushText(filtered);
+    }
   }
 
   // 최종: 그래도 아무 것도 없으면 body 텍스트 한번 더
