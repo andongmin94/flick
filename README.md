@@ -1,7 +1,7 @@
 <div align="center">
 
 <a href="https://flick.andongmin.com">
-<img src="https://flick.andongmin.com/logo.svg" alt="logo" height="200" />
+<img src="https://flick.andongmin.com/logo.png" alt="logo" height="200" />
 </a>
 
 </div>
