@@ -4,12 +4,12 @@
   "description": "커뮤니티 게시글을 유튜브 쇼츠 포맷에 맞게 바꾸어주어 쇼츠 생성을 용이하게 해주는 확장 프로그램",
   "version": "0.0.2",
   "icons": {
-    "16": "flick.png",
-    "32": "flick.png",
-    "48": "flick.png",
-    "128": "flick.png",
-    "256": "flick.png",
-    "512": "flick.png"
+    "16": "icon.png",
+    "32": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png",
+    "256": "icon.png",
+    "512": "icon.png"
   },
   "permissions": [],
   "host_permissions": [],
@@ -31,9 +31,9 @@
     "default_title": "FLICK",
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "flick.png",
-      "24": "flick.png",
-      "32": "flick.png"
+      "16": "icon.png",
+      "24": "icon.png",
+      "32": "icon.png"
     }
   },
   "options_page": "options.html"
