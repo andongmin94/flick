@@ -9,7 +9,7 @@ hero:
   text: 유머 쇼츠 포매터
   tagline: 유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션
   image:
-    src: /logo.png
+    src: /logo.svg
     alt: flick
   actions:
     - theme: brand
