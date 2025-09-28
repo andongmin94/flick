@@ -13,29 +13,29 @@
   font-feature-settings: "rlig" 1, "calt" 1;
 }
 
-/** https://www.figma.com/colors/terracotta/
- *  Colors #FFB0A1 #E35336 #9E3A26 #451911
+/**
+ * Colors
  * -------------------------------------------------------------------------- */
 
 :root {
-  --vp-c-brand: #9E3A26;
-  --vp-c-brand-1: #9E3A26;
-  --vp-c-brand-light: #451911;
-  --vp-c-brand-lighter: #9E3A26;
-  --vp-c-brand-lightest: #9E3A26;
-  --vp-c-brand-dark: #9E3A26;
-  --vp-c-brand-darker: #9E3A26;
+  --vp-c-brand: #FF3F15;
+  --vp-c-brand-1: #FF3F15;
+  --vp-c-brand-light: #c73210;
+  --vp-c-brand-lighter: #FF3F15;
+  --vp-c-brand-lightest: #FF3F15;
+  --vp-c-brand-dark: #FF3F15;
+  --vp-c-brand-darker: #FF3F15;
   --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
 }
 
 .dark {
-  --vp-c-brand: #E35336;
-  --vp-c-brand-1: #ff804d;
-  --vp-c-brand-light: #451911;
-  --vp-c-brand-lighter: #E35336;
-  --vp-c-brand-lightest: #E35336;
-  --vp-c-brand-dark: #E35336;
-  --vp-c-brand-darker: #E35336;
+  --vp-c-brand: #FF9252;
+  --vp-c-brand-1: #FF9252;
+  --vp-c-brand-light: #c73210;
+  --vp-c-brand-lighter: #FF9252;
+  --vp-c-brand-lightest: #FF9252;
+  --vp-c-brand-dark: #FF9252;
+  --vp-c-brand-darker: #FF9252;
   --vp-c-brand-dimm: rgba(100, 108, 255, 0.08);
 }
 
@@ -63,14 +63,14 @@
   --vp-home-hero-name-color: transparent;
   --vp-home-hero-name-background: -webkit-linear-gradient(
     120deg,
-    #9E3A26,
-    #E35336 50%
+    #FF9252 0%,
+    #FF3F15
   );
 
   --vp-home-hero-image-background-image: linear-gradient(
     -45deg,
-    #9E3A26 50%,
-    #E35336 50%
+    #FF9252 50%,
+    #FF3F15 50%
   );
   --vp-home-hero-image-filter: blur(40px);
 }
