@@ -79,7 +79,7 @@ interface ExtractResult {
 ## 지원 사이트 규칙 추가 가이드
 
 1. `packages/src/rules/` 에 `{site}.ts` 생성
-2. 필수 export:
+2. 필수 export
 	 - `const {site}Rule = { id, match: /.../, articleMatch: /.../, extract, prePrepare?, postShortsMounted? }`
 	 - `extract(ruleCfg)` 는 `ExtractResult` 반환 (예외 내부 처리 및 fallback 권장)
 3. `index.ts` 의 `rules` 배열에 새 규칙 import & 추가
@@ -149,7 +149,7 @@ npm run build
 
 1. Issue / Discussion 으로 버그/요청 공유 (재현 URL 포함)
 2. Fork 후 규칙 또는 UI 개선 PR 생성
-3. PR 체크리스트 권장:
+3. PR 체크리스트 권장
 	 - [ ] 기존 사이트 정상 동작 회귀 테스트
 	 - [ ] 새 사이트 규칙: 중복 이미지/텍스트 필터 포함
 	 - [ ] 콘솔 에러/경고 없음
@@ -166,7 +166,7 @@ npm run build
 
 ## 빠른 실험 (콘솔)
 
-지원 페이지 콘솔에서:
+지원 페이지 콘솔에서
 
 ```js
 FLICK.extractPost(); // 현재 추출 데이터 미리보기
