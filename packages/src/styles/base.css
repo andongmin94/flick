@@ -3,7 +3,7 @@
   --shorts-stage-bg: #fff;
   --shorts-overlay-bg: #fff;
   --shorts-radius: 0;
-  --shorts-font: "Noto Sans KR", system-ui;
+  --shorts-font: "Pretendard";
   --shorts-header-bg: #000;
   --shorts-footer-bg: #000;
   /* shared gradients & colors */
@@ -59,4 +59,10 @@
 body.flick-body-lock {
   overflow: hidden !important;
   touch-action: none;
+}
+
+@font-face {
+  font-family: "Pretendard";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2") format("woff2");
+  font-display: swap;
 }
