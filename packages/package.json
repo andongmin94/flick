@@ -1,7 +1,7 @@
 {
   "name": "flick",
   "private": true,
-  "version": "0.0.3",
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite build --watch",
@@ -9,7 +9,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "vite": "^7.1.12",
+    "vite": "^7.2.2",
     "typescript": "^5.9.3"
   }
 }
