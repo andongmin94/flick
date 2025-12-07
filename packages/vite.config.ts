@@ -1,17 +1,20 @@
 import { defineConfig } from "vite";
-import { resolve } from "path";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export default defineConfig({
   build: {
     outDir: "content",
     emptyOutDir: false,
     rollupOptions: {
-      input: resolve(__dirname, "src/entry.js"),
+      input: path.resolve(__dirname, "src/entry.ts"),
       output: {
         entryFileNames: "bundle.js",
-        // CSS asset naming
         assetFileNames: (assetInfo) => {
-          if (/\.css$/i.test(assetInfo.name || "")) return "bundle.css"; // single css
+          if (/\.css$/i.test(assetInfo.name || "")) return "bundle.css";
           return assetInfo.name || "[name]";
         },
       },
