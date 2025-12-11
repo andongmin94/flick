@@ -3,9 +3,14 @@ import type { ExtractResult, Rule } from "../types/global";
 // src/rules/fmkorea.ts
 export function extractFmkorea(cfg?: Rule): ExtractResult {
   const root = document.querySelector("#bd_capture");
-  const content = (root && ((root.querySelector(".xe_content") as Element) || root)) as Element | null;
+  const content = (root &&
+    ((root.querySelector(".xe_content") as Element) || root)) as Element | null;
   const title =
-    (root && ((root.querySelector("h1,h2,h3") as HTMLElement | null)?.textContent || "").trim()) ||
+    (root &&
+      (
+        (root.querySelector("h1,h2,h3") as HTMLElement | null)?.textContent ||
+        ""
+      ).trim()) ||
     document.title ||
     "제목 없음";
   if (!content) return { title, blocks: [] };
@@ -104,7 +109,9 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
         flushBuffer(buf);
         buf.length = 0;
         let vSrc = "";
-        const sourceEl = el.querySelector("source[src]") as HTMLSourceElement | null;
+        const sourceEl = el.querySelector(
+          "source[src]"
+        ) as HTMLSourceElement | null;
         if (sourceEl) vSrc = sourceEl.getAttribute("src") || "";
         if (!vSrc) vSrc = el.getAttribute("src") || "";
         if (!vSrc) vSrc = el.getAttribute("data-original") || "";
@@ -148,10 +155,16 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
   const videoEls = Array.from(content.querySelectorAll("video"));
   if (videoEls.length) {
     const seenVideoSrc = new Set<string>();
-    const orderedVideos: { el: HTMLVideoElement; src: string; poster: string }[] = [];
+    const orderedVideos: {
+      el: HTMLVideoElement;
+      src: string;
+      poster: string;
+    }[] = [];
     videoEls.forEach((v) => {
       let vSrc =
-        (v.querySelector("source[src]") as HTMLSourceElement | null)?.getAttribute("src") ||
+        (
+          v.querySelector("source[src]") as HTMLSourceElement | null
+        )?.getAttribute("src") ||
         v.getAttribute("src") ||
         v.getAttribute("data-original") ||
         "";
@@ -173,7 +186,8 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
     });
 
     const lastVideo = orderedVideos[orderedVideos.length - 1].el;
-    const forbiddenClassRe = /(mejs-|mejs__|control|player|volume|progress|time|screen|sr-only|blind|tooltip|aria)/i;
+    const forbiddenClassRe =
+      /(mejs-|mejs__|control|player|volume|progress|time|screen|sr-only|blind|tooltip|aria)/i;
     const textBuf: string[] = [];
 
     function isNoiseText(t: string) {
@@ -183,7 +197,10 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
       if (s === "/") return true;
       if (/^\/?\s*\d+(?:\.\d+)?x$/i.test(s)) return true;
       if (/^(?:\d{1,2}:)?\d{1,2}:\d{2}$/.test(s)) return true;
-      if (/^(?:\d{1,2}:)?\d{1,2}:\d{2}\s*\/\s*(?:\d{1,2}:)?\d{1,2}:\d{2}$/.test(s)) return true;
+      if (
+        /^(?:\d{1,2}:)?\d{1,2}:\d{2}\s*\/\s*(?:\d{1,2}:)?\d{1,2}:\d{2}$/.test(s)
+      )
+        return true;
       if (/\/\s*\d+(?:\.\d+)?x$/i.test(s)) return true;
       if (/^Video Player$/i.test(s)) return true;
       return false;
@@ -201,10 +218,12 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
 
     function nextNode(node: Node | null, boundary: Element) {
       if (!node) return null;
-      if ((node as Element).firstChild) return (node as Element).firstChild as Node;
+      if ((node as Element).firstChild)
+        return (node as Element).firstChild as Node;
       while (node) {
         if (node === boundary) return null;
-        if ((node as Element).nextSibling) return (node as Element).nextSibling as Node;
+        if ((node as Element).nextSibling)
+          return (node as Element).nextSibling as Node;
         node = (node as Element).parentNode as Node;
       }
       return null;
@@ -215,7 +234,11 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
       if (cur.nodeType === 1) {
         const el = cur as Element;
         if (!isForbiddenElement(el)) {
-          if (/^(P|DIV|BR|SECTION|ARTICLE|LI|UL|OL|H1|H2|H3|H4|H5|H6)$/i.test(el.tagName)) {
+          if (
+            /^(P|DIV|BR|SECTION|ARTICLE|LI|UL|OL|H1|H2|H3|H4|H5|H6)$/i.test(
+              el.tagName
+            )
+          ) {
             if (el.tagName === "BR") textBuf.push("\n");
           }
         }
@@ -274,11 +297,14 @@ export function preFmkoreaPrepare() {
   document.querySelectorAll("#bd_capture video").forEach((v) => {
     try {
       const src =
-        (v.getAttribute("src") ||
-          (v.querySelector("source[src]") as HTMLSourceElement | null)?.getAttribute("src") ||
-          v.getAttribute("data-original") ||
-          "");
-      if (src && !(src in __fmkVideoVolumes)) __fmkVideoVolumes[src] = (v as HTMLVideoElement).volume;
+        v.getAttribute("src") ||
+        (
+          v.querySelector("source[src]") as HTMLSourceElement | null
+        )?.getAttribute("src") ||
+        v.getAttribute("data-original") ||
+        "";
+      if (src && !(src in __fmkVideoVolumes))
+        __fmkVideoVolumes[src] = (v as HTMLVideoElement).volume;
       (v as HTMLVideoElement).pause();
       v.removeAttribute("autoplay");
     } catch (_) {}
@@ -292,9 +318,10 @@ export function postFmkoreaShortsMounted() {
       vv.autoplay = true;
       vv.muted = false;
       const src = vv.getAttribute("src");
-      if (src && __fmkVideoVolumes[src] != null) vv.volume = __fmkVideoVolumes[src];
+      if (src && __fmkVideoVolumes[src] != null)
+        vv.volume = __fmkVideoVolumes[src];
       else if (!src && Object.keys(__fmkVideoVolumes).length === 1) {
-        vv.volume = (Object.values(__fmkVideoVolumes)[0] as number);
+        vv.volume = Object.values(__fmkVideoVolumes)[0] as number;
       }
       vv.play().catch(() => {});
     } catch (_) {}

@@ -9,7 +9,9 @@ function normUrl(src: string | null): string {
 
 export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
   let title =
-    (document.querySelector(".title_subject") as HTMLElement | null)?.textContent?.trim() ||
+    (
+      document.querySelector(".title_subject") as HTMLElement | null
+    )?.textContent?.trim() ||
     document.title ||
     "제목 없음";
 
@@ -57,7 +59,8 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
     if (!src || seenImg.has(src)) return;
     if (/pixel|ads|banner/i.test(src)) return;
     let cleanAlt = (alt || "").trim();
-    if (/^[a-f0-9]{24,}$/i.test(cleanAlt) || cleanAlt.length > 120) cleanAlt = "";
+    if (/^[a-f0-9]{24,}$/i.test(cleanAlt) || cleanAlt.length > 120)
+      cleanAlt = "";
     seenImg.add(src);
     blocks.push({ type: "image", src, alt: cleanAlt });
   }
@@ -93,7 +96,9 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
       if (tag === "VIDEO") {
         flush(buf);
         let vSrc =
-          (el.querySelector("source[src]") as HTMLSourceElement | null)?.getAttribute("src") ||
+          (
+            el.querySelector("source[src]") as HTMLSourceElement | null
+          )?.getAttribute("src") ||
           el.getAttribute("src") ||
           el.getAttribute("data-original") ||
           "";
@@ -117,7 +122,11 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
       if (isBlock && !hasChildContent) {
         if (!buf.length || !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       }
-      if (isBlock && startLen !== buf.length && !/\n$/.test(buf[buf.length - 1])) {
+      if (
+        isBlock &&
+        startLen !== buf.length &&
+        !/\n$/.test(buf[buf.length - 1])
+      ) {
         buf.push("\n");
       }
       return;

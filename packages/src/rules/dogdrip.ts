@@ -9,12 +9,18 @@ function norm(src: string | null): string {
 
 export function extractDogdrip(): ExtractResult {
   let title =
-    (document.querySelector('meta[property="og:title"]') as HTMLMetaElement | null)?.getAttribute("content")?.trim() ||
-    (document
-      .querySelector(
+    (
+      document.querySelector(
+        'meta[property="og:title"]'
+      ) as HTMLMetaElement | null
+    )
+      ?.getAttribute("content")
+      ?.trim() ||
+    (
+      document.querySelector(
         ".title h1, h1.title, h1.tit, h2.title, .document_title, .ed h4, .ed h3"
-      ) as HTMLElement | null)
-      ?.textContent?.trim() ||
+      ) as HTMLElement | null
+    )?.textContent?.trim() ||
     document.title ||
     "제목 없음";
 
@@ -114,7 +120,9 @@ export function extractDogdrip(): ExtractResult {
       if (tag === "VIDEO") {
         flush(buf);
         let vSrc =
-          (el.querySelector("source[src]") as HTMLSourceElement | null)?.getAttribute("src") ||
+          (
+            el.querySelector("source[src]") as HTMLSourceElement | null
+          )?.getAttribute("src") ||
           el.getAttribute("src") ||
           el.getAttribute("data-src") ||
           "";
@@ -130,13 +138,19 @@ export function extractDogdrip(): ExtractResult {
         buf.push("\n");
         return;
       }
-      const isBlock = /^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6]|BLOCKQUOTE)$/i.test(tag);
+      const isBlock =
+        /^(P|DIV|SECTION|ARTICLE|LI|UL|OL|H[1-6]|BLOCKQUOTE)$/i.test(tag);
       if (isBlock) {
         if (buf.length && !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
       }
       const startLen = buf.length;
       for (const child of Array.from(el.childNodes)) walk(child, buf);
-      if (isBlock && startLen !== buf.length && !/\n$/.test(buf[buf.length - 1])) buf.push("\n");
+      if (
+        isBlock &&
+        startLen !== buf.length &&
+        !/\n$/.test(buf[buf.length - 1])
+      )
+        buf.push("\n");
       return;
     } else if (node.nodeType === 3) {
       const text = (node.nodeValue || "").replace(/\s+/g, " ");
@@ -154,7 +168,10 @@ export function extractDogdrip(): ExtractResult {
     const pending: string[] = [];
     function flushPending() {
       if (!pending.length) return;
-      let raw = pending.join("\n").replace(/\n{3,}/g, "\n\n").trim();
+      let raw = pending
+        .join("\n")
+        .replace(/\n{3,}/g, "\n\n")
+        .trim();
       if (!raw) {
         pending.length = 0;
         return;
@@ -211,7 +228,8 @@ export function extractDogdrip(): ExtractResult {
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ");
       if (isBlankPara(raw)) {
-        if (pending.length && pending[pending.length - 1] !== "") pending.push("");
+        if (pending.length && pending[pending.length - 1] !== "")
+          pending.push("");
         pending.push("");
         return;
       }
