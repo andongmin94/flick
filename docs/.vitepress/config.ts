@@ -4,14 +4,14 @@ import { buildEnd } from "./buildEnd.config";
 const ogTitle = "FLICK";
 const ogDescription = "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션";
 const ogUrl = "https://flick.andongmin.com";
-const ogImage = "https://flick.andongmin.com/logo.svg";
+const ogImage = "https://flick.andongmin.com/logo.png";
 
 export default defineConfig({
     title: "FLICK",
     description: "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션",
 
     head: [
-      ["link", { rel: "icon", type: "image/svg+xml", href: "/logo.svg" }],
+      ["link", { rel: "icon", type: "image/png", href: "/logo.png" }],
       [
         "link",
         { rel: "alternate", type: "application/rss+xml", href: "/blog.rss" },
