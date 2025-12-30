@@ -13,8 +13,8 @@ export const buildEnd = async (config: SiteConfig) => {
     id: blogUrl,
     link: blogUrl,
     language: "ko",
-    image: "https://flick.andongmin.com/logo.png",
-    favicon: "https://flick.andongmin.com/logo.png",
+    image: "https://flick.andongmin.com/logo.svg",
+    favicon: "https://flick.andongmin.com/logo.svg",
     copyright: "Copyright © 2025 andongmin",
   });
 
