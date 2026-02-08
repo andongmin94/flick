@@ -1,5 +1,4 @@
-import { defineConfig, UserConfig } from "vitepress";
-import { buildEnd } from "./buildEnd.config";
+import { defineConfig } from "vitepress";
 
 const ogTitle = "FLICK";
 const ogDescription = "유머 게시글을 유튜브 쇼츠 포맷으로 변환하는 크롬 익스텐션";
@@ -12,17 +11,13 @@ export default defineConfig({
 
     head: [
       ["link", { rel: "icon", type: "image/png", href: "/logo.png" }],
-      [
-        "link",
-        { rel: "alternate", type: "application/rss+xml", href: "/blog.rss" },
-      ],
       ["link", { rel: "organization", href: "https://github.com/andongmin94" }],
       ["meta", { property: "og:type", content: "website" }],
       ["meta", { property: "og:title", content: ogTitle }],
       ["meta", { property: "og:description", content: ogDescription }],
       ["meta", { property: "og:url", content: ogUrl }],
       ["meta", { property: "og:image", content: ogImage }],
-      ["meta", { name: "theme-color", content: "#646cff" }],
+      ["meta", { name: "theme-color", content: "#FF3F15" }],
       [
         "script",
         {
@@ -33,6 +28,13 @@ export default defineConfig({
         },
       ],
     ],
+
+    vite: {
+      server: {
+        port: 3000,
+        host: "0.0.0.0",
+      },
+    },
 
     themeConfig: {
       logo: "/logo.svg",
@@ -120,6 +122,5 @@ export default defineConfig({
         { rel: "canonical", href: canonicalUrl },
       ]);
       return pageData;
-    },
-    buildEnd,
+    }
 });
