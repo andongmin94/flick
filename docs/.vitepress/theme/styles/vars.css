@@ -139,12 +139,12 @@
   display: none;
 }
 
-/* Firefox */
+/* Firefox용 */
 html {
   scrollbar-width: none;
 }
 
-/* IE, Edge */
+/* IE, Edge용 */
 body {
   -ms-overflow-style: none;
 }
