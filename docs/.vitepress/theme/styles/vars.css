@@ -87,12 +87,6 @@
   }
 }
 
-/* 메인 페이지 윈도우랑 맥 박스 가운데 정렬 */
-.box {
-  display: flex;
-  align-items: center;
-}
-
 /**
  * Component: Custom Block
  * -------------------------------------------------------------------------- */
@@ -107,14 +101,6 @@
   --vp-custom-block-tip-border: var(--vp-c-brand);
   --vp-custom-block-tip-text: var(--vp-c-brand-lightest);
   --vp-custom-block-tip-bg: var(--vp-c-brand-dimm);
-}
-
-/**
- * Component: Algolia
- * -------------------------------------------------------------------------- */
-
-.DocSearch {
-  --docsearch-primary-color: var(--vp-c-brand) !important;
 }
 
 /**
@@ -148,37 +134,23 @@
   transition: color 0.25s;
 }
 
-.vp-sponsor.aside .vp-sponsor-grid.mini .vp-sponsor-grid-image {
-  max-width: 124px;
-}
-
-.vp-sponsor-grid.big .vp-sponsor-grid-image {
-  max-height: 96px;
-}
-
-.vp-sponsor-grid.mini .vp-sponsor-grid-image[alt='Bit'] {
-  max-height: 48px;
-}
-
-.vp-sponsor-grid.xmini .vp-sponsor-grid-image[alt='JetBrains'] {
-  max-height: 54px;
-}
-
-.vp-sponsor-grid.medium .vp-sponsor-grid-image[alt='JetBrains'] {
-  max-height: 100px;
-}
-
 /* 스크롤바 숨기기 (마우스 휠 스크롤은 유지) */
 ::-webkit-scrollbar {
   display: none;
 }
 
-/* Firefox용 */
+/* Firefox */
 html {
   scrollbar-width: none;
 }
 
-/* IE, Edge용 */
+/* IE, Edge */
 body {
   -ms-overflow-style: none;
+}
+
+/* 메인 페이지 윈도우랑 맥 박스 가운데 정렬 */
+.box {
+  display: flex;
+  align-items: center;
 }
