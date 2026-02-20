@@ -6,6 +6,14 @@ FLICK 는 커뮤니티 게시글을 **YouTube Shorts 스타일 세로 뷰어** �
 
 이 가이드는 개발용 설치부터 기본 사용, 커스터마이징, 규칙(추출 로직) 확장까지 한 번에 다룹니다.
 
+## 이 문서의 범위
+
+이 문서는 `flick/packages` 코드 기준으로 작성됩니다.
+
+- 확장 소스: `flick/packages`
+- 문서 소스: `flick/docs`
+- 구조 요약: [패키지 구성](./packages.md)
+
 ## 개발/로컬 설치
 
 릴리즈 패키지가 아직 없다면 저장소를 클론 후 직접 빌드하여 로드할 수 있습니다.
@@ -25,12 +33,12 @@ Chrome → 주소창 `chrome://extensions` → 개발자 모드 On → "압축�
 
 현재 버전이 내부 규칙으로 인식하는 게시글 페이지:
 
-- fmkorea (일반/베스트)
-- dcinside (일반 + 마이너 갤러리 view)
-- Naver Cafe (새 에디터 기반 `/cafes/<id>/articles/` 경로)
-- DogDrip (다양한 문서 URL 변형)
+- fmkorea
+- dcinside
+- Naver Cafe
+- DogDrip
 
-규칙은 `packages/src/rules/*.js` 에서 정의되며, `match` + `articleMatch` 정규식 조합으로 활성화 여부를 판단합니다.
+규칙은 `packages/src/rules/*.ts` 에서 정의되며, `match` + `articleMatch` 정규식 조합으로 활성화 여부를 판단합니다.
 
 ## 기본 사용 흐름
 
@@ -80,15 +88,15 @@ interface ExtractResult {
 }
 ```
 
-`ui.js` 의 `buildUI()` 는 이 목록을 순서대로 렌더합니다. 비어 있거나 노이즈(댓글, 광고, 플레이어 컨트롤 잔여 텍스트)는 규칙 내부에서 제거합니다.
+`ui.ts` 의 `buildUI()` 는 이 목록을 순서대로 렌더합니다. 비어 있거나 노이즈(댓글, 광고, 플레이어 컨트롤 잔여 텍스트)는 규칙 내부에서 제거합니다.
 
 ## 규칙 추가(확장) 빠른 가이드
 
-1. 새 파일: `packages/src/rules/<site>.js`
+1. 새 파일: `packages/src/rules/<site>.ts`
 2. `match` (도메인 범위), `articleMatch` (실제 글 URL 패턴) 정규식 정의
 3. `extract(ruleCfg)` 구현 → 제목 + 블록 수집 (예외 try/catch)
 4. 필요 시 `prePrepare()` (원본 비디오 일시정지 등), `postShortsMounted()` (쇼츠 내 재생/autoplay 등) 훅 추가
-5. `rules/index.js` 의 배열에 import & push
+5. `rules/index.ts` 의 배열에 import & push
 6. `npm run build` 후 대상 페이지에서 콘솔 `FLICK.extractPost()` 로 결과 검증
 
 자세한 패턴/샘플은 각 사이트 전용 문서 참고:
