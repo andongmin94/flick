@@ -66,6 +66,7 @@ export default defineConfig({
 
       nav: [
         { text: "FLICK 가이드", link: "/guide", activeMatch: "/guide" },
+        { text: "패키지 구성", link: "/guide/packages" },
         { text: "FLICK 개발자", link: "/maintainer" },
       ],
 
@@ -77,6 +78,10 @@ export default defineConfig({
               {
                 text: "FLICK 시작하기",
                 link: "/guide/",
+              },
+              {
+                text: "패키지 구성",
+                link: "/guide/packages",
               },
               {
                 text: "에펨코리아",
