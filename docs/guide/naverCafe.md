@@ -1,41 +1,71 @@
-# 네이버 카페 규칙
+# 네이버 카페 추출 규칙
 
-`/cafes/<숫자>/articles/` 경로의 새 에디터(se-) 기반 게시글을 파싱.
+네이버 카페(cafe.naver.com)의 새 에디터(`se-` 접두사) 기반 게시글에서 콘텐츠를 추출하는 규칙입니다.
+
+`/cafes/<숫자>/articles/` 경로의 게시글을 대상으로, 텍스트·이미지·OG 링크 카드·스티커 등 다양한 컴포넌트를 인식해 블록 구조로 변환해 줍니다.
 
 ## URL 매칭
-- `match`: `/https?:\/\/cafe\.naver\.com\//i`
-- `articleMatch`: `/\/cafes\/\d+\/articles\//i`
+
+아래 정규식으로 네이버 카페 사이트와 개별 게시글을 판별합니다.
+
+| 항목 | 패턴 |
+|------|-------|
+| 사이트 매칭 | `/https?:\/\/cafe\.naver\.com\//i` |
+| 게시글 매칭 | `/\/cafes\/\d+\/articles\//i` |
 
 ## Root 탐색
-1. `.se-main-container`
-2. `#app .se-main-container`
-3. `#cafe_main` iframe 내부 동일 선택자
-4. Fallback: `document.body`
+
+본문 영역의 루트 컨테이너를 찾기 위해 아래 순서대로 시도합니다.
+
+1. `.se-main-container` — 새 에디터의 메인 컨테이너입니다.
+2. `#app .se-main-container` — SPA 구조일 때의 경로입니다.
+3. `#cafe_main` iframe 내부의 동일 선택자 — 네이버 카페가 iframe 구조를 사용하는 경우에 대응합니다.
+4. 위 모두 실패 시 `document.body`를 폴백으로 사용합니다.
 
 ## 제목 결정 로직
-1. `<h3 class="title_text">` (iframe 포함) 존재하면 우선
-2. 없으면 `<title>` 텍스트에서 카페명 접두부 `xxx: ` 제거
 
-## 컴포넌트 파싱 순서
-- `.se-component` 나열 순으로 처리
-- 타입별:
-  - `.se-text`: `p.se-text-paragraph` → 빈 p 는 gap (`\n\n`), 링크 노이즈(단일 URL) 필터
-  - `.se-oembed`: (요청) 스킵 (외부 동영상 카드 제거)
-  - OG Link: `.se-section-oglink` or `.se-module-oglink` → 썸네일/제목/요약/URL 구조화하여 커스텀 HTML 카드 (`.flick-oglink`)
-  - `.se-image`: 내부 모든 `img[src]` → image 블록
-  - Sticker: `.se-sticker-image` → image 블록 (alt="sticker")
+제목은 두 단계로 찾습니다.
+
+1. `<h3 class="title_text">` 요소가 있으면 (iframe 내부 포함) 해당 텍스트를 우선 사용합니다.
+2. 없으면 `<title>` 태그의 텍스트에서 카페명 접두부(`xxx: ` 형태)를 제거한 값을 사용합니다.
+
+## 컴포넌트 파싱
+
+네이버 카페 새 에디터는 `.se-component` 단위로 콘텐츠가 구성되어 있습니다.
+
+이 컴포넌트들을 나열 순서대로 하나씩 처리합니다.
+
+| 컴포넌트 | 처리 방식 |
+|----------|----------|
+| `.se-text` | 내부의 `p.se-text-paragraph`를 순회합니다. 빈 `p`는 문단 간격(`\n\n`)으로 처리하고, URL만 있는 라인은 링크 노이즈로 판단해 제거합니다. |
+| `.se-oembed` | 외부 동영상 카드인데, 현재는 노이즈를 줄이기 위해 스킵 처리합니다. |
+| OG Link (`.se-section-oglink`, `.se-module-oglink`) | 썸네일·제목·요약·URL을 구조화해서 `.flick-oglink` 클래스의 커스텀 HTML 카드로 변환합니다. |
+| `.se-image` | 내부의 모든 `img[src]`를 찾아 `image` 블록으로 만듭니다. |
+| Sticker (`.se-sticker-image`) | 스티커 이미지를 `image` 블록으로 추가합니다 (`alt="sticker"`). |
 
 ## Fallback 처리
-- 컴포넌트 기반 결과가 비거나 거의 없을 때: 전체 root 복제 → script/style/nav 제거 → 광역 텍스트 스캔
-- 메뉴/헤더 노이즈 판단 heuristic (`isMenuNoise`) 로 매우 짧거나 메뉴 위주 텍스트 제외
+
+::: tip 컴포넌트 파싱이 실패하면?
+컴포넌트 기반으로 추출한 결과가 비어 있거나 너무 적을 때는 Fallback 모드가 작동합니다.
+
+전체 root 요소를 복제한 뒤 `script`, `style`, `nav` 등을 제거하고 넓은 범위에서 텍스트를 스캔합니다.
+
+이때 메뉴나 헤더에서 나오는 짧은 텍스트는 `isMenuNoise` heuristic으로 걸러냅니다.
+:::
 
 ## 텍스트 정리
-- Zero-width / NBSP 제거
-- 4+ 연속 개행 → 2개
-- 링크 노이즈: 공백 없는 단일 URL 라인 제외
-- `\n\n` → `<br><br>`, 단일 `\n` → `<br>`
 
-## 블록 예시
+추출된 텍스트는 여러 단계를 거쳐 깔끔하게 정리합니다.
+
+- Zero-width 문자와 NBSP(`\u00A0`)를 제거합니다.
+- 4줄 이상 연속된 개행은 2줄로 줄입니다.
+- 공백 없이 URL만 있는 라인은 링크 노이즈로 보고 제외합니다.
+- `\n\n`은 `<br><br>`로, 단일 `\n`은 `<br>`로 변환해 HTML 블록에 담습니다.
+
+## 반환 예시
+
+최종적으로 아래와 같은 구조의 데이터가 반환됩니다.
+
 ```json
 {
   "title": "카페 게시글 제목",
@@ -48,9 +78,11 @@
 ```
 
 ## Placeholder
-- 의미있는 블록이 최종적으로 없을 때: 안내 placeholder HTML 블록 삽입 (사용자 혼란 방지)
+
+모든 추출이 끝난 뒤 의미 있는 블록이 하나도 없으면, 사용자가 빈 화면에 당황하지 않도록 안내 placeholder HTML 블록을 삽입합니다.
 
 ## 개선 아이디어
-- OG Link 카드 다크모드 스타일 추가
-- 이미지 그룹이 많은 글의 지연 로딩(src 교체) 재시도
-- `oembed` 내 동영상 → 선택적(옵션 기반) 허용 기능
+
+- **다크모드 OG Link 카드**: OG Link 카드에 다크모드 전용 스타일을 추가하면 야간 사용 시 더 보기 편해질 것입니다.
+- **지연 로딩 이미지 재시도**: 이미지가 많은 글에서 lazy-loading으로 인해 src가 아직 교체되지 않은 이미지를 재시도 로직으로 잡아내면 좋겠습니다.
+- **oembed 동영상 선택적 허용**: 현재 스킵 중인 `oembed` 영역의 동영상을 사용자 옵션에 따라 허용하는 기능도 고려해 볼 만합니다.

@@ -1,36 +1,62 @@
-# 개드립 규칙
+# 개드립(Dogdrip) 추출 규칙
 
-다양한 경로 패턴(`/숫자`, `/dogdrip/숫자`, `/doc/숫자`)의 문서를 파싱.
+개드립(dogdrip.net) 커뮤니티의 게시글을 추출하는 규칙입니다.
+
+개드립은 URL 형태가 `/숫자`, `/dogdrip/숫자`, `/doc/숫자` 등 다양한 경로 패턴을 사용하기 때문에, 이를 모두 인식할 수 있도록 유연한 매칭 로직을 갖추고 있습니다.
 
 ## URL 매칭
-- `match`: `/https?:\/\/(?:www\.)?dogdrip\.net\//i`
-- `articleMatch`: `/\/(?:((dogdrip|doc)\/)?\d+)(?:$|[?#])/`
 
-## Root & 제목
-- 우선 meta `og:title` → 없으면 대표 제목 후보 셀렉터 → fallback `document.title`
-- 본문 1차 target: `div.rhymix_content.xe_content[class*='document_']`
-- Fallback: `.ed`, `.document_view`, `.view_content`, `.read_body`, `.content_body`, `article`, `#content`, `body`
+아래 정규식으로 개드립 사이트인지, 그리고 개별 게시글 페이지인지를 판별합니다.
 
-## 파서 두 가지 경로
-1. Primary 컨테이너 발견: 내부 `p` 순회 전용 최적화
-   - 각 `p` 내 이미지 즉시 image 블록
-   - 텍스트는 비어있지 않으면 pending 배열 → flush 시 중복 제거 + 개행 정규화
-2. Fallback: 범용 DFS (`walk`) 로 IMG/VIDEO/BR/블록 경계 처리
+| 항목 | 패턴 |
+|------|-------|
+| 사이트 매칭 | `/https?:\/\/(?:www\.)?dogdrip\.net\//i` |
+| 게시글 매칭 | `/\/(?:((dogdrip|doc)\/)?\d+)(?:$|[?#])/` |
+
+## 제목과 본문 탐색
+
+제목은 우선 `og:title` 메타 태그에서 가져오고, 없으면 대표 제목 셀렉터를 순차 탐색한 뒤, 최종적으로 `document.title`을 폴백으로 사용합니다.
+
+본문 영역은 가장 정확한 컨테이너를 먼저 시도합니다.
+
+| 우선순위 | 셀렉터 |
+|----------|--------|
+| 1차 (Primary) | `div.rhymix_content.xe_content[class*='document_']` |
+| 2차 (Fallback) | `.ed`, `.document_view`, `.view_content`, `.read_body`, `.content_body`, `article`, `#content`, `body` |
+
+## 파서 동작 방식
+
+본문을 파싱할 때는 두 가지 경로 중 하나를 선택합니다.
+
+### 1. Primary 컨테이너를 찾은 경우
+
+최적화된 전용 파서가 동작합니다. 컨테이너 내부의 `p` 태그를 하나씩 순회하면서 이미지가 있으면 즉시 `image` 블록으로 분리하고, 텍스트는 pending 배열에 모아 두었다가 한꺼번에 flush합니다. 이때 중복 제거와 개행 정규화가 함께 이루어집니다.
+
+### 2. Fallback (범용 DFS)
+
+Primary 컨테이너를 찾지 못했을 때는 범용 DFS(`walk`) 방식으로 DOM 트리 전체를 순회하면서 `IMG`, `VIDEO`, `BR`, 블록 경계 등을 처리합니다.
 
 ## 노이즈 필터
-- 댓글 / 공유 / 태그 / 광고 / 배너 / pagination / aside 등 SKIP_SELECTOR
-- ALT 가 긴 해시 또는 80자 초과 → ALT 제거
-- 링크 노이즈 (단일 URL 라인) 제거
-- Level 표기 `[레벨:숫자]` 패턴 제거
+
+깨끗한 본문만 추출하기 위해 여러 종류의 노이즈를 걸러냅니다.
+
+- **영역 스킵**: 댓글, 공유 버튼, 태그, 광고, 배너, 페이지네이션, aside 등은 SKIP_SELECTOR로 통째로 건너뜁니다.
+- **ALT 정리**: 이미지의 ALT 텍스트가 긴 해시값이거나 80자를 초과하면 의미 없는 데이터로 보고 제거합니다.
+- **링크 노이즈 제거**: 내용 없이 URL만 한 줄로 적힌 라인은 제거합니다.
+- **레벨 표기 제거**: `[레벨:숫자]` 형태의 사용자 레벨 표기 패턴도 걸러냅니다.
 
 ## 비디오 처리
-- `<video>` + 내부 `<source>` 우선 src → `video` 블록 (poster 유지)
-- 추가 후 autoplay/mute/loop 는 후처리에서 제어 가능 (현 버전은 별도 hook 없음)
+
+`<video>` 태그를 만나면 내부 `<source>`에서 src를 가져와 `video` 블록으로 추가하고, 포스터(poster) 이미지가 있으면 함께 유지합니다. 자동재생이나 반복 재생 등은 후처리 단계에서 제어할 수 있지만, 현재 버전에서는 별도 hook이 적용되어 있지 않습니다.
 
 ## Placeholder
-- 블록이 전혀 없을 때 카페 규칙과 동일한 empty placeholder 삽입
+
+추출 결과 블록이 하나도 없을 때는 사용자 혼란을 방지하기 위해 빈 콘텐츠 안내 placeholder를 삽입합니다. (네이버 카페 규칙과 동일한 방식입니다.)
 
 ## 반환 예시
+
+최종적으로 아래와 같은 구조의 데이터가 반환됩니다.
+
 ```json
 {
   "title": "문서 제목",
@@ -42,6 +68,7 @@
 ```
 
 ## 개선 아이디어
-- 투표/설문 위젯 감지 후 요약 형식 HTML 블록으로 치환
-- GIF vs Video 판단하여 loop 정책 차등 적용
-- 긴 코드/인용 blockquote 전용 스타일 추가
+
+- **투표/설문 위젯 변환**: 투표·설문 위젯을 감지한 뒤, 요약 형식의 HTML 블록으로 치환하면 더 보기 좋을 것입니다.
+- **GIF vs Video 구분**: GIF와 일반 동영상을 구분해서 반복 재생(loop) 정책을 다르게 적용하면 사용자 경험이 개선됩니다.
+- **인용/코드 스타일**: 긴 코드 블록이나 인용(`blockquote`)에 전용 스타일을 추가하는 것도 고려해 볼 만합니다.
