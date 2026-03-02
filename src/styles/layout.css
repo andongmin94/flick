@@ -60,6 +60,9 @@
   word-break: break-word;
   color: inherit;
 }
+.flick-text-block {
+  white-space: pre-wrap;
+}
 .flick-block img {
   max-width: 100%;
   height: auto;

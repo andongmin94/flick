@@ -10,22 +10,6 @@
       "group": "build"
     },
     {
-      "label": "Type check",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "typecheck"],
-      "problemMatcher": ["$tsc"],
-      "group": "build"
-    },
-    {
-      "label": "Type check",
-      "type": "shell",
-      "command": "npm",
-      "args": ["run", "typecheck"],
-      "problemMatcher": ["$tsc"],
-      "group": "build"
-    },
-    {
       "label": "Vite build",
       "type": "shell",
       "command": "npm",
