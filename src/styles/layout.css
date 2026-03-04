@@ -8,6 +8,8 @@
   color: #fff;
   flex: 0 0 auto;
   user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .flick-title {
   font-weight: 700;
@@ -28,13 +30,16 @@
   flex: 1;
   overflow-y: auto;
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding: var(--flick-body-pad, 0);
   background: transparent;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  color: #222;
+  color: var(--shorts-fg);
+  box-sizing: border-box;
 }
 .flick-body::-webkit-scrollbar {
   width: 0;
@@ -52,6 +57,8 @@
   border-top: 1px solid #111;
   flex: 0 0 auto;
   user-select: none;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 .flick-block {
   font-size: 16px;
@@ -59,9 +66,18 @@
   white-space: normal;
   word-break: break-word;
   color: inherit;
+  scroll-snap-align: start;
+  scroll-margin-block: 12px;
+  box-sizing: border-box;
 }
 .flick-text-block {
   white-space: pre-wrap;
+  padding: 0 14px;
+}
+.flick-media-block {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .flick-block img {
   max-width: 100%;
@@ -88,12 +104,47 @@
 
 /* 빈 상태 placeholder */
 .flick-empty-placeholder {
-  padding: 24px 18px;
+  padding: 26px 18px;
   text-align: center;
   font-size: 14px;
   line-height: 1.5;
-  color: #888;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px dashed #444;
-  border-radius: 10px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px dashed rgba(120, 130, 150, 0.65);
+  border-radius: var(--flick-radius-lg);
+  margin: 20px 14px;
+}
+.flick-empty-placeholder strong {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+.flick-empty-placeholder p {
+  margin: 0 0 14px;
+  color: currentColor;
+  opacity: 0.72;
+}
+.flick-empty-source-btn {
+  appearance: none;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: var(--flick-radius-md);
+  background: #111827;
+  color: #fff;
+  cursor: pointer;
+  font: inherit;
+  padding: 7px 12px;
+}
+.flick-footer-status {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.flick-stage.flick-safe-area-on::before {
+  content: "";
+  position: absolute;
+  inset: 5.5% 7%;
+  z-index: 6;
+  pointer-events: none;
+  border: 1px dashed rgba(250, 204, 21, 0.9);
+  box-shadow: 0 0 0 9999px rgba(250, 204, 21, 0.045);
 }

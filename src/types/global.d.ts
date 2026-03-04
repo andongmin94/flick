@@ -15,6 +15,10 @@ export type Block =
 export interface ExtractResult {
   title: string;
   blocks: Block[];
+  sourceUrl?: string;
+  siteId?: string;
+  status?: "ok" | "empty" | "error" | "unsupported";
+  message?: string;
 }
 
 export interface Rule {
