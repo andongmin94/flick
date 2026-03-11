@@ -1,8 +1,5 @@
 import type { Block, ExtractResult } from "./types/global";
 
-type LayoutPresetId = "balanced" | "headline" | "caption";
-type ThemePresetId = "classic" | "paper" | "dark";
-
 type NavControls = {
   prevButton: HTMLButtonElement;
   nextButton: HTMLButtonElement;
@@ -13,63 +10,10 @@ const KEY_TITLE_FS = "flick:titleFontSize";
 const KEY_HEADER = "flick:headerHeight";
 const KEY_FOOTER = "flick:footerHeight";
 const KEY_HIGHLIGHT = "flick:highlightColor";
-const KEY_LAYOUT = "flick:layoutPreset";
-const KEY_THEME = "flick:themePreset";
 const KEY_SAFE_AREA = "flick:safeArea";
-
-const LAYOUT_PRESETS: Record<
-  LayoutPresetId,
-  { label: string; header: number; footer: number; titleSize: number }
-> = {
-  balanced: { label: "기본", header: 96, footer: 52, titleSize: 20 },
-  headline: { label: "제목", header: 152, footer: 36, titleSize: 28 },
-  caption: { label: "자막", header: 64, footer: 124, titleSize: 18 },
-};
-
-const THEME_PRESETS: Record<
-  ThemePresetId,
-  {
-    label: string;
-    swatch: string;
-    overlay: string;
-    stage: string;
-    fg: string;
-    header: string;
-    footer: string;
-    font: string;
-  }
-> = {
-  classic: {
-    label: "기본",
-    swatch: "linear-gradient(135deg,#111 0 50%,#fff 50% 100%)",
-    overlay: "#ffffff",
-    stage: "#ffffff",
-    fg: "#222222",
-    header: "#000000",
-    footer: "#000000",
-    font: "Pretendard, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-  },
-  paper: {
-    label: "밝게",
-    swatch: "linear-gradient(135deg,#f8f8f2 0 50%,#17324d 50% 100%)",
-    overlay: "#22272e",
-    stage: "#f8f8f2",
-    fg: "#202124",
-    header: "#17324d",
-    footer: "#17324d",
-    font: "Pretendard, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-  },
-  dark: {
-    label: "어둡게",
-    swatch: "linear-gradient(135deg,#050505 0 50%,#f4d35e 50% 100%)",
-    overlay: "#050505",
-    stage: "#111111",
-    fg: "#f4f4f4",
-    header: "#000000",
-    footer: "#000000",
-    font: "Pretendard, system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
-  },
-};
+const DEFAULT_HEADER_HEIGHT = 96;
+const DEFAULT_FOOTER_HEIGHT = 52;
+const DEFAULT_TITLE_SIZE = 20;
 
 let activeCleanups: Array<() => void> = [];
 
@@ -131,24 +75,6 @@ function readIntStorage(
 ) {
   const parsed = parseInt(readStorage(key) || "", 10);
   return !isNaN(parsed) && parsed >= min && parsed <= max ? parsed : fallback;
-}
-
-function isLayoutPreset(value: string | null): value is LayoutPresetId {
-  return !!value && value in LAYOUT_PRESETS;
-}
-
-function isThemePreset(value: string | null): value is ThemePresetId {
-  return !!value && value in THEME_PRESETS;
-}
-
-function getLayoutPreset(): LayoutPresetId {
-  const stored = readStorage(KEY_LAYOUT);
-  return isLayoutPreset(stored) ? stored : "balanced";
-}
-
-function getThemePreset(): ThemePresetId {
-  const stored = readStorage(KEY_THEME);
-  return isThemePreset(stored) ? stored : "classic";
 }
 
 function getHighlightColor() {
@@ -278,48 +204,17 @@ function renderBlocks(parent: HTMLElement, data: ExtractResult) {
   return rendered;
 }
 
-function applyTheme(
-  wrap: HTMLElement,
-  stage: HTMLElement,
-  presetId: ThemePresetId
-) {
-  const preset = THEME_PRESETS[presetId];
-  wrap.style.setProperty("--shorts-overlay-bg", preset.overlay);
-  wrap.style.setProperty("--shorts-font", preset.font);
-  stage.style.setProperty("--shorts-stage-bg", preset.stage);
-  stage.style.setProperty("--shorts-fg", preset.fg);
-  stage.style.setProperty("--shorts-header-bg", preset.header);
-  stage.style.setProperty("--shorts-footer-bg", preset.footer);
-}
-
-function applyLayout(
-  header: HTMLElement,
-  footer: HTMLElement,
-  title: HTMLElement,
-  presetId: LayoutPresetId
-) {
-  const preset = LAYOUT_PRESETS[presetId];
-  header.style.height = preset.header + "px";
-  footer.style.height = preset.footer + "px";
-  title.style.fontSize = preset.titleSize + "px";
-  writeStorage(KEY_HEADER, String(preset.header));
-  writeStorage(KEY_FOOTER, String(preset.footer));
-  writeStorage(KEY_TITLE_FS, String(preset.titleSize));
-  writeStorage(KEY_LAYOUT, presetId);
-}
-
 function applyStoredSizing(
   header: HTMLElement,
   footer: HTMLElement,
   title: HTMLElement
 ) {
-  const preset = LAYOUT_PRESETS[getLayoutPreset()];
   header.style.height =
-    readIntStorage(KEY_HEADER, preset.header, 20, 360) + "px";
+    readIntStorage(KEY_HEADER, DEFAULT_HEADER_HEIGHT, 20, 360) + "px";
   footer.style.height =
-    readIntStorage(KEY_FOOTER, preset.footer, 16, 260) + "px";
+    readIntStorage(KEY_FOOTER, DEFAULT_FOOTER_HEIGHT, 16, 260) + "px";
   title.style.fontSize =
-    readIntStorage(KEY_TITLE_FS, preset.titleSize, 12, 72) + "px";
+    readIntStorage(KEY_TITLE_FS, DEFAULT_TITLE_SIZE, 12, 72) + "px";
 }
 
 function siteLabel(siteId?: string) {
@@ -347,7 +242,6 @@ export function buildUI(data: ExtractResult) {
   if (readStorage(KEY_SAFE_AREA) === "true") {
     stage.classList.add("flick-safe-area-on");
   }
-  applyTheme(wrap, stage, getThemePreset());
 
   const header = document.createElement("div");
   header.className = "flick-header";
@@ -392,10 +286,7 @@ export function buildUI(data: ExtractResult) {
 
   const controls = createControlPanel({
     data,
-    wrap,
     stage,
-    header,
-    footer,
     title,
     renderedCount,
   });
@@ -440,14 +331,11 @@ export function closeShorts() {
 
 function createControlPanel(args: {
   data: ExtractResult;
-  wrap: HTMLElement;
   stage: HTMLElement;
-  header: HTMLElement;
-  footer: HTMLElement;
   title: HTMLElement;
   renderedCount: number;
 }) {
-  const { data, wrap, stage, header, footer, title, renderedCount } = args;
+  const { data, stage, title, renderedCount } = args;
   const panel = document.createElement("div");
   panel.className = "flick-control-panel";
 
@@ -508,61 +396,6 @@ function createControlPanel(args: {
     "제목 강조 해제"
   );
 
-  const layoutGroup = document.createElement("div");
-  layoutGroup.className = "flick-segment-group";
-
-  const setLayoutActive = (activeId: LayoutPresetId | null) => {
-    layoutGroup
-      .querySelectorAll<HTMLButtonElement>(".flick-segment-btn")
-      .forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.value === activeId);
-      });
-  };
-
-  (Object.keys(LAYOUT_PRESETS) as LayoutPresetId[]).forEach((presetId) => {
-    const preset = LAYOUT_PRESETS[presetId];
-    const button = makeButton(
-      "flick-segment-btn",
-      preset.label,
-      `${preset.label} 레이아웃`
-    );
-    button.dataset.value = presetId;
-    button.addEventListener("click", () => {
-      applyLayout(header, footer, title, presetId);
-      fontInput.value = String(preset.titleSize);
-      fontValue.textContent = preset.titleSize + "px";
-      setRangePercent(fontInput);
-      setLayoutActive(presetId);
-    });
-    layoutGroup.appendChild(button);
-  });
-  setLayoutActive(getLayoutPreset());
-
-  const themeGroup = document.createElement("div");
-  themeGroup.className = "flick-swatch-group";
-
-  const setThemeActive = (activeId: ThemePresetId) => {
-    themeGroup
-      .querySelectorAll<HTMLButtonElement>(".flick-swatch-btn")
-      .forEach((button) => {
-        button.classList.toggle("is-active", button.dataset.value === activeId);
-      });
-  };
-
-  (Object.keys(THEME_PRESETS) as ThemePresetId[]).forEach((presetId) => {
-    const preset = THEME_PRESETS[presetId];
-    const button = makeButton("flick-swatch-btn", "", `${preset.label} 배경`);
-    button.dataset.value = presetId;
-    button.style.background = preset.swatch;
-    button.addEventListener("click", () => {
-      applyTheme(wrap, stage, presetId);
-      writeStorage(KEY_THEME, presetId);
-      setThemeActive(presetId);
-    });
-    themeGroup.appendChild(button);
-  });
-  setThemeActive(getThemePreset());
-
   const safeAreaButton = makeButton(
     "flick-tool-btn flick-text-tool-btn",
     "안전영역",
@@ -607,8 +440,6 @@ function createControlPanel(args: {
   toolRow.appendChild(fontGroup);
   toolRow.appendChild(colorPicker);
   toolRow.appendChild(resetHighlight);
-  toolRow.appendChild(layoutGroup);
-  toolRow.appendChild(themeGroup);
   toolRow.appendChild(safeAreaButton);
 
   panel.appendChild(topRow);
