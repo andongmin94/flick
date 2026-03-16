@@ -10,10 +10,13 @@ const KEY_TITLE_FS = "flick:titleFontSize";
 const KEY_HEADER = "flick:headerHeight";
 const KEY_FOOTER = "flick:footerHeight";
 const KEY_HIGHLIGHT = "flick:highlightColor";
+const KEY_HEADER_BG = "flick:headerBg";
+const KEY_FOOTER_BG = "flick:footerBg";
 const KEY_SAFE_AREA = "flick:safeArea";
 const DEFAULT_HEADER_HEIGHT = 96;
 const DEFAULT_FOOTER_HEIGHT = 52;
 const DEFAULT_TITLE_SIZE = 20;
+const DEFAULT_SANDBOX_BG = "#000000";
 
 let activeCleanups: Array<() => void> = [];
 
@@ -81,6 +84,32 @@ function getHighlightColor() {
   const stored = readStorage(KEY_HIGHLIGHT);
   if (stored && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(stored)) return stored;
   return "#ffff00";
+}
+
+function getStoredColor(key: string, fallback: string) {
+  const stored = readStorage(key);
+  if (stored && /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(stored)) {
+    return normalizeHexColor(stored);
+  }
+  return fallback;
+}
+
+function normalizeHexColor(color: string) {
+  if (/^#[0-9a-f]{6}$/i.test(color)) return color.toLowerCase();
+  const short = color.match(/^#([0-9a-f])([0-9a-f])([0-9a-f])$/i);
+  if (!short) return color;
+  return `#${short[1]}${short[1]}${short[2]}${short[2]}${short[3]}${short[3]}`.toLowerCase();
+}
+
+function getReadableTextColor(bgColor: string) {
+  const color = normalizeHexColor(bgColor);
+  const match = color.match(/^#([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+  if (!match) return "#ffffff";
+  const r = parseInt(match[1], 16);
+  const g = parseInt(match[2], 16);
+  const b = parseInt(match[3], 16);
+  const luminance = (r * 299 + g * 587 + b * 114) / 1000;
+  return luminance > 150 ? "#111827" : "#ffffff";
 }
 
 function makeButton(className: string, label: string, title: string) {
@@ -217,6 +246,36 @@ function applyStoredSizing(
     readIntStorage(KEY_TITLE_FS, DEFAULT_TITLE_SIZE, 12, 72) + "px";
 }
 
+function applySandboxColors(
+  header: HTMLElement,
+  footer: HTMLElement,
+  title: HTMLElement,
+  headerColor: string,
+  footerColor: string
+) {
+  const headerTextColor = getReadableTextColor(headerColor);
+  const footerTextColor = getReadableTextColor(footerColor);
+  header.style.backgroundColor = headerColor;
+  header.style.color = headerTextColor;
+  title.style.color = headerTextColor;
+  footer.style.backgroundColor = footerColor;
+  footer.style.color = footerTextColor;
+}
+
+function applyStoredSandboxColors(
+  header: HTMLElement,
+  footer: HTMLElement,
+  title: HTMLElement
+) {
+  applySandboxColors(
+    header,
+    footer,
+    title,
+    getStoredColor(KEY_HEADER_BG, DEFAULT_SANDBOX_BG),
+    getStoredColor(KEY_FOOTER_BG, DEFAULT_SANDBOX_BG)
+  );
+}
+
 export function buildUI(data: ExtractResult) {
   if (document.querySelector(".flick-wrap-injected")) return;
   runCleanups();
@@ -256,6 +315,7 @@ export function buildUI(data: ExtractResult) {
   footer.className = "flick-footer";
 
   applyStoredSizing(header, footer, title);
+  applyStoredSandboxColors(header, footer, title);
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
@@ -270,6 +330,8 @@ export function buildUI(data: ExtractResult) {
   const controls = createControlPanel({
     data,
     stage,
+    header,
+    footer,
     title,
     renderedCount,
   });
@@ -315,10 +377,12 @@ export function closeShorts() {
 function createControlPanel(args: {
   data: ExtractResult;
   stage: HTMLElement;
+  header: HTMLElement;
+  footer: HTMLElement;
   title: HTMLElement;
   renderedCount: number;
 }) {
-  const { data, stage, title, renderedCount } = args;
+  const { data, stage, header, footer, title, renderedCount } = args;
   const panel = document.createElement("div");
   panel.className = "flick-control-panel";
 
@@ -379,6 +443,36 @@ function createControlPanel(args: {
     "제목 강조 해제"
   );
 
+  const sandboxColorGroup = document.createElement("div");
+  sandboxColorGroup.className = "flick-color-group";
+  const headerColorLabel = document.createElement("label");
+  headerColorLabel.className = "flick-color-label";
+  const headerColorText = document.createElement("span");
+  headerColorText.textContent = "위";
+  const headerColorPicker = document.createElement("input");
+  headerColorPicker.type = "color";
+  headerColorPicker.className = "flick-hl-picker-main";
+  headerColorPicker.value = getStoredColor(KEY_HEADER_BG, DEFAULT_SANDBOX_BG);
+  headerColorPicker.title = "위쪽 영역 색";
+  headerColorPicker.setAttribute("aria-label", "위쪽 영역 색");
+  headerColorLabel.appendChild(headerColorText);
+  headerColorLabel.appendChild(headerColorPicker);
+
+  const footerColorLabel = document.createElement("label");
+  footerColorLabel.className = "flick-color-label";
+  const footerColorText = document.createElement("span");
+  footerColorText.textContent = "아래";
+  const footerColorPicker = document.createElement("input");
+  footerColorPicker.type = "color";
+  footerColorPicker.className = "flick-hl-picker-main";
+  footerColorPicker.value = getStoredColor(KEY_FOOTER_BG, DEFAULT_SANDBOX_BG);
+  footerColorPicker.title = "아래쪽 영역 색";
+  footerColorPicker.setAttribute("aria-label", "아래쪽 영역 색");
+  footerColorLabel.appendChild(footerColorText);
+  footerColorLabel.appendChild(footerColorPicker);
+  sandboxColorGroup.appendChild(headerColorLabel);
+  sandboxColorGroup.appendChild(footerColorLabel);
+
   const safeAreaButton = makeButton(
     "flick-tool-btn flick-text-tool-btn",
     "안전영역",
@@ -411,6 +505,16 @@ function createControlPanel(args: {
     }
   });
 
+  function updateSandboxColors() {
+    const headerColor = normalizeHexColor(headerColorPicker.value);
+    const footerColor = normalizeHexColor(footerColorPicker.value);
+    writeStorage(KEY_HEADER_BG, headerColor);
+    writeStorage(KEY_FOOTER_BG, footerColor);
+    applySandboxColors(header, footer, title, headerColor, footerColor);
+  }
+  headerColorPicker.addEventListener("input", updateSandboxColors);
+  footerColorPicker.addEventListener("input", updateSandboxColors);
+
   resetHighlight.addEventListener("click", () => {
     title.querySelectorAll("[data-flick-hl]").forEach((span) => {
       const parent = span.parentNode as HTMLElement | null;
@@ -423,6 +527,7 @@ function createControlPanel(args: {
   toolRow.appendChild(fontGroup);
   toolRow.appendChild(colorPicker);
   toolRow.appendChild(resetHighlight);
+  toolRow.appendChild(sandboxColorGroup);
   toolRow.appendChild(safeAreaButton);
 
   panel.appendChild(topRow);
