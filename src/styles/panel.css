@@ -62,15 +62,6 @@
   background: rgba(193, 18, 31, 0.86);
   border-color: rgba(255, 255, 255, 0.12);
 }
-.flick-progress-pill {
-  min-width: 48px;
-  padding: 7px 8px;
-  border-radius: var(--flick-radius-md);
-  background: rgba(255, 255, 255, 0.1);
-  color: #e5e7eb;
-  font-variant-numeric: tabular-nums;
-  text-align: center;
-}
 .flick-range-group {
   display: flex;
   align-items: center;

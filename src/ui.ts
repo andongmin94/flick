@@ -1,9 +1,5 @@
 import type { Block, ExtractResult } from "./types/global";
 
-type NavControls = {
-  progress: HTMLElement;
-};
-
 const KEY_TITLE_FS = "flick:titleFontSize";
 const KEY_HEADER = "flick:headerHeight";
 const KEY_FOOTER = "flick:footerHeight";
@@ -307,7 +303,7 @@ export function buildUI(data: ExtractResult) {
 
   const body = document.createElement("div");
   body.className = "flick-body";
-  const renderedCount = renderBlocks(body, data);
+  renderBlocks(body, data);
 
   const footer = document.createElement("div");
   footer.className = "flick-footer";
@@ -331,7 +327,6 @@ export function buildUI(data: ExtractResult) {
     header,
     footer,
     title,
-    renderedCount,
   });
 
   wrap.appendChild(stage);
@@ -355,7 +350,6 @@ export function buildUI(data: ExtractResult) {
   );
 
   setupResize(stage, header, footer);
-  setupBlockNavigation(body, controls.nav);
   addCleanup(enableAutoHighlight(title));
 
   window.dispatchEvent(new CustomEvent("flick:shortschange", { detail: true }));
@@ -378,9 +372,8 @@ function createControlPanel(args: {
   header: HTMLElement;
   footer: HTMLElement;
   title: HTMLElement;
-  renderedCount: number;
 }) {
-  const { data, stage, header, footer, title, renderedCount } = args;
+  const { data, stage, header, footer, title } = args;
   const panel = document.createElement("div");
   panel.className = "flick-control-panel";
 
@@ -389,9 +382,6 @@ function createControlPanel(args: {
 
   const sourceButton = makeButton("flick-tool-btn", "↗", "원본 글 열기");
   const closeButton = makeButton("flick-tool-btn flick-tool-btn-close", "×", "닫기");
-  const progress = document.createElement("span");
-  progress.className = "flick-progress-pill";
-  progress.textContent = `1/${renderedCount}`;
 
   sourceButton.addEventListener("click", () => {
     window.open(data.sourceUrl || location.href, "_blank", "noopener,noreferrer");
@@ -399,7 +389,6 @@ function createControlPanel(args: {
   closeButton.addEventListener("click", closeShorts);
 
   topRow.appendChild(sourceButton);
-  topRow.appendChild(progress);
   topRow.appendChild(closeButton);
 
   const toolRow = document.createElement("div");
@@ -527,12 +516,7 @@ function createControlPanel(args: {
   panel.appendChild(topRow);
   panel.appendChild(toolRow);
 
-  return {
-    panel,
-    nav: {
-      progress,
-    },
-  };
+  return { panel };
 }
 
 function setRangePercent(input: HTMLInputElement) {
@@ -609,88 +593,6 @@ function setupResize(
     document.removeEventListener("mousemove", onMove);
     document.removeEventListener("mouseup", onUp);
   });
-}
-
-function setupBlockNavigation(body: HTMLElement, controls: NavControls) {
-  let currentIndex = 0;
-  let raf = 0;
-
-  const getBlocks = () =>
-    Array.from(body.querySelectorAll<HTMLElement>(".flick-block"));
-
-  const setProgress = (index: number, total: number) => {
-    currentIndex = Math.max(0, Math.min(Math.max(total - 1, 0), index));
-    controls.progress.textContent = `${currentIndex + 1}/${total}`;
-  };
-
-  const update = () => {
-    const blocks = getBlocks();
-    if (blocks.length === 0) {
-      controls.progress.textContent = "0/0";
-      return;
-    }
-
-    const bodyRect = body.getBoundingClientRect();
-    const anchor = bodyRect.top + 8;
-    let nearest = 0;
-    let nearestDistance = Number.POSITIVE_INFINITY;
-    blocks.forEach((block, index) => {
-      const rect = block.getBoundingClientRect();
-      const distance = Math.abs(rect.top - anchor);
-      if (distance < nearestDistance) {
-        nearest = index;
-        nearestDistance = distance;
-      }
-    });
-
-    setProgress(nearest, blocks.length);
-  };
-
-  const requestUpdate = () => {
-    if (raf) cancelAnimationFrame(raf);
-    raf = requestAnimationFrame(update);
-  };
-
-  const scrollToIndex = (index: number) => {
-    const blocks = getBlocks();
-    const next = Math.max(0, Math.min(blocks.length - 1, index));
-    const target = blocks[next];
-    if (target) {
-      body.scrollTo({
-        top: target.offsetTop - body.offsetTop,
-        behavior: "smooth",
-      });
-    }
-    setProgress(next, blocks.length);
-    requestUpdate();
-  };
-
-  body.addEventListener("scroll", requestUpdate, { passive: true });
-
-  const onKeyDown = (event: KeyboardEvent) => {
-    const target = event.target as HTMLElement | null;
-    if (
-      target?.isContentEditable ||
-      target?.tagName === "INPUT" ||
-      target?.tagName === "TEXTAREA"
-    ) {
-      return;
-    }
-    if (event.key === "ArrowUp") {
-      event.preventDefault();
-      scrollToIndex(currentIndex - 1);
-    } else if (event.key === "ArrowDown") {
-      event.preventDefault();
-      scrollToIndex(currentIndex + 1);
-    }
-  };
-  addDocumentListener("keydown", onKeyDown);
-  addCleanup(() => {
-    body.removeEventListener("scroll", requestUpdate);
-    if (raf) cancelAnimationFrame(raf);
-  });
-
-  setTimeout(update, 0);
 }
 
 function enableAutoHighlight(titleEl: HTMLElement) {
