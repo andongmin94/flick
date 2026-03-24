@@ -6,11 +6,14 @@ const KEY_FOOTER = "flick:footerHeight";
 const KEY_HIGHLIGHT = "flick:highlightColor";
 const KEY_HEADER_BG = "flick:headerBg";
 const KEY_FOOTER_BG = "flick:footerBg";
+const KEY_BODY_BG_IMAGE = "flick:bodyBgImage";
 const KEY_SAFE_AREA = "flick:safeArea";
 const DEFAULT_HEADER_HEIGHT = 96;
 const DEFAULT_FOOTER_HEIGHT = 52;
 const DEFAULT_TITLE_SIZE = 20;
 const DEFAULT_SANDBOX_BG = "#000000";
+const MAX_BG_SOURCE_BYTES = 6 * 1024 * 1024;
+const MAX_BG_STORED_CHARS = 2_500_000;
 
 let activeCleanups: Array<() => void> = [];
 
@@ -61,6 +64,12 @@ function readStorage(key: string) {
 function writeStorage(key: string, value: string) {
   try {
     localStorage.setItem(key, value);
+  } catch (_) {}
+}
+
+function removeStorage(key: string) {
+  try {
+    localStorage.removeItem(key);
   } catch (_) {}
 }
 
@@ -270,6 +279,82 @@ function applyStoredSandboxColors(
   );
 }
 
+function applyBodyBackground(body: HTMLElement, imageData: string | null) {
+  if (!imageData) {
+    body.classList.remove("flick-body-has-bg-image");
+    body.style.removeProperty("background-image");
+    body.style.removeProperty("background-size");
+    body.style.removeProperty("background-position");
+    body.style.removeProperty("background-repeat");
+    return;
+  }
+
+  body.classList.add("flick-body-has-bg-image");
+  body.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.68), rgba(255, 255, 255, 0.68)), url("${imageData}")`;
+  body.style.backgroundSize = "cover, cover";
+  body.style.backgroundPosition = "center, center";
+  body.style.backgroundRepeat = "no-repeat, no-repeat";
+}
+
+function applyStoredBodyBackground(body: HTMLElement) {
+  applyBodyBackground(body, readStorage(KEY_BODY_BG_IMAGE));
+}
+
+function loadImage(file: File) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      resolve(img);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error("이미지를 읽지 못했습니다."));
+    };
+    img.src = url;
+  });
+}
+
+async function prepareBodyBackgroundImage(file: File) {
+  if (!file.type.startsWith("image/")) {
+    throw new Error("이미지 파일만 사용할 수 있습니다.");
+  }
+  if (file.size > MAX_BG_SOURCE_BYTES) {
+    throw new Error("6MB 이하 이미지만 사용할 수 있습니다.");
+  }
+
+  const img = await loadImage(file);
+  const maxSide = 1600;
+  const scale = Math.min(1, maxSide / Math.max(img.naturalWidth, img.naturalHeight));
+  const width = Math.max(1, Math.round(img.naturalWidth * scale));
+  const height = Math.max(1, Math.round(img.naturalHeight * scale));
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext("2d");
+  if (!context) throw new Error("이미지를 처리하지 못했습니다.");
+  context.fillStyle = "#ffffff";
+  context.fillRect(0, 0, width, height);
+  context.drawImage(img, 0, 0, width, height);
+  const dataUrl = canvas.toDataURL("image/jpeg", 0.84);
+  if (dataUrl.length > MAX_BG_STORED_CHARS) {
+    throw new Error("이미지를 더 작게 줄여서 사용해 주세요.");
+  }
+  return dataUrl;
+}
+
+function flashButtonText(
+  button: HTMLButtonElement,
+  text: string,
+  restoreText: string
+) {
+  button.textContent = text;
+  window.setTimeout(() => {
+    button.textContent = restoreText;
+  }, 1400);
+}
+
 export function buildUI(data: ExtractResult) {
   if (document.querySelector(".flick-wrap-injected")) return;
   runCleanups();
@@ -303,6 +388,7 @@ export function buildUI(data: ExtractResult) {
 
   const body = document.createElement("div");
   body.className = "flick-body";
+  applyStoredBodyBackground(body);
   renderBlocks(body, data);
 
   const footer = document.createElement("div");
@@ -326,6 +412,7 @@ export function buildUI(data: ExtractResult) {
     stage,
     header,
     footer,
+    body,
     title,
   });
 
@@ -371,9 +458,10 @@ function createControlPanel(args: {
   stage: HTMLElement;
   header: HTMLElement;
   footer: HTMLElement;
+  body: HTMLElement;
   title: HTMLElement;
 }) {
-  const { data, stage, header, footer, title } = args;
+  const { data, stage, header, footer, body, title } = args;
   const panel = document.createElement("div");
   panel.className = "flick-control-panel";
 
@@ -456,6 +544,59 @@ function createControlPanel(args: {
   sandboxColorGroup.appendChild(headerColorLabel);
   sandboxColorGroup.appendChild(footerColorLabel);
 
+  const backgroundGroup = document.createElement("div");
+  backgroundGroup.className = "flick-bg-control-group";
+  const bgInput = document.createElement("input");
+  bgInput.type = "file";
+  bgInput.accept = "image/*";
+  bgInput.className = "flick-hidden-file-input";
+  const hasBodyBg = !!readStorage(KEY_BODY_BG_IMAGE);
+  const bgButton = makeButton(
+    "flick-tool-btn flick-text-tool-btn",
+    hasBodyBg ? "배경변경" : "배경이미지",
+    "본문 배경 이미지 선택"
+  );
+  const removeBgButton = makeButton(
+    "flick-tool-btn flick-text-tool-btn",
+    "배경삭제",
+    "본문 배경 이미지 삭제"
+  );
+  removeBgButton.disabled = !hasBodyBg;
+  bgButton.addEventListener("click", () => bgInput.click());
+  bgInput.addEventListener("change", async () => {
+    const file = bgInput.files?.[0];
+    if (!file) return;
+    const originalText = bgButton.textContent || "배경이미지";
+    bgButton.disabled = true;
+    bgButton.textContent = "처리중";
+    try {
+      const dataUrl = await prepareBodyBackgroundImage(file);
+      writeStorage(KEY_BODY_BG_IMAGE, dataUrl);
+      applyBodyBackground(body, dataUrl);
+      bgButton.textContent = "배경변경";
+      removeBgButton.disabled = false;
+    } catch (error) {
+      flashButtonText(
+        bgButton,
+        error instanceof Error ? error.message : "실패",
+        originalText
+      );
+    } finally {
+      bgInput.value = "";
+      bgButton.disabled = false;
+      if (bgButton.textContent === "처리중") bgButton.textContent = originalText;
+    }
+  });
+  removeBgButton.addEventListener("click", () => {
+    removeStorage(KEY_BODY_BG_IMAGE);
+    applyBodyBackground(body, null);
+    bgButton.textContent = "배경이미지";
+    removeBgButton.disabled = true;
+  });
+  backgroundGroup.appendChild(bgButton);
+  backgroundGroup.appendChild(removeBgButton);
+  backgroundGroup.appendChild(bgInput);
+
   const safeAreaButton = makeButton(
     "flick-tool-btn flick-text-tool-btn",
     "안전영역",
@@ -511,6 +652,7 @@ function createControlPanel(args: {
   toolRow.appendChild(colorPicker);
   toolRow.appendChild(resetHighlight);
   toolRow.appendChild(sandboxColorGroup);
+  toolRow.appendChild(backgroundGroup);
   toolRow.appendChild(safeAreaButton);
 
   panel.appendChild(topRow);

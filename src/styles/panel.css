@@ -74,12 +74,14 @@
   width: auto;
 }
 .flick-color-group,
-.flick-color-label {
+.flick-color-label,
+.flick-bg-control-group {
   display: flex;
   align-items: center;
   gap: 7px;
 }
-.flick-color-group {
+.flick-color-group,
+.flick-bg-control-group {
   flex-wrap: wrap;
   justify-content: center;
 }
@@ -91,6 +93,9 @@
   background: #facc15;
   border-color: #facc15;
   color: #111827;
+}
+.flick-hidden-file-input {
+  display: none !important;
 }
 
 .flick-fontsize-panel {

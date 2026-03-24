@@ -41,6 +41,9 @@
   color: var(--shorts-fg);
   box-sizing: border-box;
 }
+.flick-body-has-bg-image {
+  background-color: #fff;
+}
 .flick-body::-webkit-scrollbar {
   width: 0;
   height: 0;
