@@ -491,8 +491,17 @@ function createControlPanel(args: {
   topRow.appendChild(sourceButton);
   topRow.appendChild(closeButton);
 
-  const toolRow = document.createElement("div");
-  toolRow.className = "flick-control-row flick-control-row-tools";
+  const titleRow = document.createElement("div");
+  titleRow.className = "flick-control-row flick-control-row-title";
+
+  const colorRow = document.createElement("div");
+  colorRow.className = "flick-control-row flick-control-row-colors";
+
+  const backgroundRow = document.createElement("div");
+  backgroundRow.className = "flick-control-row flick-control-row-background";
+
+  const visibilityRow = document.createElement("div");
+  visibilityRow.className = "flick-control-row flick-control-row-visibility";
 
   const fontGroup = document.createElement("label");
   fontGroup.className = "flick-range-group";
@@ -694,16 +703,19 @@ function createControlPanel(args: {
     });
   });
 
-  toolRow.appendChild(fontGroup);
-  toolRow.appendChild(colorPicker);
-  toolRow.appendChild(resetHighlight);
-  toolRow.appendChild(sandboxColorGroup);
-  toolRow.appendChild(backgroundGroup);
-  toolRow.appendChild(bgVisibilityGroup);
-  toolRow.appendChild(safeAreaButton);
+  titleRow.appendChild(fontGroup);
+  titleRow.appendChild(colorPicker);
+  colorRow.appendChild(resetHighlight);
+  colorRow.appendChild(sandboxColorGroup);
+  backgroundRow.appendChild(backgroundGroup);
+  backgroundRow.appendChild(safeAreaButton);
+  visibilityRow.appendChild(bgVisibilityGroup);
 
   panel.appendChild(topRow);
-  panel.appendChild(toolRow);
+  panel.appendChild(titleRow);
+  panel.appendChild(colorRow);
+  panel.appendChild(backgroundRow);
+  panel.appendChild(visibilityRow);
 
   return { panel };
 }
