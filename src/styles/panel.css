@@ -10,14 +10,24 @@
   gap: 9px;
   padding: 10px;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: var(--flick-radius-lg);
-  background: rgba(36, 38, 42, 0.72);
-  color: #f8fafc;
-  box-shadow: 0 18px 44px -22px rgba(0, 0, 0, 0.72),
-    0 1px 0 rgba(255, 255, 255, 0.12) inset;
-  backdrop-filter: blur(18px) saturate(1.45);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  background: var(--flick-ios-material);
+  color: var(--flick-ios-label);
+  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(255, 255, 255, 0.16) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.24) inset;
+  backdrop-filter: blur(24px) saturate(1.65);
   font: 12px/1.2 var(--shorts-font);
+}
+.flick-control-panel::before {
+  content: "";
+  align-self: center;
+  width: 36px;
+  height: 4px;
+  margin: 0 0 1px;
+  border-radius: 999px;
+  background: rgba(235, 235, 245, 0.28);
 }
 .flick-control-row {
   display: flex;
@@ -27,26 +37,29 @@
   min-width: 0;
 }
 .flick-control-row-main {
+  justify-content: flex-end;
   padding-bottom: 1px;
 }
 .flick-control-row-title,
 .flick-control-row-colors,
 .flick-control-row-background,
 .flick-control-row-visibility {
-  justify-content: center;
+  justify-content: flex-start;
   flex-wrap: wrap;
-  padding: 7px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--flick-radius-lg);
-  background: rgba(255, 255, 255, 0.055);
+  gap: 0;
+  padding: 4px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  background: var(--flick-ios-section);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
   box-sizing: border-box;
 }
 .flick-tool-btn {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--flick-radius-md);
-  background: rgba(255, 255, 255, 0.1);
-  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 999px;
+  background: var(--flick-ios-fill);
+  color: var(--flick-ios-label);
   cursor: pointer;
   font: 600 12px/1.2 var(--shorts-font);
   min-height: 32px;
@@ -59,13 +72,24 @@
 }
 .flick-text-tool-btn {
   min-width: auto;
-  padding: 0 11px;
+  padding: 0 12px;
   white-space: nowrap;
 }
+.flick-control-row-main .flick-tool-btn:first-child,
+.flick-bg-control-group .flick-tool-btn:not(:disabled):first-child {
+  background: rgba(10, 132, 255, 0.18);
+  border-color: rgba(10, 132, 255, 0.24);
+  color: #64d2ff;
+}
+.flick-control-row-main .flick-tool-btn:first-child:hover:not(:disabled),
+.flick-bg-control-group .flick-tool-btn:not(:disabled):first-child:hover {
+  background: rgba(10, 132, 255, 0.28);
+  border-color: rgba(10, 132, 255, 0.36);
+}
 .flick-tool-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.24);
-  box-shadow: 0 8px 16px -12px rgba(0, 0, 0, 0.85);
+  background: var(--flick-ios-fill-hover);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 16px -12px rgba(0, 0, 0, 0.9);
   transform: translateY(-1px);
 }
 .flick-tool-btn:disabled {
@@ -74,19 +98,29 @@
   transform: none;
 }
 .flick-tool-btn-close {
-  background: rgba(216, 43, 58, 0.9);
-  border-color: rgba(255, 255, 255, 0.16);
+  background: var(--flick-ios-red);
+  border-color: rgba(255, 255, 255, 0.18);
+  color: #fff;
+  box-shadow: 0 8px 18px -12px rgba(255, 69, 58, 0.8);
 }
 .flick-range-group {
   display: flex;
   align-items: center;
   gap: 8px;
   min-width: 236px;
-  color: #e5e7eb;
+  min-height: 40px;
+  color: var(--flick-ios-secondary-label);
+}
+.flick-control-row-title {
+  flex-wrap: nowrap;
+}
+.flick-control-row-title .flick-range-group {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 .flick-range-group > span:first-child {
   flex: 0 0 auto;
-  color: rgba(248, 250, 252, 0.72);
+  color: var(--flick-ios-secondary-label);
   font-weight: 700;
 }
 .flick-bg-visibility-group {
@@ -106,32 +140,52 @@
 .flick-color-group,
 .flick-bg-control-group {
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-end;
+}
+.flick-color-group {
+  flex: 1 1 auto;
+}
+.flick-bg-control-group {
+  flex: 1 1 auto;
+}
+.flick-control-row-colors,
+.flick-control-row-background,
+.flick-control-row-visibility {
+  justify-content: space-between;
 }
 .flick-color-label {
-  color: #e5e7eb;
+  color: var(--flick-ios-secondary-label);
   font-weight: 700;
   white-space: nowrap;
 }
 .flick-tool-btn.is-active {
-  background: #facc15;
-  border-color: #facc15;
-  color: #111827;
+  background: var(--flick-ios-blue);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #fff;
+  box-shadow: 0 8px 18px -12px rgba(10, 132, 255, 0.95);
+}
+.flick-tool-btn.is-active:hover:not(:disabled) {
+  background: var(--flick-ios-blue-pressed);
+}
+.flick-control-row-background > .flick-tool-btn.is-active {
+  background: var(--flick-ios-green);
+  border-color: rgba(255, 255, 255, 0.24);
+  box-shadow: 0 8px 18px -12px rgba(48, 209, 88, 0.9);
+}
+.flick-control-row-background > .flick-tool-btn.is-active:hover:not(:disabled) {
+  background: #24b84f;
 }
 .flick-hidden-file-input {
   display: none !important;
 }
 
 .flick-fontsize-panel {
-  backdrop-filter: blur(6px) saturate(1.3);
-  background: radial-gradient(
-    circle at 30% 20%,
-    rgba(30, 30, 35, 0.9),
-    rgba(18, 18, 22, 0.85)
-  );
-  border: 1px solid #2a2f3a !important;
-  box-shadow: 0 10px 28px -6px rgba(0, 0, 0, 0.55),
-    0 0 0 1px rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(24px) saturate(1.65);
+  background: var(--flick-ios-material);
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.82),
+    0 1px 0 rgba(255, 255, 255, 0.14) inset;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -145,7 +199,7 @@
 .flick-panel-row label {
   font-size: 12px;
   letter-spacing: 0.4px;
-  color: #d4d8e1;
+  color: var(--flick-ios-secondary-label);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -155,21 +209,26 @@
   appearance: none;
   width: 140px;
   height: 20px;
-  background: transparent;
+  background: linear-gradient(
+        90deg,
+        var(--fs-fill, var(--flick-ios-blue)) 0%,
+        var(--fs-fill, var(--flick-ios-blue)) var(--_percent, 0%),
+        var(--fs-empty) var(--_percent, 0%),
+        var(--fs-empty) 100%
+      )
+      center / 100% 7px no-repeat;
   border: none;
   padding: 0;
   margin: 0;
   cursor: default;
   position: relative;
-  --fs-empty: #ffffff;
-  --fs-thumb: #f83600;
+  --fs-empty: rgba(120, 120, 128, 0.54);
+  --fs-thumb: #ffffff;
+  --fs-fill: var(--flick-ios-blue);
 }
 .flick-fontsize-input::-webkit-slider-runnable-track {
-  height: 6px;
-  /* 두 겹 배경: 1) 채워진 구간 그라디언트 (width: --_percent) 2) 빈 구간 배경 */
-  background: var(--flick-grad-warm) 0 0 / calc(var(--_percent, 0%)) 100%
-      no-repeat,
-    var(--fs-empty);
+  height: 7px;
+  background: transparent;
   border-radius: 999px;
   cursor: pointer;
 }
@@ -179,34 +238,34 @@
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--fs-thumb, #f83600);
-  border: 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.15);
-  margin-top: -5.5px;
+  background: var(--fs-thumb, #ffffff);
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.36) inset;
+  margin-top: -4.5px;
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-track {
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
   background: var(--fs-empty);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.4) inset,
-    0 0 0 1px rgba(255, 255, 255, 0.04);
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-progress {
-  /* fallback simpler gradient */
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
-  background: var(--flick-grad-warm);
+  background: var(--fs-fill, var(--flick-ios-blue));
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-thumb {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--fs-thumb, #f83600);
-  border: 0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.15);
+  background: var(--fs-thumb, #ffffff);
+  border: 0.5px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.34),
+    0 0 0 1px rgba(255, 255, 255, 0.36) inset;
   cursor: pointer;
   transition: background 0.25s linear;
 }
@@ -225,7 +284,7 @@
   -webkit-tap-highlight-color: transparent;
 }
 .flick-fontsize-val {
-  color: #98a2b3;
+  color: var(--flick-ios-tertiary-label);
   flex: 0 0 42px;
   text-align: right;
   font-variant-numeric: tabular-nums;
@@ -237,12 +296,12 @@ input.flick-hl-picker-main {
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--flick-radius-lg);
-  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 10px;
+  background: rgba(120, 120, 128, 0.2);
   cursor: pointer;
-  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.85),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.86),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   transition: transform 0.2s, box-shadow 0.25s, border-color 0.25s;
 }
 input.flick-hl-picker-main::-webkit-color-swatch-wrapper {
@@ -258,23 +317,23 @@ input.flick-hl-picker-main::-moz-color-swatch {
 }
 input.flick-hl-picker-main:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.34);
-  box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.88),
-    0 0 0 3px rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.9),
+    0 0 0 3px rgba(10, 132, 255, 0.16);
 }
 input.flick-hl-picker-main:active {
   transform: scale(0.92);
 }
 .flick-hl-reset-btn {
-  background: rgba(255, 255, 255, 0.1);
-  color: #e8edf3 !important;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--flick-ios-fill);
+  color: var(--flick-ios-label) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 16px -14px rgba(0, 0, 0, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
   transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
 }
 .flick-hl-reset-btn:hover {
-  background: rgba(255, 255, 255, 0.18);
+  background: var(--flick-ios-fill-hover);
 }
 .flick-hl-reset-btn:active {
   transform: translateY(1px);
