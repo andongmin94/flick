@@ -10,14 +10,14 @@
   gap: 9px;
   padding: 10px;
   box-sizing: border-box;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(60, 60, 67, 0.13);
   border-radius: 18px;
   background: var(--flick-ios-material);
   color: var(--flick-ios-label);
-  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.82),
-    0 1px 0 rgba(255, 255, 255, 0.16) inset,
-    0 -1px 0 rgba(0, 0, 0, 0.24) inset;
-  backdrop-filter: blur(24px) saturate(1.65);
+  box-shadow: 0 24px 56px -30px rgba(0, 0, 0, 0.34),
+    0 1px 0 rgba(255, 255, 255, 0.86) inset,
+    0 -1px 0 rgba(60, 60, 67, 0.08) inset;
+  backdrop-filter: blur(26px) saturate(1.75);
   font: 12px/1.2 var(--shorts-font);
 }
 .flick-control-panel::before {
@@ -27,7 +27,7 @@
   height: 4px;
   margin: 0 0 1px;
   border-radius: 999px;
-  background: rgba(235, 235, 245, 0.28);
+  background: rgba(60, 60, 67, 0.28);
 }
 .flick-control-row {
   display: flex;
@@ -49,15 +49,15 @@
   flex-wrap: wrap;
   gap: 0;
   padding: 4px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(60, 60, 67, 0.1);
   border-radius: 14px;
   background: var(--flick-ios-section);
-  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.06) inset;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset;
   box-sizing: border-box;
 }
 .flick-tool-btn {
   appearance: none;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(60, 60, 67, 0.1);
   border-radius: 999px;
   background: var(--flick-ios-fill);
   color: var(--flick-ios-label);
@@ -78,19 +78,19 @@
 }
 .flick-control-row-main .flick-tool-btn:first-child,
 .flick-bg-control-group .flick-tool-btn:not(:disabled):first-child {
-  background: rgba(10, 132, 255, 0.18);
-  border-color: rgba(10, 132, 255, 0.24);
-  color: #64d2ff;
+  background: rgba(10, 132, 255, 0.1);
+  border-color: rgba(10, 132, 255, 0.18);
+  color: var(--flick-ios-blue);
 }
 .flick-control-row-main .flick-tool-btn:first-child:hover:not(:disabled),
 .flick-bg-control-group .flick-tool-btn:not(:disabled):first-child:hover {
-  background: rgba(10, 132, 255, 0.28);
-  border-color: rgba(10, 132, 255, 0.36);
+  background: rgba(10, 132, 255, 0.16);
+  border-color: rgba(10, 132, 255, 0.26);
 }
 .flick-tool-btn:hover:not(:disabled) {
   background: var(--flick-ios-fill-hover);
-  border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 8px 16px -12px rgba(0, 0, 0, 0.9);
+  border-color: rgba(60, 60, 67, 0.16);
+  box-shadow: 0 8px 16px -12px rgba(0, 0, 0, 0.28);
   transform: translateY(-1px);
 }
 .flick-tool-btn:disabled {
@@ -100,7 +100,7 @@
 }
 .flick-tool-btn-close {
   background: var(--flick-ios-red);
-  border-color: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.54);
   color: #fff;
   box-shadow: 0 8px 18px -12px rgba(255, 69, 58, 0.8);
 }
@@ -163,7 +163,7 @@
   color: var(--flick-ios-tertiary-label);
 }
 .flick-font-input:focus {
-  color: #64d2ff;
+  color: var(--flick-ios-blue);
 }
 .flick-range-group > span:first-child {
   flex: 0 0 auto;
@@ -207,7 +207,7 @@
 }
 .flick-tool-btn.is-active {
   background: var(--flick-ios-blue);
-  border-color: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.62);
   color: #fff;
   box-shadow: 0 8px 18px -12px rgba(10, 132, 255, 0.95);
 }
@@ -216,7 +216,7 @@
 }
 .flick-control-row-background > .flick-tool-btn.is-active {
   background: var(--flick-ios-green);
-  border-color: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.62);
   box-shadow: 0 8px 18px -12px rgba(48, 209, 88, 0.9);
 }
 .flick-control-row-background > .flick-tool-btn.is-active:hover:not(:disabled) {
@@ -229,10 +229,10 @@
 .flick-fontsize-panel {
   backdrop-filter: blur(24px) saturate(1.65);
   background: var(--flick-ios-material);
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  border: 1px solid rgba(60, 60, 67, 0.13) !important;
   border-radius: 18px !important;
-  box-shadow: 0 24px 56px -28px rgba(0, 0, 0, 0.82),
-    0 1px 0 rgba(255, 255, 255, 0.14) inset;
+  box-shadow: 0 24px 56px -30px rgba(0, 0, 0, 0.34),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -269,7 +269,7 @@
   margin: 0;
   cursor: default;
   position: relative;
-  --fs-empty: rgba(120, 120, 128, 0.54);
+  --fs-empty: rgba(120, 120, 128, 0.28);
   --fs-thumb: #ffffff;
   --fs-fill: var(--flick-ios-blue);
 }
@@ -286,9 +286,9 @@
   height: 16px;
   border-radius: 50%;
   background: var(--fs-thumb, #ffffff);
-  border: 0.5px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.34),
-    0 0 0 1px rgba(255, 255, 255, 0.36) inset;
+  border: 0.5px solid rgba(60, 60, 67, 0.18);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.72) inset;
   margin-top: -4.5px;
   cursor: pointer;
 }
@@ -296,7 +296,7 @@
   height: 7px;
   border-radius: 999px;
   background: var(--fs-empty);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  box-shadow: 0 0 0 1px rgba(60, 60, 67, 0.08) inset;
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-progress {
@@ -310,9 +310,9 @@
   height: 16px;
   border-radius: 50%;
   background: var(--fs-thumb, #ffffff);
-  border: 0.5px solid rgba(0, 0, 0, 0.12);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.34),
-    0 0 0 1px rgba(255, 255, 255, 0.36) inset;
+  border: 0.5px solid rgba(60, 60, 67, 0.18);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24),
+    0 0 0 1px rgba(255, 255, 255, 0.72) inset;
   cursor: pointer;
   transition: background 0.25s linear;
 }
@@ -343,12 +343,12 @@ input.flick-hl-picker-main {
   width: 32px;
   height: 32px;
   padding: 0;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(60, 60, 67, 0.12);
   border-radius: 10px;
-  background: rgba(120, 120, 128, 0.2);
+  background: rgba(255, 255, 255, 0.72);
   cursor: pointer;
-  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.86),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.8);
   transition: transform 0.2s, box-shadow 0.25s, border-color 0.25s;
 }
 input.flick-hl-picker-main::-webkit-color-swatch-wrapper {
@@ -364,9 +364,9 @@ input.flick-hl-picker-main::-moz-color-swatch {
 }
 input.flick-hl-picker-main:hover {
   transform: translateY(-1px);
-  border-color: rgba(255, 255, 255, 0.28);
-  box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.9),
-    0 0 0 3px rgba(10, 132, 255, 0.16);
+  border-color: rgba(10, 132, 255, 0.28);
+  box-shadow: 0 10px 20px -14px rgba(0, 0, 0, 0.3),
+    0 0 0 3px rgba(10, 132, 255, 0.12);
 }
 input.flick-hl-picker-main:active {
   transform: scale(0.92);
@@ -374,9 +374,9 @@ input.flick-hl-picker-main:active {
 .flick-hl-reset-btn {
   background: var(--flick-ios-fill);
   color: var(--flick-ios-label) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: 0 8px 16px -14px rgba(0, 0, 0, 0.75),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(60, 60, 67, 0.1);
+  box-shadow: 0 8px 16px -14px rgba(0, 0, 0, 0.28),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.78);
   transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
 }
 .flick-hl-reset-btn:hover {
