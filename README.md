@@ -30,18 +30,20 @@
 
 ```
 flick/
- ├─ docs/                 # VitePress 기반 문서 (사이트 hero 등)
- └─ packages/           
-     ├─ src/
-     │   ├─ entry.ts/     # content script 진입, 버튼 & 라우트 감시, API publish
-     │   ├─ ui.ts/        # 쇼츠 패널 생성 / 닫기 / 편집 / 강조 / 리사이즈 로직
-     │   ├─ rules/        # 사이트별 추출 규칙 (fmkorea, dcinside, navercafe, dogdrip)
-     │   └─ styles/       # 세분화된 CSS -> styles.css 로 집약
-     └─ content/
-         ├─ manifest.json # Chrome MV3 매니페스트
-         ├─ popup.html    # 브라우저 액션 팝업(UI/안내)
-         └─ options.html  # 옵션/도메인 안내 (현재 정적)
+ ├─ src/
+ │   ├─ entry.ts         # content script 진입, 버튼 & 라우트 감시, API publish
+ │   ├─ ui.ts            # 쇼츠 패널 생성 / 닫기 / 편집 / 강조 / 리사이즈 로직
+ │   ├─ rules/           # 사이트별 추출 규칙 (fmkorea, dcinside, navercafe, dogdrip)
+ │   └─ styles/          # 세분화된 CSS -> styles.css 로 집약
+ ├─ content/
+ │   ├─ manifest.json    # Chrome MV3 매니페스트
+ │   ├─ popup.html       # 브라우저 액션 팝업(UI/안내)
+ │   └─ options.html     # 옵션/도메인 안내 (현재 정적)
+ └─ scripts/
+     └─ bump-extension-version.cjs
 ```
+
+문서 사이트는 이제 이 저장소 밖의 별도 프로젝트에서 관리합니다.
 
 ## 동작 방식
 
@@ -88,7 +90,7 @@ interface ExtractResult {
 
 새로운 사이트를 지원하고 싶으시다면, 아래 절차를 따라 주시면 됩니다.
 
-1. `packages/src/rules/` 폴더에 `{site}.ts` 파일을 생성합니다.
+1. `src/rules/` 폴더에 `{site}.ts` 파일을 생성합니다.
 2. 아래 형식으로 규칙 객체를 export 합니다.
    - `const {site}Rule = { id, match: /.../, articleMatch: /.../, extract, prePrepare?, postShortsMounted? }`
    - `extract(ruleCfg)` 함수는 `ExtractResult`를 반환해야 합니다. 내부에서 예외를 처리하고 fallback을 제공하는 것을 권장합니다.
@@ -101,7 +103,6 @@ interface ExtractResult {
 Node 18 이상이 필요합니다 (ESM & Vite 7 권장).
 
 ```bash
-cd packages
 npm install
 
 # 개발(워치 빌드) → content/ 에 bundle.js / bundle.css 출력
@@ -111,13 +112,13 @@ npm run dev
 npm run build
 ```
 
-빌드가 완료되면, `packages/content/manifest.json`의 `content_scripts` 경로가 빌드 산출물(`bundle.js`, `bundle.css`)과 일치하는지 확인해 주세요.
+빌드가 완료되면, `content/manifest.json`의 `content_scripts` 경로가 빌드 산출물(`bundle.js`, `bundle.css`)과 일치하는지 확인해 주세요.
 
 ### Chrome에 확장 프로그램 로드하기
 
 1. Chrome 주소창에 `chrome://extensions`를 입력하고, 개발자 모드를 활성화합니다.
 2. **압축해제된 확장 프로그램을 로드** 버튼을 클릭합니다.
-3. `packages/content` 폴더(manifest.json이 위치한 폴더)를 선택합니다.
+3. `content` 폴더(manifest.json이 위치한 폴더)를 선택합니다.
 4. 지원 사이트의 게시글에 접속하면 화면 우측에 FLICK 배지가 나타납니다. 클릭하거나 `F4`를 눌러 보세요!
 
 ## 권한 안내 (Manifest v3)
