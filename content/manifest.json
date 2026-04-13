@@ -22,8 +22,12 @@
         "*://cafe.naver.com/*",
         "*://*.dogdrip.net/*"
       ],
-      "js": ["bundle.js"],
-      "css": ["bundle.css"],
+      "js": [
+        "bundle.js"
+      ],
+      "css": [
+        "bundle.css"
+      ],
       "run_at": "document_idle"
     }
   ],
