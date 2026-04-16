@@ -20,15 +20,6 @@
   backdrop-filter: blur(26px) saturate(1.75);
   font: 12px/1.2 var(--shorts-font);
 }
-.flick-control-panel::before {
-  content: "";
-  align-self: center;
-  width: 36px;
-  height: 4px;
-  margin: 0 0 1px;
-  border-radius: 999px;
-  background: rgba(60, 60, 67, 0.28);
-}
 .flick-control-row {
   display: flex;
   align-items: center;
@@ -146,23 +137,33 @@
   font-weight: 700;
   white-space: nowrap;
 }
-.flick-font-input {
+.flick-font-select {
   appearance: none;
   flex: 1 1 auto;
   min-width: 0;
   height: 30px;
-  padding: 0;
+  padding: 0 16px 0 0;
   border: 0;
   outline: 0;
-  background: transparent;
+  background: linear-gradient(
+        45deg,
+        transparent 50%,
+        var(--flick-ios-tertiary-label) 50%
+      )
+      right 5px center / 5px 5px no-repeat,
+    linear-gradient(
+        135deg,
+        var(--flick-ios-tertiary-label) 50%,
+        transparent 50%
+      )
+      right 1px center / 5px 5px no-repeat;
   color: var(--flick-ios-label);
   font: 600 12px/1.2 var(--shorts-font);
   text-align: right;
+  text-align-last: right;
+  cursor: pointer;
 }
-.flick-font-input::placeholder {
-  color: var(--flick-ios-tertiary-label);
-}
-.flick-font-input:focus {
+.flick-font-select:focus {
   color: var(--flick-ios-blue);
 }
 .flick-range-group > span:first-child {
