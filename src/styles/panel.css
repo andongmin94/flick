@@ -256,7 +256,7 @@
   -webkit-appearance: none;
   appearance: none;
   width: 140px;
-  height: 20px;
+  height: 28px;
   background: linear-gradient(
         90deg,
         var(--fs-fill, var(--flick-ios-blue)) 0%,
@@ -264,18 +264,18 @@
         var(--fs-empty) var(--_percent, 0%),
         var(--fs-empty) 100%
       )
-      center / 100% 7px no-repeat;
+      center / 100% 4px no-repeat;
   border: none;
   padding: 0;
   margin: 0;
   cursor: default;
   position: relative;
-  --fs-empty: rgba(120, 120, 128, 0.28);
+  --fs-empty: rgba(120, 120, 128, 0.24);
   --fs-thumb: #ffffff;
   --fs-fill: var(--flick-ios-blue);
 }
 .flick-fontsize-input::-webkit-slider-runnable-track {
-  height: 7px;
+  height: 4px;
   background: transparent;
   border-radius: 999px;
   cursor: pointer;
@@ -283,37 +283,37 @@
 
 .flick-fontsize-input::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--fs-thumb, #ffffff);
   border: 0.5px solid rgba(60, 60, 67, 0.18);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24),
-    0 0 0 1px rgba(255, 255, 255, 0.72) inset;
-  margin-top: -4.5px;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.24),
+    0 0 0 0.5px rgba(255, 255, 255, 0.82) inset;
+  margin-top: -9px;
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-track {
-  height: 7px;
+  height: 4px;
   border-radius: 999px;
   background: var(--fs-empty);
   box-shadow: 0 0 0 1px rgba(60, 60, 67, 0.08) inset;
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-progress {
-  height: 7px;
+  height: 4px;
   border-radius: 999px;
   background: var(--fs-fill, var(--flick-ios-blue));
   cursor: pointer;
 }
 .flick-fontsize-input::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   background: var(--fs-thumb, #ffffff);
   border: 0.5px solid rgba(60, 60, 67, 0.18);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.24),
-    0 0 0 1px rgba(255, 255, 255, 0.72) inset;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.24),
+    0 0 0 0.5px rgba(255, 255, 255, 0.82) inset;
   cursor: pointer;
   transition: background 0.25s linear;
 }
