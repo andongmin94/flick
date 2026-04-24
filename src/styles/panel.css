@@ -7,14 +7,14 @@
   width: min(348px, calc(50vw - (var(--flick-stage-w) * 0.5) - 24px));
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 10px;
   padding: 10px;
   box-sizing: border-box;
   border: 1px solid rgba(60, 60, 67, 0.13);
-  border-radius: 18px;
+  border-radius: 22px;
   background: var(--flick-ios-material);
   color: var(--flick-ios-label);
-  box-shadow: 0 24px 56px -30px rgba(0, 0, 0, 0.34),
+  box-shadow: 0 22px 54px -32px rgba(0, 0, 0, 0.32),
     0 1px 0 rgba(255, 255, 255, 0.86) inset,
     0 -1px 0 rgba(60, 60, 67, 0.08) inset;
   backdrop-filter: blur(26px) saturate(1.75);
@@ -29,22 +29,26 @@
 }
 .flick-control-row-main {
   justify-content: flex-end;
-  padding-bottom: 1px;
+  gap: 8px;
 }
-.flick-control-row-title,
-.flick-control-row-fonts,
-.flick-control-row-colors,
-.flick-control-row-background,
-.flick-control-row-visibility {
-  justify-content: flex-start;
-  flex-wrap: wrap;
-  gap: 0;
-  padding: 4px 8px;
+.flick-control-section {
+  overflow: hidden;
   border: 1px solid rgba(60, 60, 67, 0.1);
-  border-radius: 14px;
+  border-radius: 16px;
   background: var(--flick-ios-section);
   box-shadow: 0 1px 0 rgba(255, 255, 255, 0.95) inset;
   box-sizing: border-box;
+}
+.flick-control-section > .flick-control-row {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  min-height: 44px;
+  gap: 8px;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.flick-control-section > .flick-control-row + .flick-control-row {
+  border-top: 1px solid var(--flick-ios-separator);
 }
 .flick-tool-btn {
   appearance: none;
@@ -81,8 +85,7 @@
 .flick-tool-btn:hover:not(:disabled) {
   background: var(--flick-ios-fill-hover);
   border-color: rgba(60, 60, 67, 0.16);
-  box-shadow: 0 8px 16px -12px rgba(0, 0, 0, 0.28);
-  transform: translateY(-1px);
+  box-shadow: none;
 }
 .flick-tool-btn:disabled {
   cursor: default;
@@ -90,10 +93,10 @@
   transform: none;
 }
 .flick-tool-btn-close {
-  background: var(--flick-ios-red);
-  border-color: rgba(255, 255, 255, 0.54);
-  color: #fff;
-  box-shadow: 0 8px 18px -12px rgba(255, 69, 58, 0.8);
+  background: rgba(120, 120, 128, 0.16);
+  border-color: rgba(60, 60, 67, 0.08);
+  color: rgba(60, 60, 67, 0.72);
+  box-shadow: none;
 }
 .flick-range-group {
   display: flex;
@@ -105,6 +108,7 @@
 }
 .flick-control-row-title {
   flex-wrap: nowrap;
+  min-height: 50px;
 }
 .flick-control-row-title .flick-range-group {
   flex: 1 1 auto;
@@ -222,6 +226,46 @@
 }
 .flick-control-row-background > .flick-tool-btn.is-active:hover:not(:disabled) {
   background: #24b84f;
+}
+.flick-switch-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--flick-ios-label);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-switch-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.flick-switch-track {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: rgba(120, 120, 128, 0.2);
+  box-shadow: inset 0 0 0 1px rgba(60, 60, 67, 0.08);
+  transition: background 0.18s ease;
+}
+.flick-switch-track::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.24);
+  transition: transform 0.18s ease;
+}
+.flick-switch-input:checked + .flick-switch-track {
+  background: var(--flick-ios-green);
+}
+.flick-switch-input:checked + .flick-switch-track::before {
+  transform: translateX(18px);
 }
 .flick-hidden-file-input {
   display: none !important;
@@ -341,11 +385,11 @@
 input.flick-hl-picker-main {
   appearance: none;
   -webkit-appearance: none;
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   padding: 0;
   border: 1px solid rgba(60, 60, 67, 0.12);
-  border-radius: 10px;
+  border-radius: 999px;
   background: rgba(255, 255, 255, 0.72);
   cursor: pointer;
   box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.28),
@@ -357,11 +401,11 @@ input.flick-hl-picker-main::-webkit-color-swatch-wrapper {
 }
 input.flick-hl-picker-main::-webkit-color-swatch {
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
 }
 input.flick-hl-picker-main::-moz-color-swatch {
   border: none;
-  border-radius: 6px;
+  border-radius: 999px;
 }
 input.flick-hl-picker-main:hover {
   transform: translateY(-1px);
@@ -389,11 +433,13 @@ input.flick-hl-picker-main:active {
 
 @media (max-width: 640px) {
   .flick-control-panel {
-    top: 8px;
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
     left: 50%;
     width: calc(100vw - 12px);
     transform: translateX(-50%);
     padding: 7px;
+    border-radius: 22px;
   }
   .flick-control-row {
     gap: 6px;
@@ -420,5 +466,13 @@ input.flick-hl-picker-main:active {
     left: 50%;
     width: min(760px, calc(100vw - 16px));
     transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 640px) {
+  .flick-control-panel {
+    top: auto;
+    bottom: max(8px, env(safe-area-inset-bottom));
+    width: calc(100vw - 12px);
   }
 }
