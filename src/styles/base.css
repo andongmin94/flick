@@ -77,6 +77,16 @@ body.flick-body-lock {
   }
 }
 
+@media (max-width: 640px) {
+  .flick-wrap-injected {
+    padding-top: 288px;
+  }
+  .flick-stage {
+    height: min(calc(100vh - 288px), calc(100vw * 16 / 9));
+    width: min(100vw, calc((100vh - 288px) * 0.5625));
+  }
+}
+
 @font-face {
   font-family: "Pretendard";
   src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/pretendard@1.0/Pretendard-Medium.woff2") format("woff2");
