@@ -887,16 +887,6 @@ function setRangePercent(input: HTMLInputElement) {
   const value = parseFloat(input.value) || min;
   const percent = ((value - min) / (max - min)) * 100;
   input.style.setProperty("--_percent", percent + "%");
-  const t = Math.max(0, Math.min(1, percent / 100));
-  const start = { r: 0x64, g: 0xd2, b: 0xff };
-  const end = { r: 0x0a, g: 0x84, b: 0xff };
-  const lerp = (a: number, b: number) => Math.round(a + (b - a) * t);
-  const hex =
-    "#" +
-    [lerp(start.r, end.r), lerp(start.g, end.g), lerp(start.b, end.b)]
-      .map((n) => n.toString(16).padStart(2, "0"))
-      .join("");
-  input.style.setProperty("--fs-fill", hex);
 }
 
 function setupResize(
