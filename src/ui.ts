@@ -1,8 +1,6 @@
 import type { Block, ExtractResult } from "./types/global";
 
 type NavControls = {
-  prevButton: HTMLButtonElement;
-  nextButton: HTMLButtonElement;
   progress: HTMLElement;
 };
 
@@ -390,8 +388,6 @@ function createControlPanel(args: {
   topRow.className = "flick-control-row flick-control-row-main";
 
   const sourceButton = makeButton("flick-tool-btn", "↗", "원본 글 열기");
-  const prevButton = makeButton("flick-tool-btn", "↑", "이전 블록");
-  const nextButton = makeButton("flick-tool-btn", "↓", "다음 블록");
   const closeButton = makeButton("flick-tool-btn flick-tool-btn-close", "×", "닫기");
   const progress = document.createElement("span");
   progress.className = "flick-progress-pill";
@@ -403,9 +399,7 @@ function createControlPanel(args: {
   closeButton.addEventListener("click", closeShorts);
 
   topRow.appendChild(sourceButton);
-  topRow.appendChild(prevButton);
   topRow.appendChild(progress);
-  topRow.appendChild(nextButton);
   topRow.appendChild(closeButton);
 
   const toolRow = document.createElement("div");
@@ -439,7 +433,7 @@ function createControlPanel(args: {
 
   const resetHighlight = makeButton(
     "flick-tool-btn flick-text-tool-btn",
-    "강조해제",
+    "제목 강조해제",
     "제목 강조 해제"
   );
 
@@ -536,8 +530,6 @@ function createControlPanel(args: {
   return {
     panel,
     nav: {
-      prevButton,
-      nextButton,
       progress,
     },
   };
@@ -629,16 +621,12 @@ function setupBlockNavigation(body: HTMLElement, controls: NavControls) {
   const setProgress = (index: number, total: number) => {
     currentIndex = Math.max(0, Math.min(Math.max(total - 1, 0), index));
     controls.progress.textContent = `${currentIndex + 1}/${total}`;
-    controls.prevButton.disabled = currentIndex <= 0;
-    controls.nextButton.disabled = currentIndex >= total - 1;
   };
 
   const update = () => {
     const blocks = getBlocks();
     if (blocks.length === 0) {
       controls.progress.textContent = "0/0";
-      controls.prevButton.disabled = true;
-      controls.nextButton.disabled = true;
       return;
     }
 
@@ -677,12 +665,6 @@ function setupBlockNavigation(body: HTMLElement, controls: NavControls) {
     requestUpdate();
   };
 
-  controls.prevButton.addEventListener("click", () =>
-    scrollToIndex(currentIndex - 1)
-  );
-  controls.nextButton.addEventListener("click", () =>
-    scrollToIndex(currentIndex + 1)
-  );
   body.addEventListener("scroll", requestUpdate, { passive: true });
 
   const onKeyDown = (event: KeyboardEvent) => {
@@ -705,8 +687,6 @@ function setupBlockNavigation(body: HTMLElement, controls: NavControls) {
   addDocumentListener("keydown", onKeyDown);
   addCleanup(() => {
     body.removeEventListener("scroll", requestUpdate);
-    controls.prevButton.disabled = true;
-    controls.nextButton.disabled = true;
     if (raf) cancelAnimationFrame(raf);
   });
 
