@@ -10,6 +10,8 @@ const KEY_VIEWER_BG_IMAGE = "flick:viewerBgImage";
 const KEY_VIEWER_BG_VISIBILITY = "flick:viewerBgVisibility";
 const KEY_LEGACY_BODY_BG_IMAGE = "flick:bodyBgImage";
 const KEY_SAFE_AREA = "flick:safeArea";
+const KEY_TITLE_FONT = "flick:titleFont";
+const KEY_CONTENT_FONT = "flick:contentFont";
 const DEFAULT_HEADER_HEIGHT = 96;
 const DEFAULT_FOOTER_HEIGHT = 52;
 const DEFAULT_TITLE_SIZE = 20;
@@ -73,6 +75,39 @@ function removeStorage(key: string) {
   try {
     localStorage.removeItem(key);
   } catch (_) {}
+}
+
+function cleanFontName(value: string | null) {
+  return (value || "")
+    .replace(/[\r\n\t]/g, " ")
+    .replace(/[;"'`{}<>\\]/g, "")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 80);
+}
+
+function quoteFontFamily(fontName: string) {
+  return `"${fontName.replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
+}
+
+function applyFontFamily(target: HTMLElement, fontName: string) {
+  const cleaned = cleanFontName(fontName);
+  if (!cleaned) {
+    target.style.removeProperty("font-family");
+    return;
+  }
+  target.style.fontFamily = `${quoteFontFamily(cleaned)}, var(--shorts-font), sans-serif`;
+}
+
+function readFontStorage(key: string) {
+  return cleanFontName(readStorage(key));
+}
+
+function writeFontStorage(key: string, value: string) {
+  const cleaned = cleanFontName(value);
+  if (cleaned) writeStorage(key, cleaned);
+  else removeStorage(key);
+  return cleaned;
 }
 
 function readIntStorage(
@@ -281,6 +316,11 @@ function applyStoredSandboxColors(
   );
 }
 
+function applyStoredFonts(title: HTMLElement, body: HTMLElement) {
+  applyFontFamily(title, readFontStorage(KEY_TITLE_FONT));
+  applyFontFamily(body, readFontStorage(KEY_CONTENT_FONT));
+}
+
 function getViewerBackgroundVisibility() {
   return readIntStorage(KEY_VIEWER_BG_VISIBILITY, 100, 0, 100);
 }
@@ -408,6 +448,7 @@ export function buildUI(data: ExtractResult) {
 
   applyStoredSizing(header, footer, title);
   applyStoredSandboxColors(header, footer, title);
+  applyStoredFonts(title, body);
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
@@ -426,6 +467,7 @@ export function buildUI(data: ExtractResult) {
     header,
     footer,
     title,
+    body,
   });
 
   wrap.appendChild(stage);
@@ -472,8 +514,9 @@ function createControlPanel(args: {
   header: HTMLElement;
   footer: HTMLElement;
   title: HTMLElement;
+  body: HTMLElement;
 }) {
-  const { data, stage, wrap, header, footer, title } = args;
+  const { data, stage, wrap, header, footer, title, body } = args;
   const panel = document.createElement("div");
   panel.className = "flick-control-panel";
 
@@ -496,6 +539,9 @@ function createControlPanel(args: {
 
   const colorRow = document.createElement("div");
   colorRow.className = "flick-control-row flick-control-row-colors";
+
+  const fontFamilyRow = document.createElement("div");
+  fontFamilyRow.className = "flick-control-row flick-control-row-fonts";
 
   const backgroundRow = document.createElement("div");
   backgroundRow.className = "flick-control-row flick-control-row-background";
@@ -528,6 +574,38 @@ function createControlPanel(args: {
   colorPicker.value = getHighlightColor();
   colorPicker.title = "강조색";
   colorPicker.setAttribute("aria-label", "강조색");
+
+  const titleFontField = document.createElement("label");
+  titleFontField.className = "flick-font-field";
+  const titleFontLabel = document.createElement("span");
+  titleFontLabel.textContent = "제목폰트";
+  const titleFontInput = document.createElement("input");
+  titleFontInput.type = "text";
+  titleFontInput.className = "flick-font-input";
+  titleFontInput.value = readFontStorage(KEY_TITLE_FONT);
+  titleFontInput.placeholder = "Pretendard";
+  titleFontInput.maxLength = 80;
+  titleFontInput.spellcheck = false;
+  titleFontInput.title = "로컬에 설치된 제목 폰트 이름";
+  titleFontInput.setAttribute("aria-label", "제목 폰트");
+  titleFontField.appendChild(titleFontLabel);
+  titleFontField.appendChild(titleFontInput);
+
+  const contentFontField = document.createElement("label");
+  contentFontField.className = "flick-font-field";
+  const contentFontLabel = document.createElement("span");
+  contentFontLabel.textContent = "본문폰트";
+  const contentFontInput = document.createElement("input");
+  contentFontInput.type = "text";
+  contentFontInput.className = "flick-font-input";
+  contentFontInput.value = readFontStorage(KEY_CONTENT_FONT);
+  contentFontInput.placeholder = "Pretendard";
+  contentFontInput.maxLength = 80;
+  contentFontInput.spellcheck = false;
+  contentFontInput.title = "로컬에 설치된 본문 폰트 이름";
+  contentFontInput.setAttribute("aria-label", "본문 폰트");
+  contentFontField.appendChild(contentFontLabel);
+  contentFontField.appendChild(contentFontInput);
 
   const resetHighlight = makeButton(
     "flick-tool-btn flick-text-tool-btn",
@@ -678,6 +756,22 @@ function createControlPanel(args: {
     applyViewerBackground(wrap, readStorage(KEY_VIEWER_BG_IMAGE), value);
   });
 
+  const bindFontInput = (
+    input: HTMLInputElement,
+    key: string,
+    target: HTMLElement
+  ) => {
+    const update = (sanitizeDisplay: boolean) => {
+      const fontName = writeFontStorage(key, input.value);
+      if (sanitizeDisplay) input.value = fontName;
+      applyFontFamily(target, fontName);
+    };
+    input.addEventListener("input", () => update(false));
+    input.addEventListener("change", () => update(true));
+  };
+  bindFontInput(titleFontInput, KEY_TITLE_FONT, title);
+  bindFontInput(contentFontInput, KEY_CONTENT_FONT, body);
+
   colorPicker.addEventListener("input", () => {
     if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(colorPicker.value)) {
       writeStorage(KEY_HIGHLIGHT, colorPicker.value);
@@ -705,6 +799,8 @@ function createControlPanel(args: {
 
   titleRow.appendChild(fontGroup);
   titleRow.appendChild(colorPicker);
+  fontFamilyRow.appendChild(titleFontField);
+  fontFamilyRow.appendChild(contentFontField);
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
@@ -713,6 +809,7 @@ function createControlPanel(args: {
 
   panel.appendChild(topRow);
   panel.appendChild(titleRow);
+  panel.appendChild(fontFamilyRow);
   panel.appendChild(colorRow);
   panel.appendChild(backgroundRow);
   panel.appendChild(visibilityRow);

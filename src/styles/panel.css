@@ -41,6 +41,7 @@
   padding-bottom: 1px;
 }
 .flick-control-row-title,
+.flick-control-row-fonts,
 .flick-control-row-colors,
 .flick-control-row-background,
 .flick-control-row-visibility {
@@ -117,6 +118,52 @@
 .flick-control-row-title .flick-range-group {
   flex: 1 1 auto;
   min-width: 0;
+}
+.flick-control-row-fonts {
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+  padding: 0;
+}
+.flick-font-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 38px;
+  width: auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.flick-font-field + .flick-font-field {
+  border-left: 1px solid var(--flick-ios-separator);
+}
+.flick-font-field > span {
+  flex: 0 0 auto;
+  color: var(--flick-ios-secondary-label);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-font-input {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 30px;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--flick-ios-label);
+  font: 600 12px/1.2 var(--shorts-font);
+  text-align: right;
+}
+.flick-font-input::placeholder {
+  color: var(--flick-ios-tertiary-label);
+}
+.flick-font-input:focus {
+  color: #64d2ff;
 }
 .flick-range-group > span:first-child {
   flex: 0 0 auto;
