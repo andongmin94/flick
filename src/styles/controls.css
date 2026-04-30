@@ -15,15 +15,14 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  border-radius: 999px;
+  border-radius: var(--flick-radius-md);
   background: var(--flick-grad-warm);
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.28);
-  box-shadow: 0 6px 16px -10px rgba(10, 132, 255, 0.9),
-    0 1px 0 rgba(255, 255, 255, 0.28) inset;
+  color: #222;
+  border: 1px solid #dca21a;
+  box-shadow: var(--flick-shadow-soft);
   user-select: none;
   cursor: pointer;
-  text-shadow: none;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
   transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease,
     background 0.16s ease, color 0.16s ease;
 }
@@ -43,11 +42,10 @@
 }
 .flick-logo-badge[data-state="open"],
 .flick-logo-badge[data-state="empty"] {
-  background: rgba(255, 255, 255, 0.88);
-  border-color: var(--flick-ios-separator);
-  color: var(--flick-ios-label);
+  background: #111;
+  border-color: #3d4654;
+  color: #fff;
   text-shadow: none;
-  backdrop-filter: blur(14px) saturate(1.35);
 }
 .flick-logo-badge[data-state="loading"] {
   cursor: wait;
@@ -55,15 +53,15 @@
   animation: flick-button-pulse 0.9s ease-in-out infinite alternate;
 }
 .flick-logo-badge[data-state="error"] {
-  background: var(--flick-ios-red);
-  border-color: rgba(255, 255, 255, 0.22);
+  background: #c1121f;
+  border-color: #8f0d17;
   color: #fff;
   text-shadow: none;
 }
 .flick-logo-badge[data-state="unsupported"] {
-  background: rgba(120, 120, 128, 0.18);
-  border-color: rgba(120, 120, 128, 0.32);
-  color: rgba(60, 60, 67, 0.62);
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  color: #4b5563;
   cursor: not-allowed;
   filter: saturate(0.35);
   text-shadow: none;
