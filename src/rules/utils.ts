@@ -1,6 +1,7 @@
 import type { ExtractResult } from "../types/global";
 
 type Blocks = ExtractResult["blocks"];
+type SpacedBlock = Blocks[number] & { gapAfter?: boolean };
 
 export function normUrl(src: string | null): string {
   if (!src) return "";
@@ -18,6 +19,28 @@ export function cleanText(t: string, maxNewlines = 2): string {
     .replace(/[ \t]+/g, " ")
     .replace(repeatedNewlines, "\n".repeat(maxNewlines))
     .trim();
+}
+
+export function textWithLineBreaks(root: Element): string {
+  const parts: string[] = [];
+
+  function walk(node: Node) {
+    if (node.nodeType === 3) {
+      parts.push(node.nodeValue || "");
+      return;
+    }
+    if (node.nodeType !== 1) return;
+
+    const el = node as HTMLElement;
+    if (el.tagName === "BR") {
+      parts.push("\n");
+      return;
+    }
+    el.childNodes.forEach(walk);
+  }
+
+  root.childNodes.forEach(walk);
+  return parts.join("");
 }
 
 export function pushUniqueText(
@@ -66,11 +89,7 @@ export function pushTrustedHtml(blocks: Blocks, html: string): boolean {
 }
 
 export function appendTextGap(blocks: Blocks): void {
-  const last = blocks[blocks.length - 1] as
-    | ((typeof blocks)[number] & { type?: string; text?: string })
-    | undefined;
-  if (!last || last.type !== "text") return;
-  const text = last.text || "";
-  if (/\n\n$/.test(text)) return;
-  last.text = text.replace(/\s+$/g, "") + (/\n$/.test(text) ? "\n" : "\n\n");
+  const last = blocks[blocks.length - 1] as SpacedBlock | undefined;
+  if (!last) return;
+  last.gapAfter = true;
 }

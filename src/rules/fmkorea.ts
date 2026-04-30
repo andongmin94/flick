@@ -37,12 +37,12 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
 
   function flushBuffer(buf: string[]) {
     const raw = buf.join("");
-    const cleaned = cleanText(raw, 1);
+    const cleaned = cleanText(raw);
     if (!cleaned) {
       if (/\n+/.test(raw)) addGap();
       return;
     }
-    pushUniqueText(blocks, seenText, cleaned, 1);
+    pushUniqueText(blocks, seenText, cleaned);
   }
 
   function isGapElement(el: Element | null) {
@@ -222,9 +222,9 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
       .split(/\n+/)
       .map((l) => l.trim())
       .filter((l) => l && !isNoiseText(l));
-    const cleanedTrailing = cleanText(filteredLines.join("\n"), 1);
+    const cleanedTrailing = cleanText(filteredLines.join("\n"));
     if (cleanedTrailing) {
-      pushUniqueText(blocks, seenText, cleanedTrailing, 1);
+      pushUniqueText(blocks, seenText, cleanedTrailing);
     }
     return { title, blocks };
   }

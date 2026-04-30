@@ -1,10 +1,25 @@
 // Global types used across the project
 
-export type ImageBlock = { type: "image"; src: string; alt?: string };
-export type VideoBlock = { type: "video"; src: string; poster?: string };
-export type TextBlock = { type: "text"; text: string };
-export type TrustedHtmlBlock = { type: "trusted-html"; html: string };
-export type LegacyHtmlBlock = { type: "html"; html: string };
+export type BlockSpacing = { gapAfter?: boolean };
+export type ImageBlock = {
+  type: "image";
+  src: string;
+  alt?: string;
+} & BlockSpacing;
+export type VideoBlock = {
+  type: "video";
+  src: string;
+  poster?: string;
+} & BlockSpacing;
+export type TextBlock = { type: "text"; text: string } & BlockSpacing;
+export type TrustedHtmlBlock = {
+  type: "trusted-html";
+  html: string;
+} & BlockSpacing;
+export type LegacyHtmlBlock = {
+  type: "html";
+  html: string;
+} & BlockSpacing;
 export type Block =
   | ImageBlock
   | VideoBlock
