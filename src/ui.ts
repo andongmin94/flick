@@ -992,16 +992,16 @@ function createControlPanel(args: {
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
-  safeAreaRow.appendChild(safeFitButton);
   safeAreaRow.appendChild(safeAreaToggle);
+  safeAreaRow.appendChild(safeFitButton);
   visibilityRow.appendChild(bgVisibilityGroup);
 
   styleSection.appendChild(titleRow);
   styleSection.appendChild(contentSizeRow);
   styleSection.appendChild(fontFamilyRow);
   styleSection.appendChild(colorRow);
-  backgroundSection.appendChild(backgroundRow);
   backgroundSection.appendChild(safeAreaRow);
+  backgroundSection.appendChild(backgroundRow);
   backgroundSection.appendChild(visibilityRow);
 
   panel.appendChild(topRow);
