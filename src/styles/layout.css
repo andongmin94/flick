@@ -61,7 +61,7 @@
   overflow: hidden;
 }
 .flick-block {
-  font-size: 16px;
+  font-size: var(--flick-content-font-size, 16px);
   line-height: 1.55;
   white-space: normal;
   word-break: break-word;

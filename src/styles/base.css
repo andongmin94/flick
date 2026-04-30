@@ -93,11 +93,11 @@ body.flick-body-lock {
 @media (max-width: 640px) {
   .flick-wrap-injected {
     padding-top: 0;
-    padding-bottom: 316px;
+    padding-bottom: 360px;
   }
   .flick-stage {
-    height: min(calc(100vh - 316px), calc(100vw * 16 / 9));
-    width: min(100vw, calc((100vh - 316px) * 0.5625));
+    height: min(calc(100vh - 360px), calc(100vw * 16 / 9));
+    width: min(100vw, calc((100vh - 360px) * 0.5625));
   }
 }
 
