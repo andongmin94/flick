@@ -250,7 +250,29 @@ function createTextBlock(text: string) {
   const div = document.createElement("div");
   div.className = "flick-block flick-text-block";
   div.textContent = cleaned;
+  div.contentEditable = "plaintext-only";
+  div.spellcheck = false;
+  div.title = "본문 수정 가능";
+  div.setAttribute("aria-label", "본문 텍스트 수정");
+  div.addEventListener("paste", pastePlainText);
   return div;
+}
+
+function pastePlainText(event: ClipboardEvent) {
+  const text = event.clipboardData?.getData("text/plain");
+  if (text == null) return;
+  event.preventDefault();
+  const selection = window.getSelection();
+  if (!selection || !selection.rangeCount) return;
+  selection.deleteFromDocument();
+  selection.getRangeAt(0).insertNode(document.createTextNode(text));
+  selection.collapseToEnd();
+}
+
+function isEditableTarget(target: Element | null, wrap: HTMLElement) {
+  if (!(target instanceof HTMLElement)) return false;
+  if (!wrap.contains(target)) return false;
+  return target.isContentEditable;
 }
 
 function applyBlockSpacing(el: HTMLElement, block: Block) {
@@ -576,7 +598,7 @@ export function buildUI(data: ExtractResult) {
   addDocumentListener("keydown", onEscape);
 
   const suppress = (event: KeyboardEvent) => {
-    if (document.activeElement === title) {
+    if (isEditableTarget(document.activeElement, wrap)) {
       if (event.key === "Escape") return;
       event.stopImmediatePropagation();
     }
