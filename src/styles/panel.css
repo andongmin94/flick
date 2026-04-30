@@ -163,8 +163,8 @@
       right 1px center / 5px 5px no-repeat;
   color: var(--flick-ios-label);
   font: 600 12px/1.2 var(--shorts-font);
-  text-align: right;
-  text-align-last: right;
+  text-align: left;
+  text-align-last: left;
   cursor: pointer;
 }
 .flick-font-select:focus {
