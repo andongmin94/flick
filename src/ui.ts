@@ -7,6 +7,7 @@ const KEY_HIGHLIGHT = "flick:highlightColor";
 const KEY_HEADER_BG = "flick:headerBg";
 const KEY_FOOTER_BG = "flick:footerBg";
 const KEY_VIEWER_BG_IMAGE = "flick:viewerBgImage";
+const KEY_VIEWER_BG_VISIBILITY = "flick:viewerBgVisibility";
 const KEY_LEGACY_BODY_BG_IMAGE = "flick:bodyBgImage";
 const KEY_SAFE_AREA = "flick:safeArea";
 const DEFAULT_HEADER_HEIGHT = 96;
@@ -280,7 +281,15 @@ function applyStoredSandboxColors(
   );
 }
 
-function applyViewerBackground(wrap: HTMLElement, imageData: string | null) {
+function getViewerBackgroundVisibility() {
+  return readIntStorage(KEY_VIEWER_BG_VISIBILITY, 100, 0, 100);
+}
+
+function applyViewerBackground(
+  wrap: HTMLElement,
+  imageData: string | null,
+  visibility = getViewerBackgroundVisibility()
+) {
   if (!imageData) {
     wrap.classList.remove("flick-wrap-has-bg-image");
     wrap.style.removeProperty("background-image");
@@ -291,7 +300,8 @@ function applyViewerBackground(wrap: HTMLElement, imageData: string | null) {
   }
 
   wrap.classList.add("flick-wrap-has-bg-image");
-  wrap.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("${imageData}")`;
+  const overlayAlpha = Math.max(0, Math.min(1, (100 - visibility) / 100));
+  wrap.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, ${overlayAlpha}), rgba(255, 255, 255, ${overlayAlpha})), url("${imageData}")`;
   wrap.style.backgroundSize = "cover, cover";
   wrap.style.backgroundPosition = "center, center";
   wrap.style.backgroundRepeat = "no-repeat, no-repeat";
@@ -575,7 +585,11 @@ function createControlPanel(args: {
     try {
       const dataUrl = await prepareViewerBackgroundImage(file);
       writeStorage(KEY_VIEWER_BG_IMAGE, dataUrl);
-      applyViewerBackground(wrap, dataUrl);
+      applyViewerBackground(
+        wrap,
+        dataUrl,
+        parseInt(bgVisibilityInput.value, 10)
+      );
       bgButton.textContent = "전체배경변경";
       removeBgButton.disabled = false;
     } catch (error) {
@@ -601,6 +615,24 @@ function createControlPanel(args: {
   backgroundGroup.appendChild(removeBgButton);
   backgroundGroup.appendChild(bgInput);
 
+  const bgVisibilityGroup = document.createElement("label");
+  bgVisibilityGroup.className = "flick-range-group flick-bg-visibility-group";
+  const bgVisibilityLabel = document.createElement("span");
+  bgVisibilityLabel.textContent = "배경선명도";
+  const bgVisibilityInput = document.createElement("input");
+  bgVisibilityInput.type = "range";
+  bgVisibilityInput.min = "0";
+  bgVisibilityInput.max = "100";
+  bgVisibilityInput.step = "1";
+  bgVisibilityInput.className = "flick-fontsize-input";
+  bgVisibilityInput.value = String(getViewerBackgroundVisibility());
+  const bgVisibilityValue = document.createElement("span");
+  bgVisibilityValue.className = "flick-fontsize-val";
+  bgVisibilityValue.textContent = bgVisibilityInput.value + "%";
+  bgVisibilityGroup.appendChild(bgVisibilityLabel);
+  bgVisibilityGroup.appendChild(bgVisibilityInput);
+  bgVisibilityGroup.appendChild(bgVisibilityValue);
+
   const safeAreaButton = makeButton(
     "flick-tool-btn flick-text-tool-btn",
     "안전영역",
@@ -618,6 +650,7 @@ function createControlPanel(args: {
   });
 
   setRangePercent(fontInput);
+  setRangePercent(bgVisibilityInput);
   fontInput.addEventListener("input", () => {
     const value = parseInt(fontInput.value, 10);
     if (isNaN(value)) return;
@@ -625,6 +658,15 @@ function createControlPanel(args: {
     fontValue.textContent = value + "px";
     writeStorage(KEY_TITLE_FS, String(value));
     setRangePercent(fontInput);
+  });
+
+  bgVisibilityInput.addEventListener("input", () => {
+    const value = parseInt(bgVisibilityInput.value, 10);
+    if (isNaN(value)) return;
+    bgVisibilityValue.textContent = value + "%";
+    writeStorage(KEY_VIEWER_BG_VISIBILITY, String(value));
+    setRangePercent(bgVisibilityInput);
+    applyViewerBackground(wrap, readStorage(KEY_VIEWER_BG_IMAGE), value);
   });
 
   colorPicker.addEventListener("input", () => {
@@ -657,6 +699,7 @@ function createControlPanel(args: {
   toolRow.appendChild(resetHighlight);
   toolRow.appendChild(sandboxColorGroup);
   toolRow.appendChild(backgroundGroup);
+  toolRow.appendChild(bgVisibilityGroup);
   toolRow.appendChild(safeAreaButton);
 
   panel.appendChild(topRow);
