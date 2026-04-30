@@ -12,10 +12,18 @@
     "512": "512x512.png"
   },
   "permissions": [],
-  "host_permissions": [],
+  "host_permissions": [
+    "*://fmkorea.com/*",
+    "*://*.fmkorea.com/*",
+    "*://gall.dcinside.com/*",
+    "*://m.dcinside.com/*",
+    "*://cafe.naver.com/*",
+    "*://*.dogdrip.net/*"
+  ],
   "content_scripts": [
     {
       "matches": [
+        "*://fmkorea.com/*",
         "*://*.fmkorea.com/*",
         "*://gall.dcinside.com/*",
         "*://m.dcinside.com/*",

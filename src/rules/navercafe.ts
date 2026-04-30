@@ -1,11 +1,11 @@
 import type { ExtractResult, Rule } from "../types/global";
-
-function norm(src: string | null) {
-  if (!src) return "";
-  if (src.startsWith("//")) return location.protocol + src;
-  if (src.startsWith("/")) return location.origin + src;
-  return src;
-}
+import {
+  normUrl,
+  pushTrustedHtml,
+  pushUniqueImage,
+  pushUniqueText,
+  pushVideo as pushVideoBlock,
+} from "./utils";
 
 export function extractNavercafe(): ExtractResult {
   let rawTitle = document.title || "제목 없음";
@@ -105,38 +105,15 @@ export function extractNavercafe(): ExtractResult {
   }
 
   function pushText(raw: string) {
-    const cleaned = cleanText(raw);
-    if (!cleaned) return;
-    if (seenText.has(cleaned)) return;
-    seenText.add(cleaned);
-    const html = cleaned
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/\n\n/g, "<br><br>")
-      .replace(/\n/g, "<br>");
-    if (html) blocks.push({ type: "html", html });
+    pushUniqueText(blocks, seenText, raw);
   }
 
   function pushImage(src: string | null, alt?: string) {
-    const u = norm(src);
-    if (!u || seenImg.has(u)) return;
-    seenImg.add(u);
-    blocks.push({ type: "image", src: u, alt: (alt || "").trim() });
+    pushUniqueImage(blocks, seenImg, src, alt || "");
   }
 
   function pushVideo(src: string | null, poster?: string | null) {
-    const u = norm(src);
-    if (!u) return;
-    blocks.push({ type: "video", src: u, poster: poster || "" });
-  }
-
-  function cleanText(t: string) {
-    return t
-      .replace(/\u200B/g, "")
-      .replace(/\u00A0/g, " ")
-      .replace(/\r/g, "")
-      .replace(/[ \t]+/g, " ")
-      .replace(/\n{4,}/g, "\n\n")
-      .trim();
+    pushVideoBlock(blocks, src, poster);
   }
 
   function esc(s = "") {
@@ -146,6 +123,11 @@ export function extractNavercafe(): ExtractResult {
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#39;");
+  }
+
+  function safeHttpUrl(raw: string | null) {
+    const url = normUrl(raw);
+    return /^https?:\/\//i.test(url) ? url : "";
   }
 
   const components = root.querySelectorAll(".se-component");
@@ -191,9 +173,10 @@ export function extractNavercafe(): ExtractResult {
       const summaryTxt = summaryEl?.textContent?.trim() || "";
       const urlTxt = urlEl?.textContent?.trim() || "";
       let inner = "";
-      if (thumbImg) {
+      const thumbSrc = safeHttpUrl(thumbImg?.getAttribute("src") || null);
+      if (thumbSrc) {
         inner += `<div class="og-thumb"><img src="${esc(
-          norm(thumbImg.getAttribute("src"))
+          thumbSrc
         )}" alt=""></div>`;
       }
       inner += '<div class="og-meta">';
@@ -206,12 +189,13 @@ export function extractNavercafe(): ExtractResult {
       if (urlTxt) inner += `<div class="og-url">${esc(urlTxt)}</div>`;
       inner += "</div>";
       let card = `<div class="flick-oglink">${inner}</div>`;
-      if (href) {
+      const safeHref = safeHttpUrl(href);
+      if (safeHref) {
         card = `<a class="flick-oglink-wrap" href="${esc(
-          href
+          safeHref
         )}" target="_blank" rel="noopener noreferrer">${card}</a>`;
       }
-      blocks.push({ type: "html", html: card });
+      pushTrustedHtml(blocks, card);
       return;
     }
     if (el.matches(".se-image")) {
@@ -280,10 +264,10 @@ export function extractNavercafe(): ExtractResult {
   }
 
   if (blocks.length === 0) {
-    blocks.push({
-      type: "html",
-      html: '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>',
-    });
+    pushTrustedHtml(
+      blocks,
+      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>'
+    );
   }
 
   return { title, blocks };

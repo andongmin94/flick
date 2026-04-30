@@ -100,7 +100,7 @@ interface ExtractResult {
 
 ## 개발 & 빌드
 
-Node 18 이상이 필요합니다 (ESM & Vite 7 권장).
+Node 20.19 이상 또는 22.12 이상이 필요합니다 (ESM & Vite 8 권장).
 
 ```bash
 npm install
@@ -110,7 +110,18 @@ npm run dev
 
 # 프로덕션 번들
 npm run build
+
+# 타입 검사
+npm run typecheck
+
+# 타입 검사 + 프로덕션 번들 + 확장 manifest 참조 검증
+npm run verify
+
+# 릴리스 준비(Chrome Web Store 버전 확인 후 manifest 버전 범프 + 검증)
+npm run release:prepare
 ```
+
+`npm run build`는 버전을 변경하지 않고 Vite 번들만 생성합니다. 릴리스 전에 버전만 갱신하려면 `npm run version:bump`를, 버전 갱신 후 타입 검사와 빌드까지 한 번에 확인하려면 `npm run release:prepare`를 사용해 주세요.
 
 빌드가 완료되면, `content/manifest.json`의 `content_scripts` 경로가 빌드 산출물(`bundle.js`, `bundle.css`)과 일치하는지 확인해 주세요.
 
@@ -127,9 +138,9 @@ FLICK이 요청하는 권한과 그 목적은 다음과 같습니다.
 
 | 항목 | 목적 |
 |------|------|
-| `host_permissions: <all_urls>` | 규칙 기반으로 지원 사이트를 판별하기 위해 사용됩니다 (초기 전역 삽입). |
-| `storage` | 사용자가 설정한 폰트 크기, 패널 높이, 강조 색상 등의 값을 보존합니다. |
-| `scripting` | 현재는 직접 사용 빈도가 낮으며, 추후 동적 주입을 위해 확보해 둔 권한입니다. |
+| `permissions: []` | 별도의 Chrome 확장 API 권한을 요청하지 않습니다. |
+| `host_permissions` | fmkorea, dcinside, Naver Cafe, DogDrip 지원 도메인에서 content script가 동작하도록 허용합니다. |
+| `content_scripts.matches` | 지원 도메인 URL 패턴에서만 번들을 삽입하고, 내부 게시글 규칙을 한 번 더 확인합니다. |
 
 별도의 네트워크 전송, 원격 코드 실행, 애널리틱스는 일체 없습니다. 안심하고 사용하셔도 됩니다.
 
@@ -178,7 +189,7 @@ FLICK이 요청하는 권한과 그 목적은 다음과 같습니다.
 
 | 질문 | 답변 |
 |------|------|
-| 왜 모든 URL에서 스크립트가 로드되나요? | MV3 manifest의 패턴 단순화를 위해 `<all_urls>`를 사용하고 있습니다. 내부에서 즉시 규칙 필터를 거치기 때문에, 미지원 페이지에서는 아무런 DOM 삽입 없이 조용히 종료됩니다. |
+| 왜 지원 사이트에서만 스크립트가 로드되나요? | 현재 manifest는 `<all_urls>`를 쓰지 않고, `host_permissions`와 `content_scripts.matches`에 등록된 지원 사이트 패턴에서만 번들을 삽입합니다. 그 안에서도 게시글 규칙 필터를 다시 거쳐 미지원 페이지에서는 아무런 DOM 삽입 없이 조용히 종료됩니다. |
 | 확장에 서버 통신이 있나요? | 없습니다. 모든 추출과 렌더링은 사용자의 브라우저에서만 수행됩니다. |
 | 쇼츠 UI가 깨질 때는 어떻게 하나요? | 페이지 CSS와의 충돌일 수 있습니다. Issue에 해당 URL과 스크린샷을 첨부해 주시면 확인하겠습니다. |
 | 강조 색을 초기화하려면 어떻게 하나요? | 패널의 강조색 선택기 옆 '강조해제' 버튼을 누르면 전체 강조가 해제됩니다. localStorage에서 `flick:highlightColor` 키를 삭제해도 초기화됩니다. |

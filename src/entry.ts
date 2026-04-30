@@ -10,6 +10,11 @@ import { buildUI, closeShorts } from "./ui";
 import "./styles/styles.css"; // aggregate all CSS for single bundle
 import type { ExtractResult } from "./types/global";
 
+const flickRuntime = window as Window & {
+  __flickHistoryPatched?: boolean;
+  __flickRouteWatcherInstalled?: boolean;
+};
+
 // attach minimal API (still provide __FLICK for backward compatibility)
 const API = {
   isSupportedArticle,
@@ -67,6 +72,8 @@ if (document.readyState === "loading") {
 
 // SPA / 동적 내비게이션 대응: URL 변경 및 버튼 소실 감지
 function setupRouteWatcher() {
+  if (flickRuntime.__flickRouteWatcherInstalled) return;
+  flickRuntime.__flickRouteWatcherInstalled = true;
   let lastHref = location.href;
   function check() {
     if (location.href !== lastHref) {
@@ -86,17 +93,24 @@ function setupRouteWatcher() {
       }
     }
   }
-  // history API patch
-  (["pushState", "replaceState"] as const).forEach((m) => {
-    const orig = (history as any)[m] as (...args: any[]) => any;
-    if (typeof orig === "function") {
-      (history as any)[m] = function (this: unknown, ...args: any[]) {
-        const ret = orig.apply(this as any, args);
-        window.dispatchEvent(new Event("flick:locationchange"));
-        return ret;
-      } as any;
+  if (!flickRuntime.__flickHistoryPatched) {
+    try {
+      (["pushState", "replaceState"] as const).forEach((method) => {
+        const original = history[method];
+        history[method] = function (
+          this: History,
+          ...args: Parameters<typeof original>
+        ) {
+          const ret = original.apply(this, args);
+          window.dispatchEvent(new Event("flick:locationchange"));
+          return ret;
+        } as typeof original;
+      });
+      flickRuntime.__flickHistoryPatched = true;
+    } catch (error) {
+      console.warn("[flick history patch failed]", error);
     }
-  });
+  }
   window.addEventListener("popstate", check, true);
   window.addEventListener("flick:locationchange", check, true);
   const mo = new MutationObserver((mut) => {

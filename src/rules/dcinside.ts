@@ -1,11 +1,11 @@
 import type { ExtractResult, Rule } from "../types/global";
-
-function normUrl(src: string | null): string {
-  if (!src) return "";
-  if (src.startsWith("//")) return location.protocol + src;
-  if (src.startsWith("/")) return location.origin + src;
-  return src;
-}
+import {
+  appendTextGap,
+  cleanText,
+  pushUniqueImage,
+  pushUniqueText,
+  pushVideo,
+} from "./utils";
 
 export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
   let title =
@@ -55,22 +55,10 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
   ].join(",");
 
   function pushImage(raw: string | null, alt?: string) {
-    const src = normUrl(raw);
-    if (!src || seenImg.has(src)) return;
-    if (/pixel|ads|banner/i.test(src)) return;
     let cleanAlt = (alt || "").trim();
     if (/^[a-f0-9]{24,}$/i.test(cleanAlt) || cleanAlt.length > 120)
       cleanAlt = "";
-    seenImg.add(src);
-    blocks.push({ type: "image", src, alt: cleanAlt });
-  }
-
-  function cleanText(t: string) {
-    return t
-      .replace(/\u00A0/g, " ")
-      .replace(/[ \t]+/g, " ")
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
+    pushUniqueImage(blocks, seenImg, raw, cleanAlt, /pixel|ads|banner/i);
   }
 
   function walk(node: Node | null, buf: string[]) {
@@ -102,7 +90,7 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
           el.getAttribute("src") ||
           el.getAttribute("data-original") ||
           "";
-        if (vSrc) blocks.push({ type: "video", src: normUrl(vSrc) });
+        pushVideo(blocks, vSrc);
         return;
       }
       if (tag === "BR") {
@@ -145,24 +133,10 @@ export function extractDcinside(_ruleCfg?: Rule): ExtractResult {
     const cleaned = cleanText(raw);
     if (!cleaned) {
       const nlCount = (raw.match(/\n/g) || []).length;
-      if (nlCount) {
-        const last = blocks[blocks.length - 1];
-        if (last && last.type === "html") {
-          const existingTrail = (last.html.match(/(<br>)+$/i) || [""])[0];
-          const existingCnt = (existingTrail.match(/<br>/gi) || []).length;
-          const need = Math.min(2 - existingCnt, nlCount);
-          if (need > 0) last.html += "<br>".repeat(need);
-        }
-      }
+      if (nlCount) appendTextGap(blocks);
       return;
     }
-    if (seenText.has(cleaned)) return;
-    seenText.add(cleaned);
-    const html = cleaned
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/\n\n/g, "<br><br>")
-      .replace(/\n/g, "<br>");
-    if (html) blocks.push({ type: "html", html });
+    pushUniqueText(blocks, seenText, cleaned);
   }
 
   const buf: string[] = [];
