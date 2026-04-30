@@ -253,6 +253,11 @@ function createTextBlock(text: string) {
   return div;
 }
 
+function applyBlockSpacing(el: HTMLElement, block: Block) {
+  if (block.gapAfter) el.classList.add("flick-block-gap-after");
+  return el;
+}
+
 function createBlockElement(block: Block) {
   if (block.type === "image") {
     if (!block.src) return null;
@@ -263,7 +268,7 @@ function createBlockElement(block: Block) {
     img.src = block.src;
     img.alt = block.alt || "";
     container.appendChild(img);
-    return container;
+    return applyBlockSpacing(container, block);
   }
 
   if (block.type === "video") {
@@ -278,19 +283,23 @@ function createBlockElement(block: Block) {
     video.playsInline = true;
     video.preload = "metadata";
     container.appendChild(video);
-    return container;
+    return applyBlockSpacing(container, block);
   }
 
-  if (block.type === "text") return createTextBlock(block.text);
+  if (block.type === "text") {
+    const el = createTextBlock(block.text);
+    return el ? applyBlockSpacing(el, block) : null;
+  }
 
   if (block.type === "trusted-html") {
     const div = document.createElement("div");
     div.className = "flick-block";
     div.innerHTML = block.html;
-    return div;
+    return applyBlockSpacing(div, block);
   }
 
-  return createTextBlock(legacyHtmlToText(block.html));
+  const el = createTextBlock(legacyHtmlToText(block.html));
+  return el ? applyBlockSpacing(el, block) : null;
 }
 
 function appendEmptyState(parent: HTMLElement, data: ExtractResult) {

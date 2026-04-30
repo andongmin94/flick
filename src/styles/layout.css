@@ -70,6 +70,9 @@
   scroll-margin-block: 12px;
   box-sizing: border-box;
 }
+.flick-block-gap-after {
+  margin-bottom: 18px;
+}
 .flick-text-block {
   white-space: pre-wrap;
   padding: 0 14px;
