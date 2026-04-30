@@ -621,6 +621,11 @@ function createControlPanel(args: {
   const visibilityRow = document.createElement("div");
   visibilityRow.className = "flick-control-row flick-control-row-visibility";
 
+  const styleSection = document.createElement("div");
+  styleSection.className = "flick-control-section";
+  const backgroundSection = document.createElement("div");
+  backgroundSection.className = "flick-control-section";
+
   const fontGroup = document.createElement("label");
   fontGroup.className = "flick-range-group";
   const fontLabel = document.createElement("span");
@@ -784,20 +789,27 @@ function createControlPanel(args: {
   bgVisibilityGroup.appendChild(bgVisibilityInput);
   bgVisibilityGroup.appendChild(bgVisibilityValue);
 
-  const safeAreaButton = makeButton(
-    "flick-tool-btn flick-text-tool-btn",
-    "안전영역",
-    "9:16 안전영역 표시"
-  );
+  const safeAreaToggle = document.createElement("label");
+  safeAreaToggle.className = "flick-switch-field";
+  const safeAreaLabel = document.createElement("span");
+  safeAreaLabel.textContent = "안전영역";
+  const safeAreaInput = document.createElement("input");
+  safeAreaInput.type = "checkbox";
+  safeAreaInput.className = "flick-switch-input";
+  safeAreaInput.setAttribute("aria-label", "9:16 안전영역 표시");
+  const safeAreaTrack = document.createElement("span");
+  safeAreaTrack.className = "flick-switch-track";
+  safeAreaToggle.appendChild(safeAreaLabel);
+  safeAreaToggle.appendChild(safeAreaInput);
+  safeAreaToggle.appendChild(safeAreaTrack);
   const setSafeArea = (enabled: boolean) => {
     stage.classList.toggle("flick-safe-area-on", enabled);
-    safeAreaButton.classList.toggle("is-active", enabled);
-    safeAreaButton.setAttribute("aria-pressed", enabled ? "true" : "false");
+    safeAreaInput.checked = enabled;
     writeStorage(KEY_SAFE_AREA, enabled ? "true" : "false");
   };
   setSafeArea(stage.classList.contains("flick-safe-area-on"));
-  safeAreaButton.addEventListener("click", () => {
-    setSafeArea(!stage.classList.contains("flick-safe-area-on"));
+  safeAreaInput.addEventListener("change", () => {
+    setSafeArea(safeAreaInput.checked);
   });
 
   setRangePercent(fontInput);
@@ -868,15 +880,18 @@ function createControlPanel(args: {
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
-  backgroundRow.appendChild(safeAreaButton);
+  backgroundRow.appendChild(safeAreaToggle);
   visibilityRow.appendChild(bgVisibilityGroup);
 
+  styleSection.appendChild(titleRow);
+  styleSection.appendChild(fontFamilyRow);
+  styleSection.appendChild(colorRow);
+  backgroundSection.appendChild(backgroundRow);
+  backgroundSection.appendChild(visibilityRow);
+
   panel.appendChild(topRow);
-  panel.appendChild(titleRow);
-  panel.appendChild(fontFamilyRow);
-  panel.appendChild(colorRow);
-  panel.appendChild(backgroundRow);
-  panel.appendChild(visibilityRow);
+  panel.appendChild(styleSection);
+  panel.appendChild(backgroundSection);
 
   return { panel };
 }
