@@ -877,11 +877,11 @@ function createControlPanel(args: {
   const safeAreaToggle = document.createElement("label");
   safeAreaToggle.className = "flick-switch-field";
   const safeAreaLabel = document.createElement("span");
-  safeAreaLabel.textContent = "안전영역";
+  safeAreaLabel.textContent = "가이드라인";
   const safeAreaInput = document.createElement("input");
   safeAreaInput.type = "checkbox";
   safeAreaInput.className = "flick-switch-input";
-  safeAreaInput.setAttribute("aria-label", "9:16 안전영역 표시");
+  safeAreaInput.setAttribute("aria-label", "9:16 가이드라인 표시");
   const safeAreaTrack = document.createElement("span");
   safeAreaTrack.className = "flick-switch-track";
   safeAreaToggle.appendChild(safeAreaLabel);
@@ -899,8 +899,8 @@ function createControlPanel(args: {
 
   const safeFitButton = makeButton(
     "flick-tool-btn flick-text-tool-btn flick-safe-fit-btn",
-    "안전영역 안에 맞추기",
-    "본문을 안전영역 안쪽으로 맞추기"
+    "가이드라인 안에 맞추기",
+    "본문을 가이드라인 안쪽으로 맞추기"
   );
   const setSafeFit = (enabled: boolean) => {
     body.classList.toggle("flick-body-safe-fit", enabled);
