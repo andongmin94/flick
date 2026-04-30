@@ -907,7 +907,6 @@ function createControlPanel(args: {
     safeFitButton.classList.toggle("is-active", enabled);
     safeFitButton.setAttribute("aria-pressed", String(enabled));
     writeStorage(KEY_SAFE_FIT, enabled ? "true" : "false");
-    if (enabled) setSafeArea(true);
   };
   setSafeFit(body.classList.contains("flick-body-safe-fit"));
   safeFitButton.addEventListener("click", () => {
