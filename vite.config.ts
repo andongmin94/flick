@@ -9,6 +9,7 @@ export default defineConfig({
   build: {
     outDir: "content",
     emptyOutDir: false,
+    minify: false,
     rollupOptions: {
       input: path.resolve(__dirname, "src/entry.ts"),
       output: {

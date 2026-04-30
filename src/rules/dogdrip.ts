@@ -1,11 +1,11 @@
 import type { ExtractResult, Rule } from "../types/global";
-
-function norm(src: string | null): string {
-  if (!src) return "";
-  if (src.startsWith("//")) return location.protocol + src;
-  if (src.startsWith("/")) return location.origin + src;
-  return src;
-}
+import {
+  cleanText,
+  pushTrustedHtml,
+  pushUniqueImage,
+  pushUniqueText,
+  pushVideo,
+} from "./utils";
 
 export function extractDogdrip(): ExtractResult {
   let title =
@@ -69,21 +69,13 @@ export function extractDogdrip(): ExtractResult {
   ].join(",");
 
   function pushImage(raw: string | null, alt?: string) {
-    let src = raw || "";
-    if (!src) return;
-    src = norm(src);
-    if (!src || seenImg.has(src)) return;
-    if (/pixel|ads|banner|doubleclick/i.test(src)) return;
-    seenImg.add(src);
-    blocks.push({ type: "image", src, alt: (alt || "").trim() });
-  }
-
-  function cleanText(t: string) {
-    return t
-      .replace(/\u00A0/g, " ")
-      .replace(/[ \t]+/g, " ")
-      .replace(/\n{3,}/g, "\n\n")
-      .trim();
+    pushUniqueImage(
+      blocks,
+      seenImg,
+      raw,
+      alt || "",
+      /pixel|ads|banner|doubleclick/i
+    );
   }
 
   function flush(buf: string[]) {
@@ -92,13 +84,7 @@ export function extractDogdrip(): ExtractResult {
     buf.length = 0;
     const cleaned = cleanText(raw);
     if (!cleaned) return;
-    if (seenText.has(cleaned)) return;
-    seenText.add(cleaned);
-    const html = cleaned
-      .replace(/\n{3,}/g, "\n\n")
-      .replace(/\n\n/g, "<br><br>")
-      .replace(/\n/g, "<br>");
-    if (html) blocks.push({ type: "html", html });
+    pushUniqueText(blocks, seenText, cleaned);
   }
 
   function walk(node: Node | null, buf: string[]) {
@@ -126,12 +112,7 @@ export function extractDogdrip(): ExtractResult {
           el.getAttribute("src") ||
           el.getAttribute("data-src") ||
           "";
-        if (vSrc)
-          blocks.push({
-            type: "video",
-            src: norm(vSrc),
-            poster: el.getAttribute("poster") || "",
-          });
+        pushVideo(blocks, vSrc, el.getAttribute("poster") || "");
         return;
       }
       if (tag === "BR") {
@@ -162,7 +143,8 @@ export function extractDogdrip(): ExtractResult {
   }
 
   if (primary) {
-    primary
+    const cleanPrimary = primary.cloneNode(true) as Element;
+    cleanPrimary
       .querySelectorAll(".addon_addvote, .wgtRv, .tag_list, .related_list")
       .forEach((n) => n.remove());
     const pending: string[] = [];
@@ -177,16 +159,11 @@ export function extractDogdrip(): ExtractResult {
         return;
       }
       const cleaned = cleanText(raw);
-      if (!cleaned || seenText.has(cleaned)) {
+      if (!cleaned) {
         pending.length = 0;
         return;
       }
-      seenText.add(cleaned);
-      const html = cleaned
-        .replace(/\n{3,}/g, "\n\n")
-        .replace(/\n\n/g, "<br><br>")
-        .replace(/\n/g, "<br>");
-      if (html) blocks.push({ type: "html", html });
+      pushUniqueText(blocks, seenText, cleaned);
       pending.length = 0;
     }
     function isBlankPara(text: string) {
@@ -206,7 +183,7 @@ export function extractDogdrip(): ExtractResult {
       if (/^(https?:\/\/|www\.)\S+$/i.test(t)) return true;
       return false;
     }
-    const pNodes = Array.from(primary.querySelectorAll("p")).slice(0, 400);
+    const pNodes = Array.from(cleanPrimary.querySelectorAll("p")).slice(0, 400);
 
     pNodes.forEach((p) => {
       const imgs = p.querySelectorAll("img[src]");
@@ -245,10 +222,10 @@ export function extractDogdrip(): ExtractResult {
   }
 
   if (!blocks.length) {
-    blocks.push({
-      type: "html",
-      html: '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>',
-    });
+    pushTrustedHtml(
+      blocks,
+      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>'
+    );
   }
 
   return { title, blocks };
