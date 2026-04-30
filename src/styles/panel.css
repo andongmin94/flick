@@ -202,11 +202,37 @@
 }
 .flick-bg-control-group {
   flex: 1 1 auto;
+  justify-content: flex-start;
 }
 .flick-control-row-colors,
 .flick-control-row-background,
 .flick-control-row-visibility {
   justify-content: space-between;
+}
+.flick-control-row-background {
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+}
+.flick-background-action {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--flick-ios-label);
+  cursor: pointer;
+  font: 700 12px/1.2 var(--shorts-font);
+  text-align: left;
+  white-space: nowrap;
+}
+.flick-background-action:hover {
+  color: var(--flick-ios-blue);
+}
+.flick-bg-remove-btn {
+  flex: 0 0 auto;
+  color: rgba(60, 60, 67, 0.48);
 }
 .flick-color-label {
   color: var(--flick-ios-secondary-label);

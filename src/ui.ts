@@ -719,14 +719,14 @@ function createControlPanel(args: {
   bgInput.accept = "image/*";
   bgInput.className = "flick-hidden-file-input";
   const hasViewerBg = !!readStorage(KEY_VIEWER_BG_IMAGE);
-  const defaultBgButtonText = hasViewerBg ? "전체배경변경" : "전체배경";
+  const defaultBgButtonText = "전체 배경";
   const bgButton = makeButton(
-    "flick-tool-btn flick-text-tool-btn",
+    "flick-background-action",
     defaultBgButtonText,
     "전체 배경 이미지 선택"
   );
   const removeBgButton = makeButton(
-    "flick-tool-btn flick-text-tool-btn",
+    "flick-tool-btn flick-text-tool-btn flick-bg-remove-btn",
     "배경삭제",
     "전체 배경 이미지 삭제"
   );
@@ -746,7 +746,7 @@ function createControlPanel(args: {
         dataUrl,
         parseInt(bgVisibilityInput.value, 10)
       );
-      bgButton.textContent = "전체배경변경";
+      bgButton.textContent = defaultBgButtonText;
       removeBgButton.disabled = false;
     } catch (error) {
       flashButtonText(
@@ -764,7 +764,7 @@ function createControlPanel(args: {
     removeStorage(KEY_VIEWER_BG_IMAGE);
     removeStorage(KEY_LEGACY_BODY_BG_IMAGE);
     applyViewerBackground(wrap, null);
-    bgButton.textContent = "전체배경";
+    bgButton.textContent = defaultBgButtonText;
     removeBgButton.disabled = true;
   });
   backgroundGroup.appendChild(bgButton);
