@@ -18,8 +18,22 @@ const DEFAULT_TITLE_SIZE = 20;
 const DEFAULT_SANDBOX_BG = "#000000";
 const MAX_BG_SOURCE_BYTES = 6 * 1024 * 1024;
 const MAX_BG_STORED_CHARS = 2_500_000;
+const FONT_OPTIONS = [
+  { value: "", label: "기본" },
+  { value: "Pretendard", label: "Pretendard" },
+  { value: "Malgun Gothic", label: "맑은 고딕" },
+  { value: "Apple SD Gothic Neo", label: "Apple SD Gothic Neo" },
+  { value: "Noto Sans KR", label: "Noto Sans KR" },
+  { value: "Nanum Gothic", label: "나눔고딕" },
+  { value: "Arial", label: "Arial" },
+  { value: "Helvetica", label: "Helvetica" },
+  { value: "Georgia", label: "Georgia" },
+  { value: "Times New Roman", label: "Times New Roman" },
+  { value: "Courier New", label: "Courier New" },
+];
 
 let activeCleanups: Array<() => void> = [];
+let localFontFamiliesPromise: Promise<string[]> | null = null;
 
 function addCleanup(cleanup: () => void) {
   activeCleanups.push(cleanup);
@@ -108,6 +122,64 @@ function writeFontStorage(key: string, value: string) {
   if (cleaned) writeStorage(key, cleaned);
   else removeStorage(key);
   return cleaned;
+}
+
+function setFontSelectOptions(
+  select: HTMLSelectElement,
+  selectedValue: string,
+  localFonts: string[] = []
+) {
+  const selected = cleanFontName(selectedValue);
+  const options = new Map<string, string>();
+  FONT_OPTIONS.forEach((option) => options.set(option.value, option.label));
+  localFonts.forEach((font) => {
+    const cleaned = cleanFontName(font);
+    if (cleaned && !options.has(cleaned)) options.set(cleaned, cleaned);
+  });
+  if (selected && !options.has(selected)) options.set(selected, selected);
+
+  select.replaceChildren();
+  options.forEach((label, value) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = label;
+    select.appendChild(option);
+  });
+  select.value = selected;
+}
+
+async function readLocalFontFamilies() {
+  if (!localFontFamiliesPromise) {
+    localFontFamiliesPromise = (async () => {
+      const fontWindow = window as Window & {
+        queryLocalFonts?: () => Promise<Array<{ family?: string }>>;
+      };
+      if (!fontWindow.queryLocalFonts) return [];
+      const fonts = await fontWindow.queryLocalFonts();
+      const families = new Set<string>();
+      fonts.forEach((font) => {
+        const family = cleanFontName(font.family || "");
+        if (family) families.add(family);
+      });
+      return Array.from(families).sort((a, b) => a.localeCompare(b, "ko"));
+    })().catch(() => []);
+  }
+  return localFontFamiliesPromise;
+}
+
+function hydrateFontSelects(selects: HTMLSelectElement[]) {
+  const hydrate = async () => {
+    const localFonts = await readLocalFontFamilies();
+    if (!localFonts.length) return;
+    selects.forEach((select) => {
+      const currentValue = select.value;
+      setFontSelectOptions(select, currentValue, localFonts);
+    });
+  };
+  selects.forEach((select) => {
+    select.addEventListener("pointerdown", hydrate);
+    select.addEventListener("focus", hydrate);
+  });
 }
 
 function readIntStorage(
@@ -579,33 +651,25 @@ function createControlPanel(args: {
   titleFontField.className = "flick-font-field";
   const titleFontLabel = document.createElement("span");
   titleFontLabel.textContent = "제목폰트";
-  const titleFontInput = document.createElement("input");
-  titleFontInput.type = "text";
-  titleFontInput.className = "flick-font-input";
-  titleFontInput.value = readFontStorage(KEY_TITLE_FONT);
-  titleFontInput.placeholder = "Pretendard";
-  titleFontInput.maxLength = 80;
-  titleFontInput.spellcheck = false;
-  titleFontInput.title = "로컬에 설치된 제목 폰트 이름";
-  titleFontInput.setAttribute("aria-label", "제목 폰트");
+  const titleFontSelect = document.createElement("select");
+  titleFontSelect.className = "flick-font-select";
+  titleFontSelect.title = "로컬에 설치된 제목 폰트";
+  titleFontSelect.setAttribute("aria-label", "제목 폰트");
+  setFontSelectOptions(titleFontSelect, readFontStorage(KEY_TITLE_FONT));
   titleFontField.appendChild(titleFontLabel);
-  titleFontField.appendChild(titleFontInput);
+  titleFontField.appendChild(titleFontSelect);
 
   const contentFontField = document.createElement("label");
   contentFontField.className = "flick-font-field";
   const contentFontLabel = document.createElement("span");
   contentFontLabel.textContent = "본문폰트";
-  const contentFontInput = document.createElement("input");
-  contentFontInput.type = "text";
-  contentFontInput.className = "flick-font-input";
-  contentFontInput.value = readFontStorage(KEY_CONTENT_FONT);
-  contentFontInput.placeholder = "Pretendard";
-  contentFontInput.maxLength = 80;
-  contentFontInput.spellcheck = false;
-  contentFontInput.title = "로컬에 설치된 본문 폰트 이름";
-  contentFontInput.setAttribute("aria-label", "본문 폰트");
+  const contentFontSelect = document.createElement("select");
+  contentFontSelect.className = "flick-font-select";
+  contentFontSelect.title = "로컬에 설치된 본문 폰트";
+  contentFontSelect.setAttribute("aria-label", "본문 폰트");
+  setFontSelectOptions(contentFontSelect, readFontStorage(KEY_CONTENT_FONT));
   contentFontField.appendChild(contentFontLabel);
-  contentFontField.appendChild(contentFontInput);
+  contentFontField.appendChild(contentFontSelect);
 
   const resetHighlight = makeButton(
     "flick-tool-btn flick-text-tool-btn",
@@ -756,21 +820,21 @@ function createControlPanel(args: {
     applyViewerBackground(wrap, readStorage(KEY_VIEWER_BG_IMAGE), value);
   });
 
-  const bindFontInput = (
-    input: HTMLInputElement,
+  hydrateFontSelects([titleFontSelect, contentFontSelect]);
+
+  const bindFontSelect = (
+    select: HTMLSelectElement,
     key: string,
     target: HTMLElement
   ) => {
-    const update = (sanitizeDisplay: boolean) => {
-      const fontName = writeFontStorage(key, input.value);
-      if (sanitizeDisplay) input.value = fontName;
+    const update = () => {
+      const fontName = writeFontStorage(key, select.value);
       applyFontFamily(target, fontName);
     };
-    input.addEventListener("input", () => update(false));
-    input.addEventListener("change", () => update(true));
+    select.addEventListener("change", update);
   };
-  bindFontInput(titleFontInput, KEY_TITLE_FONT, title);
-  bindFontInput(contentFontInput, KEY_CONTENT_FONT, body);
+  bindFontSelect(titleFontSelect, KEY_TITLE_FONT, title);
+  bindFontSelect(contentFontSelect, KEY_CONTENT_FONT, body);
 
   colorPicker.addEventListener("input", () => {
     if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(colorPicker.value)) {
