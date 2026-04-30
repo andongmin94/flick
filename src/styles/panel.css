@@ -82,6 +82,20 @@
   flex: 1 1 120px;
   width: auto;
 }
+.flick-color-group,
+.flick-color-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.flick-color-group {
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.flick-color-label {
+  color: #e5e7eb;
+  white-space: nowrap;
+}
 .flick-tool-btn.is-active {
   background: #facc15;
   border-color: #facc15;
