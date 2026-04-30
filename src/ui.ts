@@ -11,6 +11,7 @@ const KEY_VIEWER_BG_IMAGE = "flick:viewerBgImage";
 const KEY_VIEWER_BG_VISIBILITY = "flick:viewerBgVisibility";
 const KEY_LEGACY_BODY_BG_IMAGE = "flick:bodyBgImage";
 const KEY_SAFE_AREA = "flick:safeArea";
+const KEY_SAFE_FIT = "flick:safeFit";
 const KEY_TITLE_FONT = "flick:titleFont";
 const KEY_CONTENT_FONT = "flick:contentFont";
 const DEFAULT_HEADER_HEIGHT = 96;
@@ -437,6 +438,13 @@ function applyStoredContentFontSize(body: HTMLElement) {
   );
 }
 
+function applyStoredSafeFit(body: HTMLElement) {
+  body.classList.toggle(
+    "flick-body-safe-fit",
+    readStorage(KEY_SAFE_FIT) === "true"
+  );
+}
+
 function getViewerBackgroundVisibility() {
   return readIntStorage(KEY_VIEWER_BG_VISIBILITY, 100, 0, 100);
 }
@@ -566,6 +574,7 @@ export function buildUI(data: ExtractResult) {
   applyStoredSandboxColors(header, footer, title);
   applyStoredFonts(title, body);
   applyStoredContentFontSize(body);
+  applyStoredSafeFit(body);
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
@@ -666,6 +675,9 @@ function createControlPanel(args: {
 
   const backgroundRow = document.createElement("div");
   backgroundRow.className = "flick-control-row flick-control-row-background";
+
+  const safeAreaRow = document.createElement("div");
+  safeAreaRow.className = "flick-control-row flick-control-row-safe-area";
 
   const visibilityRow = document.createElement("div");
   visibilityRow.className = "flick-control-row flick-control-row-visibility";
@@ -885,6 +897,23 @@ function createControlPanel(args: {
     setSafeArea(safeAreaInput.checked);
   });
 
+  const safeFitButton = makeButton(
+    "flick-tool-btn flick-text-tool-btn flick-safe-fit-btn",
+    "안전영역 안에 맞추기",
+    "본문을 안전영역 안쪽으로 맞추기"
+  );
+  const setSafeFit = (enabled: boolean) => {
+    body.classList.toggle("flick-body-safe-fit", enabled);
+    safeFitButton.classList.toggle("is-active", enabled);
+    safeFitButton.setAttribute("aria-pressed", String(enabled));
+    writeStorage(KEY_SAFE_FIT, enabled ? "true" : "false");
+    if (enabled) setSafeArea(true);
+  };
+  setSafeFit(body.classList.contains("flick-body-safe-fit"));
+  safeFitButton.addEventListener("click", () => {
+    setSafeFit(!body.classList.contains("flick-body-safe-fit"));
+  });
+
   setRangePercent(fontInput);
   setRangePercent(contentSizeInput);
   setRangePercent(bgVisibilityInput);
@@ -964,7 +993,8 @@ function createControlPanel(args: {
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
-  backgroundRow.appendChild(safeAreaToggle);
+  safeAreaRow.appendChild(safeFitButton);
+  safeAreaRow.appendChild(safeAreaToggle);
   visibilityRow.appendChild(bgVisibilityGroup);
 
   styleSection.appendChild(titleRow);
@@ -972,6 +1002,7 @@ function createControlPanel(args: {
   styleSection.appendChild(fontFamilyRow);
   styleSection.appendChild(colorRow);
   backgroundSection.appendChild(backgroundRow);
+  backgroundSection.appendChild(safeAreaRow);
   backgroundSection.appendChild(visibilityRow);
 
   panel.appendChild(topRow);

@@ -49,6 +49,9 @@
   color: var(--shorts-fg);
   box-sizing: border-box;
 }
+.flick-body-safe-fit {
+  padding: clamp(18px, 7%, 64px) clamp(20px, 7%, 64px);
+}
 .flick-body::-webkit-scrollbar {
   width: 0;
   height: 0;
@@ -84,6 +87,9 @@
 .flick-text-block {
   white-space: pre-wrap;
   padding: 0 14px;
+}
+.flick-body-safe-fit .flick-text-block {
+  padding-inline: 0;
 }
 .flick-media-block {
   display: flex;
