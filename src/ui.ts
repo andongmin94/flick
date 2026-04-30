@@ -217,16 +217,6 @@ function applyStoredSizing(
     readIntStorage(KEY_TITLE_FS, DEFAULT_TITLE_SIZE, 12, 72) + "px";
 }
 
-function siteLabel(siteId?: string) {
-  const labels: Record<string, string> = {
-    fmkorea: "펨코",
-    dcinside: "디시",
-    navercafe: "네이버 카페",
-    dogdrip: "도그드립",
-  };
-  return siteId ? labels[siteId] || siteId : "지원 사이트";
-}
-
 export function buildUI(data: ExtractResult) {
   if (document.querySelector(".flick-wrap-injected")) return;
   runCleanups();
@@ -264,13 +254,6 @@ export function buildUI(data: ExtractResult) {
 
   const footer = document.createElement("div");
   footer.className = "flick-footer";
-  const footerStatus = document.createElement("div");
-  footerStatus.className = "flick-footer-status";
-  footerStatus.textContent =
-    data.status === "empty" || data.blocks.length === 0
-      ? `${siteLabel(data.siteId)} · 본문 없음`
-      : `${siteLabel(data.siteId)} · ${data.blocks.length}개`;
-  footer.appendChild(footerStatus);
 
   applyStoredSizing(header, footer, title);
 
