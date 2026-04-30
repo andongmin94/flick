@@ -114,6 +114,9 @@
   flex: 1 1 auto;
   min-width: 0;
 }
+.flick-control-row-title > input.flick-hl-picker-main {
+  margin-left: 12px;
+}
 .flick-control-row-fonts {
   flex-direction: row;
   align-items: stretch;
