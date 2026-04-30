@@ -10,7 +10,8 @@
   font-family: var(--shorts-font);
 }
 .flick-logo-badge {
-  padding: 4px 8px 3px;
+  appearance: none;
+  padding: 5px 9px 4px;
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -22,6 +23,8 @@
   user-select: none;
   cursor: pointer;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease,
+    background 0.16s ease, color 0.16s ease;
 }
 .flick-logo-badge:after {
   content: " beta";
@@ -29,6 +32,54 @@
   font-size: 10px;
   margin-left: 2px;
   opacity: 0.75;
+}
+.flick-logo-badge:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.45);
+}
+.flick-logo-badge:active:not(:disabled) {
+  transform: translateY(0);
+}
+.flick-logo-badge[data-state="open"],
+.flick-logo-badge[data-state="empty"] {
+  background: #111;
+  border-color: #3d4654;
+  color: #fff;
+  text-shadow: none;
+}
+.flick-logo-badge[data-state="loading"] {
+  cursor: wait;
+  filter: saturate(0.75);
+  animation: flick-button-pulse 0.9s ease-in-out infinite alternate;
+}
+.flick-logo-badge[data-state="error"] {
+  background: #c1121f;
+  border-color: #8f0d17;
+  color: #fff;
+  text-shadow: none;
+}
+.flick-logo-badge[data-state="unsupported"] {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+  color: #4b5563;
+  cursor: not-allowed;
+  filter: saturate(0.35);
+  text-shadow: none;
+}
+.flick-toggle-status {
+  max-width: 88px;
+  padding: 3px 6px;
+  border-radius: var(--flick-radius-md);
+  background: rgba(17, 24, 39, 0.78);
+  color: #f9fafb;
+  font-size: 10px;
+  line-height: 1.2;
+  box-shadow: var(--flick-shadow-soft);
+  white-space: nowrap;
+}
+body.flick-body-lock .flick-toggle-wrapper {
+  opacity: 0;
+  pointer-events: none;
 }
 .flick-toggle-floating {
   position: relative; /* wrapper 기준 */
@@ -40,4 +91,13 @@
 }
 .flick-close {
   display: none !important;
+}
+
+@keyframes flick-button-pulse {
+  from {
+    opacity: 0.72;
+  }
+  to {
+    opacity: 1;
+  }
 }
