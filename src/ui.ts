@@ -856,6 +856,10 @@ function createControlPanel(args: {
   backgroundGroup.appendChild(removeBgButton);
   backgroundGroup.appendChild(bgInput);
 
+  const bgSizeHint = document.createElement("span");
+  bgSizeHint.className = "flick-bg-size-hint";
+  bgSizeHint.textContent = "권장 1600×900";
+
   const bgVisibilityGroup = document.createElement("label");
   bgVisibilityGroup.className = "flick-range-group flick-bg-visibility-group";
   const bgVisibilityLabel = document.createElement("span");
@@ -992,6 +996,7 @@ function createControlPanel(args: {
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
+  backgroundRow.appendChild(bgSizeHint);
   safeAreaRow.appendChild(safeAreaToggle);
   safeAreaRow.appendChild(safeFitButton);
   visibilityRow.appendChild(bgVisibilityGroup);

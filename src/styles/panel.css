@@ -212,7 +212,7 @@
   justify-content: space-between;
 }
 .flick-control-row-background {
-  justify-content: flex-start !important;
+  justify-content: space-between !important;
 }
 .flick-control-row-safe-area {
   flex-wrap: nowrap !important;
@@ -242,6 +242,13 @@
 .flick-bg-remove-btn {
   flex: 0 0 auto;
   color: rgba(60, 60, 67, 0.48);
+}
+.flick-bg-size-hint {
+  flex: 0 0 auto;
+  color: var(--flick-ios-tertiary-label);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
 }
 .flick-color-label {
   color: var(--flick-ios-secondary-label);
