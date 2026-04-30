@@ -28,9 +28,7 @@
 .flick-control-row-tools {
   flex-wrap: wrap;
 }
-.flick-tool-btn,
-.flick-segment-btn,
-.flick-swatch-btn {
+.flick-tool-btn {
   appearance: none;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--flick-radius-md);
@@ -51,9 +49,7 @@
   padding: 0 10px;
   white-space: nowrap;
 }
-.flick-tool-btn:hover:not(:disabled),
-.flick-segment-btn:hover,
-.flick-swatch-btn:hover {
+.flick-tool-btn:hover:not(:disabled) {
   background: rgba(255, 255, 255, 0.16);
   transform: translateY(-1px);
 }
@@ -86,30 +82,10 @@
   flex: 1 1 120px;
   width: auto;
 }
-.flick-segment-group,
-.flick-swatch-group {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-.flick-segment-btn {
-  padding: 0 9px;
-  white-space: nowrap;
-}
-.flick-segment-btn.is-active,
 .flick-tool-btn.is-active {
   background: #facc15;
   border-color: #facc15;
   color: #111827;
-}
-.flick-swatch-btn {
-  width: 30px;
-  min-width: 30px;
-  padding: 0;
-}
-.flick-swatch-btn.is-active {
-  border-color: #facc15;
-  box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.28);
 }
 
 .flick-fontsize-panel {
@@ -280,8 +256,7 @@ input.flick-hl-picker-main:active {
     min-width: min(230px, 100%);
     flex: 1 1 100%;
   }
-  .flick-text-tool-btn,
-  .flick-segment-btn {
+  .flick-text-tool-btn {
     padding-inline: 8px;
   }
 }
