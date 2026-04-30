@@ -42,7 +42,7 @@ const THEME_PRESETS: Record<
   classic: {
     label: "기본",
     swatch: "linear-gradient(135deg,#111 0 50%,#fff 50% 100%)",
-    overlay: "#101114",
+    overlay: "#ffffff",
     stage: "#ffffff",
     fg: "#222222",
     header: "#000000",
