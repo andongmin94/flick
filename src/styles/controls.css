@@ -15,14 +15,15 @@
   font-size: 12px;
   font-weight: 600;
   letter-spacing: 0.5px;
-  border-radius: var(--flick-radius-md);
+  border-radius: 999px;
   background: var(--flick-grad-warm);
-  color: #222;
-  border: 1px solid #dca21a;
-  box-shadow: var(--flick-shadow-soft);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: 0 6px 16px -10px rgba(10, 132, 255, 0.9),
+    0 1px 0 rgba(255, 255, 255, 0.28) inset;
   user-select: none;
   cursor: pointer;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
+  text-shadow: none;
   transition: transform 0.16s ease, box-shadow 0.16s ease, filter 0.16s ease,
     background 0.16s ease, color 0.16s ease;
 }
@@ -42,10 +43,11 @@
 }
 .flick-logo-badge[data-state="open"],
 .flick-logo-badge[data-state="empty"] {
-  background: #111;
-  border-color: #3d4654;
-  color: #fff;
+  background: rgba(28, 28, 30, 0.86);
+  border-color: var(--flick-ios-separator);
+  color: var(--flick-ios-label);
   text-shadow: none;
+  backdrop-filter: blur(14px) saturate(1.35);
 }
 .flick-logo-badge[data-state="loading"] {
   cursor: wait;
@@ -53,15 +55,15 @@
   animation: flick-button-pulse 0.9s ease-in-out infinite alternate;
 }
 .flick-logo-badge[data-state="error"] {
-  background: #c1121f;
-  border-color: #8f0d17;
+  background: var(--flick-ios-red);
+  border-color: rgba(255, 255, 255, 0.22);
   color: #fff;
   text-shadow: none;
 }
 .flick-logo-badge[data-state="unsupported"] {
-  background: #e5e7eb;
-  border-color: #9ca3af;
-  color: #4b5563;
+  background: rgba(120, 120, 128, 0.18);
+  border-color: rgba(120, 120, 128, 0.32);
+  color: rgba(60, 60, 67, 0.62);
   cursor: not-allowed;
   filter: saturate(0.35);
   text-shadow: none;
@@ -69,12 +71,14 @@
 .flick-toggle-status {
   max-width: 88px;
   padding: 3px 6px;
-  border-radius: var(--flick-radius-md);
-  background: rgba(17, 24, 39, 0.78);
-  color: #f9fafb;
+  border-radius: 999px;
+  background: rgba(28, 28, 30, 0.72);
+  color: var(--flick-ios-secondary-label);
   font-size: 10px;
   line-height: 1.2;
-  box-shadow: var(--flick-shadow-soft);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 8px 18px -14px rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(12px) saturate(1.3);
   white-space: nowrap;
 }
 body.flick-body-lock .flick-toggle-wrapper {
