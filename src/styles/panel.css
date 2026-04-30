@@ -69,6 +69,9 @@
   min-width: 220px;
   color: #e5e7eb;
 }
+.flick-bg-visibility-group {
+  min-width: 260px;
+}
 .flick-range-group .flick-fontsize-input {
   flex: 1 1 120px;
   width: auto;
@@ -202,6 +205,10 @@
 }
 .flick-fontsize-val {
   color: #98a2b3;
+  flex: 0 0 42px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 input.flick-hl-picker-main {
   appearance: none;
