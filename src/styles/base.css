@@ -31,6 +31,9 @@
   font-family: var(--shorts-font);
   box-sizing: border-box;
 }
+.flick-wrap-has-bg-image {
+  background-color: #fff;
+}
 .flick-stage {
   background: var(--shorts-stage-bg);
   color: var(--shorts-fg);
