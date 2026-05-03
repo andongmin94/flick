@@ -1,6 +1,7 @@
 import type { Block, ExtractResult } from "./types/global";
 
 const KEY_TITLE_FS = "flick:titleFontSize";
+const KEY_CONTENT_FS = "flick:contentFontSize";
 const KEY_HEADER = "flick:headerHeight";
 const KEY_FOOTER = "flick:footerHeight";
 const KEY_HIGHLIGHT = "flick:highlightColor";
@@ -15,6 +16,7 @@ const KEY_CONTENT_FONT = "flick:contentFont";
 const DEFAULT_HEADER_HEIGHT = 96;
 const DEFAULT_FOOTER_HEIGHT = 52;
 const DEFAULT_TITLE_SIZE = 20;
+const DEFAULT_CONTENT_SIZE = 16;
 const DEFAULT_SANDBOX_BG = "#000000";
 const MAX_BG_SOURCE_BYTES = 6 * 1024 * 1024;
 const MAX_BG_STORED_CHARS = 2_500_000;
@@ -393,6 +395,17 @@ function applyStoredFonts(title: HTMLElement, body: HTMLElement) {
   applyFontFamily(body, readFontStorage(KEY_CONTENT_FONT));
 }
 
+function applyContentFontSize(body: HTMLElement, size: number) {
+  body.style.setProperty("--flick-content-font-size", size + "px");
+}
+
+function applyStoredContentFontSize(body: HTMLElement) {
+  applyContentFontSize(
+    body,
+    readIntStorage(KEY_CONTENT_FS, DEFAULT_CONTENT_SIZE, 12, 36)
+  );
+}
+
 function getViewerBackgroundVisibility() {
   return readIntStorage(KEY_VIEWER_BG_VISIBILITY, 100, 0, 100);
 }
@@ -521,6 +534,7 @@ export function buildUI(data: ExtractResult) {
   applyStoredSizing(header, footer, title);
   applyStoredSandboxColors(header, footer, title);
   applyStoredFonts(title, body);
+  applyStoredContentFontSize(body);
 
   const handleHeader = document.createElement("div");
   handleHeader.className = "flick-resize-handle flick-resize-header";
@@ -615,6 +629,10 @@ function createControlPanel(args: {
   const fontFamilyRow = document.createElement("div");
   fontFamilyRow.className = "flick-control-row flick-control-row-fonts";
 
+  const contentSizeRow = document.createElement("div");
+  contentSizeRow.className =
+    "flick-control-row flick-control-row-content-size";
+
   const backgroundRow = document.createElement("div");
   backgroundRow.className = "flick-control-row flick-control-row-background";
 
@@ -644,6 +662,30 @@ function createControlPanel(args: {
   fontGroup.appendChild(fontLabel);
   fontGroup.appendChild(fontInput);
   fontGroup.appendChild(fontValue);
+
+  const contentSizeGroup = document.createElement("label");
+  contentSizeGroup.className = "flick-range-group";
+  const contentSizeLabel = document.createElement("span");
+  contentSizeLabel.textContent = "본문크기";
+  const contentSizeInput = document.createElement("input");
+  contentSizeInput.type = "range";
+  contentSizeInput.min = "12";
+  contentSizeInput.max = "36";
+  contentSizeInput.step = "1";
+  contentSizeInput.className = "flick-fontsize-input";
+  const currentContentSize = readIntStorage(
+    KEY_CONTENT_FS,
+    DEFAULT_CONTENT_SIZE,
+    12,
+    36
+  );
+  contentSizeInput.value = String(currentContentSize);
+  const contentSizeValue = document.createElement("span");
+  contentSizeValue.className = "flick-fontsize-val";
+  contentSizeValue.textContent = currentContentSize + "px";
+  contentSizeGroup.appendChild(contentSizeLabel);
+  contentSizeGroup.appendChild(contentSizeInput);
+  contentSizeGroup.appendChild(contentSizeValue);
 
   const colorPicker = document.createElement("input");
   colorPicker.type = "color";
@@ -813,6 +855,7 @@ function createControlPanel(args: {
   });
 
   setRangePercent(fontInput);
+  setRangePercent(contentSizeInput);
   setRangePercent(bgVisibilityInput);
   fontInput.addEventListener("input", () => {
     const value = parseInt(fontInput.value, 10);
@@ -821,6 +864,15 @@ function createControlPanel(args: {
     fontValue.textContent = value + "px";
     writeStorage(KEY_TITLE_FS, String(value));
     setRangePercent(fontInput);
+  });
+
+  contentSizeInput.addEventListener("input", () => {
+    const value = parseInt(contentSizeInput.value, 10);
+    if (isNaN(value)) return;
+    applyContentFontSize(body, value);
+    contentSizeValue.textContent = value + "px";
+    writeStorage(KEY_CONTENT_FS, String(value));
+    setRangePercent(contentSizeInput);
   });
 
   bgVisibilityInput.addEventListener("input", () => {
@@ -877,6 +929,7 @@ function createControlPanel(args: {
   titleRow.appendChild(colorPicker);
   fontFamilyRow.appendChild(titleFontField);
   fontFamilyRow.appendChild(contentFontField);
+  contentSizeRow.appendChild(contentSizeGroup);
   colorRow.appendChild(resetHighlight);
   colorRow.appendChild(sandboxColorGroup);
   backgroundRow.appendChild(backgroundGroup);
@@ -885,6 +938,7 @@ function createControlPanel(args: {
 
   styleSection.appendChild(titleRow);
   styleSection.appendChild(fontFamilyRow);
+  styleSection.appendChild(contentSizeRow);
   styleSection.appendChild(colorRow);
   backgroundSection.appendChild(backgroundRow);
   backgroundSection.appendChild(visibilityRow);
