@@ -5,6 +5,7 @@ import {
   pushUniqueImage,
   pushUniqueText,
   pushVideo,
+  textWithLineBreaks,
 } from "./utils";
 
 export function extractDogdrip(): ExtractResult {
@@ -200,7 +201,7 @@ export function extractDogdrip(): ExtractResult {
         });
         return;
       }
-      const raw = (p.textContent || "")
+      const raw = textWithLineBreaks(p)
         .replace(/[\u200B\u200C\u200D\uFEFF]/g, "")
         .replace(/\u00A0/g, " ")
         .replace(/&nbsp;/gi, " ");
