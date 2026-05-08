@@ -946,8 +946,8 @@ function createControlPanel(args: {
   visibilityRow.appendChild(bgVisibilityGroup);
 
   styleSection.appendChild(titleRow);
-  styleSection.appendChild(fontFamilyRow);
   styleSection.appendChild(contentSizeRow);
+  styleSection.appendChild(fontFamilyRow);
   styleSection.appendChild(colorRow);
   backgroundSection.appendChild(backgroundRow);
   backgroundSection.appendChild(visibilityRow);
