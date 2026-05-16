@@ -207,12 +207,22 @@
 }
 .flick-control-row-colors,
 .flick-control-row-background,
+.flick-control-row-safe-area,
 .flick-control-row-visibility {
   justify-content: space-between;
 }
 .flick-control-row-background {
+  justify-content: flex-start !important;
+}
+.flick-control-row-safe-area {
   flex-wrap: nowrap !important;
   gap: 12px !important;
+}
+.flick-safe-fit-btn {
+  flex: 0 1 auto;
+}
+.flick-control-row-safe-area .flick-switch-field {
+  margin-left: auto;
 }
 .flick-background-action {
   appearance: none;
