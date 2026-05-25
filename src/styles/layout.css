@@ -10,14 +10,18 @@
   user-select: none;
   box-sizing: border-box;
   overflow: hidden;
+  min-height: 20px;
+  max-height: 34%;
 }
 .flick-title {
   font-weight: 700;
   line-height: 1.25;
   flex: 1;
+  min-width: 0;
   text-align: center;
   cursor: text;
   color: #fff;
+  overflow-wrap: anywhere;
 }
 .flick-title[contenteditable="true"]:focus {
   /* 색/배경 전환 제거: 편집 시에도 기존 스타일 유지 */
@@ -36,7 +40,10 @@
 }
 .flick-body {
   flex: 1;
+  min-width: 0;
+  min-height: 0;
   overflow-y: auto;
+  overscroll-behavior: contain;
   scroll-behavior: smooth;
   scroll-snap-type: y proximity;
   display: flex;
@@ -70,6 +77,8 @@
   user-select: none;
   box-sizing: border-box;
   overflow: hidden;
+  min-height: 16px;
+  max-height: 24%;
 }
 .flick-block {
   font-size: var(--flick-content-font-size, 16px);
@@ -112,6 +121,7 @@
 .flick-block pre {
   white-space: pre;
   overflow: auto;
+  max-width: 100%;
   padding: 6px;
   background: #f6f6f6;
   border: 1px solid #ddd;
@@ -164,4 +174,23 @@
   pointer-events: none;
   border: 1px dashed rgba(250, 204, 21, 0.9);
   box-shadow: 0 0 0 9999px rgba(250, 204, 21, 0.045);
+}
+
+@media (max-height: 520px) {
+  .flick-header {
+    padding: 4px 8px;
+  }
+  .flick-footer {
+    padding: 4px 8px;
+  }
+  .flick-body {
+    gap: 10px;
+  }
+  .flick-text-block {
+    padding-inline: 10px;
+  }
+  .flick-empty-placeholder {
+    margin: 12px 10px;
+    padding: 18px 12px;
+  }
 }
