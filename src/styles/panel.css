@@ -220,8 +220,6 @@
 }
 .flick-safe-fit-btn {
   flex: 0 1 auto;
-}
-.flick-control-row-safe-area .flick-switch-field {
   margin-left: auto;
 }
 .flick-background-action {
