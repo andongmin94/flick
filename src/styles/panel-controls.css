@@ -1,0 +1,297 @@
+.flick-tool-btn {
+  appearance: none;
+  border: 1px solid var(--flick-neo-edge-soft);
+  border-radius: var(--flick-neo-control-radius);
+  background: var(--flick-neo-surface);
+  color: var(--flick-neo-text);
+  cursor: pointer;
+  font: 600 12px/1.2 var(--shorts-font);
+  min-height: 32px;
+  transition: background 0.16s ease, border-color 0.16s ease,
+    box-shadow 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+}
+.flick-tool-btn {
+  min-width: 34px;
+  padding: 0 10px;
+  box-shadow: var(--flick-neo-shadow-small);
+}
+.flick-text-tool-btn {
+  min-width: auto;
+  padding: 0 12px;
+  white-space: nowrap;
+}
+.flick-control-row-main .flick-tool-btn:first-child {
+  background: var(--flick-neo-surface);
+  border-color: rgba(18, 103, 244, 0.18);
+  color: var(--flick-neo-blue);
+  box-shadow: var(--flick-neo-shadow-small);
+}
+.flick-control-row-main .flick-tool-btn:first-child:hover:not(:disabled) {
+  border-color: rgba(18, 103, 244, 0.3);
+  color: var(--flick-neo-blue-deep);
+}
+.flick-tool-btn:hover:not(:disabled) {
+  border-color: rgba(18, 103, 244, 0.18);
+  color: var(--flick-neo-blue);
+  box-shadow: 6px 6px 12px rgba(16, 35, 62, 0.12),
+    -6px -6px 12px rgba(255, 255, 255, 0.92),
+    inset 1px 1px 0 rgba(255, 255, 255, 0.72);
+}
+.flick-tool-btn:active:not(:disabled),
+.flick-background-action:active:not(:disabled) {
+  transform: translateY(1px);
+  box-shadow: var(--flick-neo-inset-shadow);
+}
+.flick-tool-btn:disabled {
+  cursor: default;
+  opacity: 0.38;
+  transform: none;
+}
+.flick-tool-btn-close {
+  background: var(--flick-neo-surface);
+  border-color: var(--flick-neo-edge-soft);
+  color: var(--flick-neo-muted);
+  box-shadow: var(--flick-neo-shadow-small);
+}
+.flick-range-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 236px;
+  min-height: 40px;
+  color: var(--flick-neo-muted);
+}
+.flick-control-row-title {
+  flex-wrap: nowrap;
+  min-height: 50px;
+}
+.flick-control-row-title .flick-range-group,
+.flick-control-row-content-size .flick-range-group {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.flick-control-row-title > input.flick-hl-picker-main {
+  margin-left: 12px;
+}
+.flick-control-row-fonts {
+  flex-direction: row;
+  align-items: stretch;
+  overflow: hidden;
+  padding: 0;
+}
+.flick-font-field {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1 1 0;
+  min-width: 0;
+  min-height: 38px;
+  width: auto;
+  padding: 0 10px;
+  box-sizing: border-box;
+}
+.flick-font-field + .flick-font-field {
+  border-left: 1px solid rgba(16, 35, 62, 0.08);
+}
+.flick-font-field > span {
+  flex: 0 0 auto;
+  color: var(--flick-neo-muted);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-font-select {
+  appearance: none;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 30px;
+  padding: 0 16px 0 0;
+  border: 0;
+  outline: 0;
+  background: linear-gradient(
+        45deg,
+        transparent 50%,
+        var(--flick-neo-muted) 50%
+      )
+      right 5px center / 5px 5px no-repeat,
+    linear-gradient(
+        135deg,
+        var(--flick-neo-muted) 50%,
+        transparent 50%
+      )
+      right 1px center / 5px 5px no-repeat;
+  color: var(--flick-neo-text);
+  font: 600 12px/1.2 var(--shorts-font);
+  text-align: left;
+  text-align-last: left;
+  cursor: pointer;
+}
+.flick-font-select:focus {
+  color: var(--flick-neo-blue);
+}
+.flick-range-group > span:first-child {
+  flex: 0 0 auto;
+  color: var(--flick-neo-muted);
+  font-weight: 700;
+}
+.flick-bg-visibility-group {
+  min-width: min(286px, 100%);
+}
+.flick-range-group .flick-fontsize-input {
+  flex: 1 1 120px;
+  width: auto;
+}
+.flick-color-group,
+.flick-color-label,
+.flick-bg-control-group {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.flick-color-group,
+.flick-bg-control-group {
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.flick-color-group {
+  flex: 1 1 auto;
+}
+.flick-bg-control-group {
+  flex: 1 1 auto;
+  justify-content: flex-start;
+}
+.flick-control-row-colors,
+.flick-control-row-background,
+.flick-control-row-safe-area,
+.flick-control-row-visibility {
+  justify-content: space-between;
+}
+.flick-control-row-background {
+  justify-content: space-between !important;
+}
+.flick-control-row-safe-area {
+  flex-wrap: nowrap !important;
+  gap: 12px !important;
+}
+.flick-safe-fit-btn {
+  flex: 0 1 auto;
+  margin-left: auto;
+}
+.flick-background-action {
+  appearance: none;
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  border-radius: var(--flick-neo-action-radius);
+  background: linear-gradient(
+    145deg,
+    #2c8cff 0%,
+    var(--flick-neo-blue) 58%,
+    #0d6eea 100%
+  );
+  color: #fff;
+  cursor: pointer;
+  font: 700 12px/1.2 var(--shorts-font);
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: var(--flick-neo-blue-shadow);
+}
+.flick-background-action:hover {
+  border-color: rgba(255, 255, 255, 0.78);
+}
+.flick-bg-remove-btn {
+  flex: 0 0 auto;
+  color: var(--flick-neo-muted);
+}
+.flick-bg-size-hint {
+  flex: 0 0 auto;
+  color: rgba(114, 128, 146, 0.82);
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-color-label {
+  color: var(--flick-neo-muted);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-tool-btn.is-active {
+  background: linear-gradient(
+    145deg,
+    #2c8cff 0%,
+    var(--flick-neo-blue) 58%,
+    #0d6eea 100%
+  );
+  border-color: rgba(255, 255, 255, 0.62);
+  color: #fff;
+  box-shadow: var(--flick-neo-blue-shadow);
+}
+.flick-tool-btn.is-active:hover:not(:disabled) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.78);
+}
+.flick-control-row-background > .flick-tool-btn.is-active {
+  background: linear-gradient(
+    145deg,
+    #2c8cff 0%,
+    var(--flick-neo-blue) 58%,
+    #0d6eea 100%
+  );
+  border-color: rgba(255, 255, 255, 0.62);
+  box-shadow: var(--flick-neo-blue-shadow);
+}
+.flick-control-row-background > .flick-tool-btn.is-active:hover:not(:disabled) {
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.78);
+}
+.flick-switch-field {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--flick-neo-text);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.flick-switch-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.flick-switch-track {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background: var(--flick-neo-surface);
+  box-shadow: var(--flick-neo-inset-shadow);
+  transition: background 0.18s ease;
+}
+.flick-switch-track::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--flick-neo-surface-soft);
+  box-shadow: 4px 4px 8px rgba(16, 35, 62, 0.12),
+    -3px -3px 7px rgba(255, 255, 255, 0.78);
+  transition: transform 0.18s ease;
+}
+.flick-switch-input:checked + .flick-switch-track {
+  background: linear-gradient(
+    145deg,
+    rgba(57, 184, 255, 0.95) 0%,
+    var(--flick-neo-blue) 52%,
+    var(--flick-neo-blue-deep) 100%
+  );
+  box-shadow: var(--flick-neo-blue-shadow);
+}
+.flick-switch-input:checked + .flick-switch-track::before {
+  transform: translateX(18px);
+}
+.flick-hidden-file-input {
+  display: none !important;
+}

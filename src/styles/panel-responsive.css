@@ -1,0 +1,117 @@
+@media (max-width: 980px), (max-aspect-ratio: 4 / 3) {
+  .flick-control-panel {
+    top: 8px;
+    bottom: auto;
+    left: auto;
+    right: 8px;
+    width: min(348px, calc(var(--flick-side-panel-space, 360px) - 16px));
+    max-height: calc(100vh - 16px);
+    transform: none;
+    padding: 8px;
+    border-radius: 18px;
+  }
+  .flick-control-row {
+    gap: 6px;
+  }
+  .flick-control-section > .flick-control-row {
+    min-height: 40px;
+    padding: 6px 10px;
+  }
+  .flick-control-row-title {
+    flex-wrap: nowrap;
+  }
+  .flick-control-row-title .flick-range-group {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .flick-range-group {
+    min-width: min(236px, 100%);
+  }
+}
+
+@supports (height: 100dvh) {
+  @media (max-width: 980px), (max-aspect-ratio: 4 / 3) {
+    .flick-control-panel {
+      max-height: calc(100dvh - 16px);
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .flick-control-panel {
+    top: 8px;
+    bottom: auto;
+    left: auto;
+    right: 4px;
+    width: min(220px, calc(var(--flick-side-panel-space, 236px) - 8px));
+    max-height: calc(100vh - 16px);
+    transform: none;
+    padding: 7px;
+    border-radius: 20px;
+  }
+  .flick-control-section > .flick-control-row {
+    min-height: 38px;
+    padding: 6px 8px;
+  }
+  .flick-control-row-title,
+  .flick-control-row-safe-area {
+    flex-wrap: wrap !important;
+  }
+  .flick-control-row-title > input.flick-hl-picker-main {
+    margin-left: 0;
+  }
+  .flick-range-group {
+    flex: 1 1 100%;
+    min-width: 0;
+    gap: 6px;
+  }
+  .flick-range-group .flick-fontsize-input {
+    flex-basis: min(120px, 44vw);
+  }
+  .flick-font-field {
+    flex: 1 1 150px;
+    padding: 0 8px;
+  }
+  .flick-font-field + .flick-font-field {
+    border-left: 0;
+  }
+  .flick-safe-fit-btn {
+    flex: 1 1 100%;
+    margin-left: 0;
+  }
+  .flick-bg-size-hint {
+    display: none;
+  }
+  .flick-background-action,
+  .flick-text-tool-btn {
+    min-width: 0;
+    max-width: 100%;
+    padding-inline: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+}
+
+@supports (height: 100dvh) {
+  @media (max-width: 640px) {
+    .flick-control-panel {
+      max-height: calc(100dvh - 16px);
+    }
+  }
+}
+
+@media (max-width: 360px) {
+  .flick-control-panel {
+    width: min(168px, calc(var(--flick-side-panel-space, 168px) - 8px));
+    padding: 6px;
+  }
+  .flick-control-section > .flick-control-row {
+    padding-inline: 6px;
+  }
+  .flick-fontsize-val {
+    display: none;
+  }
+  .flick-switch-field {
+    font-size: 11px;
+  }
+}
