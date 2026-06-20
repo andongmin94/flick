@@ -22,7 +22,7 @@ export function readIntStorage(
   key: string,
   fallback: number,
   min: number,
-  max: number
+  max: number,
 ) {
   const parsed = parseInt(readStorage(key) || "", 10);
   return !isNaN(parsed) && parsed >= min && parsed <= max ? parsed : fallback;

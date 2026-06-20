@@ -36,7 +36,7 @@ export function openShorts() {
         ? "error"
         : data.status === "empty"
           ? "empty"
-          : "open"
+          : "open",
     );
   } catch (error) {
     console.error("[FLICK open error]", error);
