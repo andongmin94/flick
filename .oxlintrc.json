@@ -1,0 +1,10 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["typescript", "import"],
+  "env": {
+    "browser": true,
+    "builtin": true,
+    "node": true
+  },
+  "ignorePatterns": ["content/**", "node_modules/**"]
+}
