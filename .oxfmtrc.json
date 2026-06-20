@@ -1,0 +1,12 @@
+{
+  "$schema": "./node_modules/oxfmt/configuration_schema.json",
+  "printWidth": 80,
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "content/**",
+    "node_modules/**",
+    "package.json",
+    "package-lock.json",
+    "*.md"
+  ]
+}
