@@ -40,7 +40,12 @@ import {
   writeFontStorage,
 } from "./fonts";
 import { applyContentFontSize } from "./sizing";
-import { readIntStorage, readStorage, removeStorage, writeStorage } from "./storage";
+import {
+  readIntStorage,
+  readStorage,
+  removeStorage,
+  writeStorage,
+} from "./storage";
 
 type StyleSectionArgs = {
   stage: HTMLElement;
@@ -81,14 +86,14 @@ export function createStyleSection(args: StyleSectionArgs) {
     parseInt(title.style.fontSize, 10) || 20,
     12,
     72,
-    "px"
+    "px",
   );
   const contentSize = createRangeControl(
     "본문크기",
     readIntStorage(KEY_CONTENT_FS, DEFAULT_CONTENT_SIZE, 12, 36),
     12,
     36,
-    "px"
+    "px",
   );
 
   const colorPicker = createColorPicker(getHighlightColor(), "강조색");
@@ -96,33 +101,37 @@ export function createStyleSection(args: StyleSectionArgs) {
     "제목폰트",
     "로컬에 설치된 제목 폰트",
     "제목 폰트",
-    readFontStorage(KEY_TITLE_FONT)
+    readFontStorage(KEY_TITLE_FONT),
   );
   const contentFont = createFontField(
     "본문폰트",
     "로컬에 설치된 본문 폰트",
     "본문 폰트",
-    readFontStorage(KEY_CONTENT_FONT)
+    readFontStorage(KEY_CONTENT_FONT),
   );
 
   const resetHighlight = makeButton(
     "flick-tool-btn flick-text-tool-btn",
     "제목 강조해제",
-    "제목 강조 해제"
+    "제목 강조 해제",
   );
 
   const sandboxColorGroup = document.createElement("div");
   sandboxColorGroup.className = "flick-color-group";
   const headerColorPicker = createColorPicker(
     getStoredColor(KEY_HEADER_BG, DEFAULT_SANDBOX_BG),
-    "위쪽 영역 색"
+    "위쪽 영역 색",
   );
   const footerColorPicker = createColorPicker(
     getStoredColor(KEY_FOOTER_BG, DEFAULT_SANDBOX_BG),
-    "아래쪽 영역 색"
+    "아래쪽 영역 색",
   );
-  sandboxColorGroup.appendChild(createSandboxColorLabel("위", headerColorPicker));
-  sandboxColorGroup.appendChild(createSandboxColorLabel("아래", footerColorPicker));
+  sandboxColorGroup.appendChild(
+    createSandboxColorLabel("위", headerColorPicker),
+  );
+  sandboxColorGroup.appendChild(
+    createSandboxColorLabel("아래", footerColorPicker),
+  );
 
   titleSize.input.addEventListener("input", () => {
     const value = parseInt(titleSize.input.value, 10);
@@ -146,7 +155,7 @@ export function createStyleSection(args: StyleSectionArgs) {
   const bindFontSelect = (
     select: HTMLSelectElement,
     key: string,
-    target: HTMLElement
+    target: HTMLElement,
   ) => {
     const update = () => {
       const fontName = writeFontStorage(key, select.value);
@@ -201,7 +210,7 @@ export function createBackgroundSection(args: BackgroundSectionArgs) {
     getViewerBackgroundVisibility(),
     0,
     100,
-    "%"
+    "%",
   );
   bgVisibility.group.classList.add("flick-bg-visibility-group");
 
@@ -216,12 +225,12 @@ export function createBackgroundSection(args: BackgroundSectionArgs) {
   const bgButton = makeButton(
     "flick-background-action",
     defaultBgButtonText,
-    "전체 배경 이미지 선택"
+    "전체 배경 이미지 선택",
   );
   const removeBgButton = makeButton(
     "flick-tool-btn flick-text-tool-btn flick-bg-remove-btn",
     "배경삭제",
-    "전체 배경 이미지 삭제"
+    "전체 배경 이미지 삭제",
   );
   removeBgButton.disabled = !hasViewerBg;
 
@@ -238,7 +247,7 @@ export function createBackgroundSection(args: BackgroundSectionArgs) {
       applyViewerBackground(
         wrap,
         dataUrl,
-        parseInt(bgVisibility.input.value, 10)
+        parseInt(bgVisibility.input.value, 10),
       );
       bgButton.textContent = defaultBgButtonText;
       removeBgButton.disabled = false;
@@ -246,12 +255,13 @@ export function createBackgroundSection(args: BackgroundSectionArgs) {
       flashButtonText(
         bgButton,
         error instanceof Error ? error.message : "실패",
-        originalText
+        originalText,
       );
     } finally {
       bgInput.value = "";
       bgButton.disabled = false;
-      if (bgButton.textContent === "처리중") bgButton.textContent = originalText;
+      if (bgButton.textContent === "처리중")
+        bgButton.textContent = originalText;
     }
   });
   removeBgButton.addEventListener("click", () => {
@@ -292,7 +302,7 @@ export function createBackgroundSection(args: BackgroundSectionArgs) {
   const safeFitButton = makeButton(
     "flick-tool-btn flick-text-tool-btn flick-safe-fit-btn",
     "가이드라인 안에 맞추기",
-    "본문을 가이드라인 안쪽으로 맞추기"
+    "본문을 가이드라인 안쪽으로 맞추기",
   );
   const setSafeFit = (enabled: boolean) => {
     body.classList.toggle("flick-body-safe-fit", enabled);

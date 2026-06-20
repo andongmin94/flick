@@ -4,7 +4,7 @@ import { writeStorage } from "./storage";
 export function setupResize(
   stage: HTMLElement,
   header: HTMLElement,
-  footer: HTMLElement
+  footer: HTMLElement,
 ) {
   const state: {
     dragging: "header" | "footer" | null;

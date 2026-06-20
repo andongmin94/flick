@@ -44,7 +44,7 @@ export function applySandboxColors(
   footer: HTMLElement,
   title: HTMLElement,
   headerColor: string,
-  footerColor: string
+  footerColor: string,
 ) {
   const headerTextColor = getReadableTextColor(headerColor);
   const footerTextColor = getReadableTextColor(footerColor);
@@ -63,7 +63,7 @@ export function applyStoredSandboxColors(
   stage: HTMLElement,
   header: HTMLElement,
   footer: HTMLElement,
-  title: HTMLElement
+  title: HTMLElement,
 ) {
   applySandboxColors(
     stage,
@@ -71,6 +71,6 @@ export function applyStoredSandboxColors(
     footer,
     title,
     getStoredColor(KEY_HEADER_BG, DEFAULT_SANDBOX_BG),
-    getStoredColor(KEY_FOOTER_BG, DEFAULT_SANDBOX_BG)
+    getStoredColor(KEY_FOOTER_BG, DEFAULT_SANDBOX_BG),
   );
 }

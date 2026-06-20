@@ -18,7 +18,7 @@ export function extractNavercafe(): ExtractResult {
     r = document.querySelector("#app .se-main-container") as Element | null;
     if (r) return r;
     const iframe = document.querySelector(
-      "#cafe_main"
+      "#cafe_main",
     ) as HTMLIFrameElement | null;
     if (iframe) {
       try {
@@ -39,18 +39,18 @@ export function extractNavercafe(): ExtractResult {
 
   (function pickVisibleTitle() {
     let h3 = document.querySelector(
-      ".article_header h3.title_text, h3.title_text"
+      ".article_header h3.title_text, h3.title_text",
     ) as HTMLElement | null;
     if (!h3) {
       const iframe = document.querySelector(
-        "#cafe_main"
+        "#cafe_main",
       ) as HTMLIFrameElement | null;
       if (iframe) {
         try {
           const idoc = iframe.contentDocument || iframe.contentWindow?.document;
           if (idoc) {
             h3 = idoc.querySelector(
-              ".article_header h3.title_text, h3.title_text"
+              ".article_header h3.title_text, h3.title_text",
             ) as HTMLElement | null;
           }
         } catch (_) {}
@@ -90,7 +90,7 @@ export function extractNavercafe(): ExtractResult {
       "출석",
     ];
     const hit = noiseWords.filter((w) => raw.includes(w)).length;
-    const punctuation = (raw.match(/[\.\?\!]/g) || []).length;
+    const punctuation = (raw.match(/[.?!]/g) || []).length;
     if (hit >= 3 && punctuation === 0) return true;
     return false;
   }
@@ -156,17 +156,17 @@ export function extractNavercafe(): ExtractResult {
       el.querySelector(".se-module-oglink")
     ) {
       const thumbImg = el.querySelector(
-        "img.se-oglink-thumbnail-resource[src]"
+        "img.se-oglink-thumbnail-resource[src]",
       ) as HTMLImageElement | null;
       const titleEl = el.querySelector(
-        ".se-oglink-title"
+        ".se-oglink-title",
       ) as HTMLElement | null;
       const summaryEl = el.querySelector(
-        ".se-oglink-summary"
+        ".se-oglink-summary",
       ) as HTMLElement | null;
       const urlEl = el.querySelector(".se-oglink-url") as HTMLElement | null;
       const linkEl = el.querySelector(
-        "a.se-oglink-info, a.se-oglink-thumbnail"
+        "a.se-oglink-info, a.se-oglink-thumbnail",
       ) as HTMLAnchorElement | null;
       const href = linkEl?.getAttribute("href") || "";
       const titleTxt = titleEl?.textContent?.trim() || "";
@@ -176,13 +176,13 @@ export function extractNavercafe(): ExtractResult {
       const thumbSrc = safeHttpUrl(thumbImg?.getAttribute("src") || null);
       if (thumbSrc) {
         inner += `<div class="og-thumb"><img src="${esc(
-          thumbSrc
+          thumbSrc,
         )}" alt=""></div>`;
       }
       inner += '<div class="og-meta">';
       if (titleTxt)
         inner += `<div class="og-title"><strong>${esc(
-          titleTxt
+          titleTxt,
         )}</strong></div>`;
       if (summaryTxt)
         inner += `<div class="og-summary">${esc(summaryTxt)}</div>`;
@@ -192,7 +192,7 @@ export function extractNavercafe(): ExtractResult {
       const safeHref = safeHttpUrl(href);
       if (safeHref) {
         card = `<a class="flick-oglink-wrap" href="${esc(
-          safeHref
+          safeHref,
         )}" target="_blank" rel="noopener noreferrer">${card}</a>`;
       }
       pushTrustedHtml(blocks, card);
@@ -201,7 +201,7 @@ export function extractNavercafe(): ExtractResult {
     if (el.matches(".se-image")) {
       const imgs = el.querySelectorAll("img[src]");
       imgs.forEach((img) =>
-        pushImage(img.getAttribute("src"), img.getAttribute("alt") || "")
+        pushImage(img.getAttribute("src"), img.getAttribute("alt") || ""),
       );
       return;
     }
@@ -210,7 +210,7 @@ export function extractNavercafe(): ExtractResult {
       stickers.forEach((img) => {
         pushImage(
           img.getAttribute("src"),
-          img.getAttribute("alt") || "sticker"
+          img.getAttribute("alt") || "sticker",
         );
       });
       return;
@@ -266,7 +266,7 @@ export function extractNavercafe(): ExtractResult {
   if (blocks.length === 0) {
     pushTrustedHtml(
       blocks,
-      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>'
+      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>',
     );
   }
 

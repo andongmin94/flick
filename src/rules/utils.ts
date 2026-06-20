@@ -47,7 +47,7 @@ export function pushUniqueText(
   blocks: Blocks,
   seenText: Set<string>,
   raw: string,
-  maxNewlines = 2
+  maxNewlines = 2,
 ): boolean {
   const text = cleanText(raw, maxNewlines);
   if (!text || seenText.has(text)) return false;
@@ -61,7 +61,7 @@ export function pushUniqueImage(
   seenImg: Set<string>,
   raw: string | null,
   alt = "",
-  skipPattern?: RegExp
+  skipPattern?: RegExp,
 ): boolean {
   const src = normUrl(raw);
   if (!src || seenImg.has(src)) return false;
@@ -74,7 +74,7 @@ export function pushUniqueImage(
 export function pushVideo(
   blocks: Blocks,
   raw: string | null,
-  poster?: string | null
+  poster?: string | null,
 ): boolean {
   const src = normUrl(raw);
   if (!src) return false;

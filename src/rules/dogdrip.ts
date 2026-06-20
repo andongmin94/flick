@@ -12,21 +12,21 @@ export function extractDogdrip(): ExtractResult {
   let title =
     (
       document.querySelector(
-        'meta[property="og:title"]'
+        'meta[property="og:title"]',
       ) as HTMLMetaElement | null
     )
       ?.getAttribute("content")
       ?.trim() ||
     (
       document.querySelector(
-        ".title h1, h1.title, h1.tit, h2.title, .document_title, .ed h4, .ed h3"
+        ".title h1, h1.title, h1.tit, h2.title, .document_title, .ed h4, .ed h3",
       ) as HTMLElement | null
     )?.textContent?.trim() ||
     document.title ||
     "제목 없음";
 
   let primary = document.querySelector(
-    "div.rhymix_content.xe_content[class*='document_']"
+    "div.rhymix_content.xe_content[class*='document_']",
   ) as Element | null;
   const content =
     primary ||
@@ -75,7 +75,7 @@ export function extractDogdrip(): ExtractResult {
       seenImg,
       raw,
       alt || "",
-      /pixel|ads|banner|doubleclick/i
+      /pixel|ads|banner|doubleclick/i,
     );
   }
 
@@ -225,7 +225,7 @@ export function extractDogdrip(): ExtractResult {
   if (!blocks.length) {
     pushTrustedHtml(
       blocks,
-      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>'
+      '<div class="flick-empty-placeholder">이 게시물에서 추출할 수 있는 본문이 없습니다.<br>다른 게시물을 확인해 주세요.</div>',
     );
   }
 

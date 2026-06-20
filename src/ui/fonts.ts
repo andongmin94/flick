@@ -39,7 +39,7 @@ export function writeFontStorage(key: string, value: string) {
 export function setFontSelectOptions(
   select: HTMLSelectElement,
   selectedValue: string,
-  localFonts: string[] = []
+  localFonts: string[] = [],
 ) {
   const selected = cleanFontName(selectedValue);
   const options = new Map<string, string>();

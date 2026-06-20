@@ -15,7 +15,10 @@ export function enableAutoHighlight(titleEl: HTMLElement) {
     for (let i = 0; i < nodes.length - 1; i++) {
       const current = nodes[i] as HTMLElement;
       const next = nodes[i + 1] as HTMLElement;
-      if (current.nextSibling === next && current.style.color === next.style.color) {
+      if (
+        current.nextSibling === next &&
+        current.style.color === next.style.color
+      ) {
         while (next.firstChild) current.appendChild(next.firstChild);
         next.remove();
       }

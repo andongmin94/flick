@@ -33,22 +33,22 @@ function runCleanups() {
 function addWindowListener<K extends keyof WindowEventMap>(
   type: K,
   listener: (event: WindowEventMap[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ) {
   window.addEventListener(type, listener as EventListener, options);
   addCleanup(() =>
-    window.removeEventListener(type, listener as EventListener, options)
+    window.removeEventListener(type, listener as EventListener, options),
   );
 }
 
 function addDocumentListener<K extends keyof DocumentEventMap>(
   type: K,
   listener: (event: DocumentEventMap[K]) => void,
-  options?: boolean | AddEventListenerOptions
+  options?: boolean | AddEventListenerOptions,
 ) {
   document.addEventListener(type, listener as EventListener, options);
   addCleanup(() =>
-    document.removeEventListener(type, listener as EventListener, options)
+    document.removeEventListener(type, listener as EventListener, options),
   );
 }
 
@@ -141,7 +141,7 @@ export function buildUI(data: ExtractResult) {
     }
   };
   (["keydown", "keypress", "keyup"] as const).forEach((type) =>
-    addWindowListener(type, suppress, true)
+    addWindowListener(type, suppress, true),
   );
 
   addCleanup(setupResize(stage, header, footer));
@@ -156,5 +156,7 @@ export function closeShorts() {
   wrap?.remove();
   document.body.classList.remove("flick-body-lock");
   document.querySelector(".flick-control-panel")?.remove();
-  window.dispatchEvent(new CustomEvent("flick:shortschange", { detail: false }));
+  window.dispatchEvent(
+    new CustomEvent("flick:shortschange", { detail: false }),
+  );
 }

@@ -106,7 +106,7 @@ function appendEmptyState(parent: HTMLElement, data: ExtractResult) {
   const sourceButton = makeButton(
     "flick-empty-source-btn",
     "원본 열기",
-    "원본 글 열기"
+    "원본 글 열기",
   );
   sourceButton.addEventListener("click", () => {
     window.open(sourceUrl, "_blank", "noopener,noreferrer");

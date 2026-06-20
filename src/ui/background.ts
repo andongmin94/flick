@@ -14,7 +14,7 @@ export function getViewerBackgroundVisibility() {
 export function applyViewerBackground(
   wrap: HTMLElement,
   imageData: string | null,
-  visibility = getViewerBackgroundVisibility()
+  visibility = getViewerBackgroundVisibility(),
 ) {
   if (!imageData) {
     wrap.classList.remove("flick-wrap-has-bg-image");
@@ -66,7 +66,7 @@ export async function prepareViewerBackgroundImage(file: File) {
   const maxSide = 1600;
   const scale = Math.min(
     1,
-    maxSide / Math.max(img.naturalWidth, img.naturalHeight)
+    maxSide / Math.max(img.naturalWidth, img.naturalHeight),
   );
   const width = Math.max(1, Math.round(img.naturalWidth * scale));
   const height = Math.max(1, Math.round(img.naturalHeight * scale));

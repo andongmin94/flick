@@ -86,7 +86,7 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
         buf.length = 0;
         let vSrc = "";
         const sourceEl = el.querySelector(
-          "source[src]"
+          "source[src]",
         ) as HTMLSourceElement | null;
         if (sourceEl) vSrc = sourceEl.getAttribute("src") || "";
         if (!vSrc) vSrc = el.getAttribute("src") || "";
@@ -134,7 +134,7 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
       )?.getAttribute("src") ||
         v.getAttribute("src") ||
         v.getAttribute("data-original") ||
-        ""
+        "",
     );
     if (vSrc && !seenVideoSrc.has(vSrc)) {
       seenVideoSrc.add(vSrc);
@@ -201,7 +201,7 @@ export function extractFmkorea(cfg?: Rule): ExtractResult {
         if (!isForbiddenElement(el)) {
           if (
             /^(P|DIV|BR|SECTION|ARTICLE|LI|UL|OL|H1|H2|H3|H4|H5|H6)$/i.test(
-              el.tagName
+              el.tagName,
             )
           ) {
             if (el.tagName === "BR") textBuf.push("\n");
@@ -259,7 +259,7 @@ export function preFmkoreaPrepare() {
             v.querySelector("source[src]") as HTMLSourceElement | null
           )?.getAttribute("src") ||
           v.getAttribute("data-original") ||
-          ""
+          "",
       );
       if (src && !(src in __fmkVideoVolumes))
         __fmkVideoVolumes[src] = (v as HTMLVideoElement).volume;
