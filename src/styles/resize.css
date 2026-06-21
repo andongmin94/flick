@@ -1,19 +1,33 @@
 .flick-stage {
-  --flick-resize-bar-color: rgb(0, 0, 0);
-  --flick-resize-bar-color-hover: rgba(0, 0, 0);
-  --flick-resize-bar-color-active: rgba(255, 255, 255, 1);
+  --flick-resize-header-bg: rgb(0, 0, 0);
+  --flick-resize-footer-bg: rgb(0, 0, 0);
+  --flick-resize-header-bar: rgb(255, 255, 255);
+  --flick-resize-footer-bar: rgb(255, 255, 255);
 }
 .flick-resize-hidden .flick-resize-handle {
   display: none !important;
 }
 .flick-resize-handle {
+  --flick-resize-handle-bg: rgb(0, 0, 0);
+  --flick-resize-handle-bar: rgb(255, 255, 255);
   height: 4px;
   cursor: ns-resize;
   position: relative;
   flex: 0 0 auto;
   opacity: 1;
-  background: #000; /* (배경면도 칠하고 싶다면) */
+  border: 0;
+  outline: 0;
+  box-shadow: none;
+  background: var(--flick-resize-handle-bg);
   transition: opacity 0.15s, height 0.15s;
+}
+.flick-resize-header {
+  --flick-resize-handle-bg: var(--flick-resize-header-bg);
+  --flick-resize-handle-bar: var(--flick-resize-header-bar);
+}
+.flick-resize-footer {
+  --flick-resize-handle-bg: var(--flick-resize-footer-bg);
+  --flick-resize-handle-bar: var(--flick-resize-footer-bar);
 }
 .flick-resize-handle:after {
   content: "";
@@ -22,24 +36,26 @@
   top: 50%;
   width: 34px;
   height: 2px;
-  background: var(--flick-resize-bar-color);
+  background: var(--flick-resize-handle-bar);
   border-radius: 2px;
+  opacity: 0;
   transform: translate(-50%, -50%);
-  transition: background 0.15s, width 0.15s;
+  transition: background 0.15s, opacity 0.15s, width 0.15s;
 }
 .flick-resize-handle:hover,
 .flick-resize-handle.active {
   opacity: 1;
-  background: #000; /* (배경면도 칠하고 싶다면) */
+  background: var(--flick-resize-handle-bg);
 }
 .flick-resize-handle:hover:after,
 .flick-resize-handle.active:after {
-  background: var(--flick-resize-bar-color-hover);
+  background: var(--flick-resize-handle-bar);
+  opacity: 1;
 }
 .flick-resize-handle:hover {
   height: 8px;
 }
 .flick-resize-handle:hover:after {
   width: 48px;
-  background: var(--flick-resize-bar-color-active);
+  background: var(--flick-resize-handle-bar);
 }
