@@ -153,10 +153,10 @@ function postDcinsideShortsMounted() {
       vv.autoplay = true;
       vv.loop = true;
       vv.muted = true;
-      (vv as any).playsInline = true;
+      vv.playsInline = true;
       vv.removeAttribute("controls");
-      if (!(vv as any).dataset._flickTried) {
-        (vv as any).dataset._flickTried = "1";
+      if (!vv.dataset._flickTried) {
+        vv.dataset._flickTried = "1";
         vv.play().catch(() => {});
       }
     } catch (_) {}
