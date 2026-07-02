@@ -7,8 +7,12 @@
   cursor: pointer;
   font: 600 12px/1.2 var(--shorts-font);
   min-height: 32px;
-  transition: background 0.16s ease, border-color 0.16s ease,
-    box-shadow 0.16s ease, color 0.16s ease, opacity 0.16s ease;
+  transition:
+    background 0.16s ease,
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    color 0.16s ease,
+    opacity 0.16s ease;
 }
 .flick-tool-btn {
   min-width: 34px;
@@ -33,7 +37,8 @@
 .flick-tool-btn:hover:not(:disabled) {
   border-color: rgba(18, 103, 244, 0.18);
   color: var(--flick-neo-blue);
-  box-shadow: 6px 6px 12px rgba(16, 35, 62, 0.12),
+  box-shadow:
+    6px 6px 12px rgba(16, 35, 62, 0.12),
     -6px -6px 12px rgba(255, 255, 255, 0.92),
     inset 1px 1px 0 rgba(255, 255, 255, 0.72);
 }
@@ -108,18 +113,11 @@
   padding: 0 16px 0 0;
   border: 0;
   outline: 0;
-  background: linear-gradient(
-        45deg,
-        transparent 50%,
-        var(--flick-neo-muted) 50%
-      )
-      right 5px center / 5px 5px no-repeat,
-    linear-gradient(
-        135deg,
-        var(--flick-neo-muted) 50%,
-        transparent 50%
-      )
-      right 1px center / 5px 5px no-repeat;
+  background:
+    linear-gradient(45deg, transparent 50%, var(--flick-neo-muted) 50%) right
+      5px center / 5px 5px no-repeat,
+    linear-gradient(135deg, var(--flick-neo-muted) 50%, transparent 50%) right
+      1px center / 5px 5px no-repeat;
   color: var(--flick-neo-text);
   font: 600 12px/1.2 var(--shorts-font);
   text-align: left;
@@ -276,7 +274,8 @@
   height: 22px;
   border-radius: 50%;
   background: var(--flick-neo-surface-soft);
-  box-shadow: 4px 4px 8px rgba(16, 35, 62, 0.12),
+  box-shadow:
+    4px 4px 8px rgba(16, 35, 62, 0.12),
     -3px -3px 7px rgba(255, 255, 255, 0.78);
   transition: transform 0.18s ease;
 }

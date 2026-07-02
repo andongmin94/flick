@@ -11,7 +11,7 @@ export function makeButton(className: string, label: string, title: string) {
 export function flashButtonText(
   button: HTMLButtonElement,
   text: string,
-  restoreText: string
+  restoreText: string,
 ) {
   button.textContent = text;
   window.setTimeout(() => {

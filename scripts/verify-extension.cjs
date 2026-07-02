@@ -68,9 +68,11 @@ if (manifest) {
     assertFile(manifest.action.default_popup, "action.default_popup");
   }
 
-  Object.entries(manifest.action?.default_icon || {}).forEach(([size, file]) => {
-    assertFile(file, `action.default_icon.${size}`);
-  });
+  Object.entries(manifest.action?.default_icon || {}).forEach(
+    ([size, file]) => {
+      assertFile(file, `action.default_icon.${size}`);
+    },
+  );
 
   if (manifest.options_page) {
     assertFile(manifest.options_page, "options_page");

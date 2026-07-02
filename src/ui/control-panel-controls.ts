@@ -12,7 +12,7 @@ export function createRangeControl(
   value: number,
   min: number,
   max: number,
-  suffix: string
+  suffix: string,
 ): RangeControl {
   const group = document.createElement("label");
   group.className = "flick-range-group";
@@ -44,7 +44,7 @@ export function createFontField(
   labelText: string,
   titleText: string,
   ariaLabel: string,
-  selectedValue: string
+  selectedValue: string,
 ) {
   const field = document.createElement("label");
   field.className = "flick-font-field";
@@ -75,7 +75,7 @@ export function createColorPicker(value: string, title: string) {
 
 export function createSandboxColorLabel(
   labelText: string,
-  input: HTMLInputElement
+  input: HTMLInputElement,
 ) {
   const label = document.createElement("label");
   label.className = "flick-color-label";

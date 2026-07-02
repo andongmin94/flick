@@ -17,7 +17,7 @@ import { readIntStorage, readStorage } from "./storage";
 export function applyStoredSizing(
   header: HTMLElement,
   footer: HTMLElement,
-  title: HTMLElement
+  title: HTMLElement,
 ) {
   header.style.height =
     readIntStorage(KEY_HEADER, DEFAULT_HEADER_HEIGHT, 20, 360) + "px";
@@ -39,13 +39,13 @@ export function applyContentFontSize(body: HTMLElement, size: number) {
 export function applyStoredContentFontSize(body: HTMLElement) {
   applyContentFontSize(
     body,
-    readIntStorage(KEY_CONTENT_FS, DEFAULT_CONTENT_SIZE, 12, 36)
+    readIntStorage(KEY_CONTENT_FS, DEFAULT_CONTENT_SIZE, 12, 36),
   );
 }
 
 export function applyStoredSafeFit(body: HTMLElement) {
   body.classList.toggle(
     "flick-body-safe-fit",
-    readStorage(KEY_SAFE_FIT) === "true"
+    readStorage(KEY_SAFE_FIT) === "true",
   );
 }

@@ -1,5 +1,8 @@
 import type { ExtractResult } from "../types/global";
-import { createBackgroundSection, createStyleSection } from "./control-panel-sections";
+import {
+  createBackgroundSection,
+  createStyleSection,
+} from "./control-panel-sections";
 import { makeButton } from "./dom";
 
 type ControlPanelArgs = {
@@ -18,10 +21,18 @@ function createTopRow(data: ExtractResult, onClose: () => void) {
   topRow.className = "flick-control-row flick-control-row-main";
 
   const sourceButton = makeButton("flick-tool-btn", "↗", "원본 글 열기");
-  const closeButton = makeButton("flick-tool-btn flick-tool-btn-close", "×", "닫기");
+  const closeButton = makeButton(
+    "flick-tool-btn flick-tool-btn-close",
+    "×",
+    "닫기",
+  );
 
   sourceButton.addEventListener("click", () => {
-    window.open(data.sourceUrl || location.href, "_blank", "noopener,noreferrer");
+    window.open(
+      data.sourceUrl || location.href,
+      "_blank",
+      "noopener,noreferrer",
+    );
   });
   closeButton.addEventListener("click", onClose);
 

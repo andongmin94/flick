@@ -19,7 +19,9 @@
   outline: 0;
   box-shadow: none;
   background: var(--flick-resize-handle-bg);
-  transition: opacity 0.15s, height 0.15s;
+  transition:
+    opacity 0.15s,
+    height 0.15s;
 }
 .flick-resize-header {
   --flick-resize-handle-bg: var(--flick-resize-header-bg);
@@ -40,7 +42,10 @@
   border-radius: 2px;
   opacity: 0;
   transform: translate(-50%, -50%);
-  transition: background 0.15s, opacity 0.15s, width 0.15s;
+  transition:
+    background 0.15s,
+    opacity 0.15s,
+    width 0.15s;
 }
 .flick-resize-handle:hover,
 .flick-resize-handle.active {
