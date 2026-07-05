@@ -153,7 +153,7 @@ function formatJsonObject(objectValue, indentLevel, alignKeys) {
 }
 
 function shouldAlignObjectKeys(currentKey) {
-  return currentKey === "scripts" || currentKey === "devDependencies";
+  return ["scripts", "dependencies", "devDependencies"].includes(currentKey);
 }
 
 function getIndent(indentLevel) {
