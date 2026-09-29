@@ -43,7 +43,7 @@ flick/
      └─ bump-extension-version.cjs
 ```
 
-문서 사이트는 이제 이 저장소 밖의 별도 프로젝트에서 관리합니다.
+[사용 가이드](https://andongmin.com/flick/guide/)는 [안동민닷컴 저장소](https://github.com/andongmin94/andongmin.com/tree/main/flick)에서 관리합니다.
 
 ## 동작 방식
 
